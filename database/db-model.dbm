@@ -1,0 +1,1271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.9.3-beta1" use-changelog="false" last-position="3506,628" last-zoom="0.95" max-obj-count="33"
+	 default-schema="public" default-owner="postgres">
+<database name="assortm" encoding="UTF8" lc-collate="de_DE.UTF-8" lc-ctype="de_DE.UTF-8" is-template="false" allow-conns="true">
+	<role name="postgres"/>
+	<tablespace name="pg_default"/>
+</database>
+
+<schema name="public" layer="0" fill-color="#f8c296" sql-disabled="true">
+</schema>
+
+<schema name="parts" layer="0" rect-visible="true" fill-color="#6291c3">
+	<role name="postgres"/>
+</schema>
+
+<schema name="storage" layer="0" rect-visible="true" fill-color="#595d9a">
+	<role name="postgres"/>
+</schema>
+
+<schema name="assemblies" layer="0" rect-visible="true" fill-color="#1e5854">
+	<role name="postgres"/>
+</schema>
+
+<schema name="kicad" layer="0" rect-visible="true" fill-color="#3b34a3">
+	<role name="postgres"/>
+</schema>
+
+<table name="parts" layer="0" collapse-mode="2" max-obj-count="7" z-value="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<position x="5020" y="2080"/>
+	<column name="id" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[The name of the part (may be identical to the manufacture_id)]]></comment>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+		<comment><![CDATA[An description of the part]]></comment>
+	</column>
+	<column name="weight">
+		<type name="double precision" length="0"/>
+	</column>
+	<column name="id_3d_models">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="parts_pk" type="pk-constr" table="parts.parts">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="documantations" layer="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Here are the documantaion file stored, like the datasheets and manuels]]></comment>
+	<position x="4460" y="1860"/>
+	<column name="id" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="id_parts" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="location" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+		<comment><![CDATA[an short description of what is dislplayed in the file]]></comment>
+	</column>
+	<constraint name="documantations_pk" type="pk-constr" table="parts.documantations">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="images" layer="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<comment><![CDATA[here are the images of the part saved]]></comment>
+	<position x="4460" y="2080"/>
+	<column name="id" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="id_parts" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="location" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[the image location]]></comment>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="images_pk" type="pk-constr" table="parts.images">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<usertype name="storage_box_sizes" configuration="enumeration">
+	<schema name="storage"/>
+	<role name="postgres"/>
+	<enumeration values="20x70x70,40x70x70,60x70x70"/>
+</usertype>
+
+<usertype name="box_types" configuration="enumeration">
+	<schema name="storage"/>
+	<role name="postgres"/>
+	<enumeration values="standard"/>
+</usertype>
+
+<table name="big_storage_places" layer="0" collapse-mode="2" max-obj-count="7" z-value="0">
+	<schema name="storage"/>
+	<role name="postgres"/>
+	<position x="5320" y="1360"/>
+	<column name="id" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="id_storage_boxes">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="cabinet">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="drawer">
+		<type name="text" length="0"/>
+	</column>
+	<column name="drawer_place_row">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[that is the row of 70x70 Square]]></comment>
+	</column>
+	<column name="drawer_place_column">
+		<type name="text" length="0"/>
+		<comment><![CDATA[that is the column of the 70x70 Square]]></comment>
+	</column>
+	<constraint name="storage_places_pk" type="pk-constr" table="storage.big_storage_places">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="storage_boxes" layer="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="storage"/>
+	<role name="postgres"/>
+	<position x="6100" y="1360"/>
+	<column name="id" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[the id of the storage id]]></comment>
+	</column>
+	<column name="size">
+		<type name="storage.storage_box_sizes" length="0"/>
+	</column>
+	<column name="type">
+		<type name="storage.box_types" length="0"/>
+	</column>
+	<column name="stock">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="id_parts" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="storage_boxes_pk" type="pk-constr" table="storage.storage_boxes">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="part_manufacturers" layer="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<position x="4460" y="2300"/>
+	<column name="manufacturer_id" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[is the id/name of the part given by the manufacturer and could be identical to parts.name]]></comment>
+	</column>
+	<column name="id_parts" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="parts_manufacturers_pk" type="pk-constr" table="parts.part_manufacturers">
+		<columns names="manufacturer_id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="name_manufacturers" index="2"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="manufacturers_fk" index="2"/>
+	</customidxs>
+</table>
+
+<view name="view_parts_parts_a_manufacturers" layer="0" collapse-mode="2" max-obj-count="1" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="4820" y="2720"/>
+	<reference>
+		<expression><![CDATA[ SELECT parts.id AS part_id,
+    parts.name AS part_name,
+    parts.description AS part_description,
+    parts.weight AS part_weight,
+    parts.type AS part_type,
+    parts_manufacturers.manufacturer AS part_manufacturer,
+    parts_manufacturers.manufacturer_id AS part_manufacturer_id,
+    parts.id_3d_models AS id_3d_model
+   FROM (parts.parts
+     LEFT JOIN parts.parts_manufacturers ON ((parts.id = parts_manufacturers.id_parts)))
+  WHERE ((parts_manufacturers.id_parts IS NULL) OR (parts.id = parts_manufacturers.id_parts));]]></expression>
+	<column name="part_id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="part_name">
+		<type name="text" length="0"/>
+	</column>
+	<column name="part_description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="part_weight">
+		<type name="double precision" length="0"/>
+	</column>
+	<column name="part_type">
+		<type name="text" length="0"/>
+	</column>
+	<column name="part_manufacturer">
+		<type name="text" length="0"/>
+	</column>
+	<column name="part_manufacturer_id">
+		<type name="text" length="0"/>
+	</column>
+	<column name="id_3d_model">
+		<type name="bigint" length="0"/>
+	</column>
+		<reftable name="parts.parts"/>
+		<reftable name="parts.part_manufacturers"/>
+	</reference>
+</view>
+
+<relationship name="rel_view_parts_parts_a_manufacturers_parts" type="reltv" layer="0"
+	 custom-color="#db66ff"
+	 src-table="public.view_parts_parts_a_manufacturers"
+	 dst-table="parts.parts"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_view_parts_parts_a_manufacturers_parts_manufacturers" type="reltv" layer="0"
+	 custom-color="#4812ce"
+	 src-table="public.view_parts_parts_a_manufacturers"
+	 dst-table="parts.part_manufacturers"
+	 src-required="false" dst-required="false"/>
+
+<view name="view_parts_parts" layer="0" collapse-mode="2" max-obj-count="1" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="4680" y="1660"/>
+	<reference>
+		<expression><![CDATA[ SELECT parts.id AS part_id,
+    parts.name AS part_name,
+    parts.description AS part_description,
+    parts.weight AS part_weight,
+    parts.type AS part_type,
+    parts.id_3d_models AS id_3d_model
+   FROM parts.parts;]]></expression>
+	<column name="part_id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="part_name">
+		<type name="text" length="0"/>
+	</column>
+	<column name="part_description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="part_weight">
+		<type name="double precision" length="0"/>
+	</column>
+	<column name="part_type">
+		<type name="text" length="0"/>
+	</column>
+	<column name="id_3d_model">
+		<type name="bigint" length="0"/>
+	</column>
+		<reftable name="parts.parts"/>
+	</reference>
+</view>
+
+<relationship name="rel_view_parts_parts_parts" type="reltv" layer="0"
+	 custom-color="#adcc4e"
+	 src-table="public.view_parts_parts"
+	 dst-table="parts.parts"
+	 src-required="false" dst-required="false"/>
+
+<view name="view_parts_documantations" layer="0" collapse-mode="2" max-obj-count="1" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="3840" y="1880"/>
+	<reference>
+		<expression><![CDATA[ SELECT
+	documantations.id AS id, 
+	documantations.location AS documantations_location,
+    documantations.id_parts AS part_id,
+    documantations.name AS documantation_name,
+    documantations.description AS documantations_description
+   FROM parts.documantations;]]></expression>
+	<column name="id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="documantations_location">
+		<type name="text" length="0"/>
+	</column>
+	<column name="part_id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="documantation_name">
+		<type name="text" length="0"/>
+	</column>
+	<column name="documantations_description">
+		<type name="text" length="0"/>
+	</column>
+		<reftable name="parts.documantations"/>
+	</reference>
+</view>
+
+<relationship name="rel_view_parts_documantations_documantations" type="reltv" layer="0"
+	 custom-color="#3088b5"
+	 src-table="public.view_parts_documantations"
+	 dst-table="parts.documantations"
+	 src-required="false" dst-required="false"/>
+
+<view name="view_parts_images" layer="0" collapse-mode="2" max-obj-count="1" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="4080" y="2100"/>
+	<reference>
+		<expression><![CDATA[ SELECT 
+	images.id AS id,
+    images.id_parts AS part_id,
+    images.location AS location,
+	images.description AS description,
+   FROM parts.images;]]></expression>
+	<column name="id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="part_id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="location">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+		<reftable name="parts.images"/>
+	</reference>
+</view>
+
+<relationship name="rel_view_parts_images_images" type="reltv" layer="0"
+	 custom-color="#3ab2a1"
+	 src-table="public.view_parts_images"
+	 dst-table="parts.images"
+	 src-required="false" dst-required="false"/>
+
+<view name="view_parts_manufacturers" layer="0" collapse-mode="2" max-obj-count="1" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="3840" y="2320"/>
+	<reference>
+		<expression><![CDATA[ SELECT parts_manufacturers.id_parts AS part_id,
+    parts_manufacturers.manufacturer AS part_manufacturer,
+    parts_manufacturers.manufacturer_id AS part_manufacturer_id
+   FROM parts.parts_manufacturers;]]></expression>
+	<column name="part_id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="part_manufacturer">
+		<type name="text" length="0"/>
+	</column>
+	<column name="part_manufacturer_id">
+		<type name="text" length="0"/>
+	</column>
+		<reftable name="parts.part_manufacturers"/>
+	</reference>
+</view>
+
+<relationship name="rel_view_parts_manufacturers_parts_manufacturers" type="reltv" layer="0"
+	 custom-color="#97c0ae"
+	 src-table="public.view_parts_manufacturers"
+	 dst-table="parts.part_manufacturers"
+	 src-required="false" dst-required="false"/>
+
+<table name="assemblies" layer="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="assemblies"/>
+	<role name="postgres"/>
+	<position x="4420" y="1340"/>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="git_project">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="assemblies_pk" type="pk-constr" table="assemblies.assemblies">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="assembly_parts" layer="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="assemblies"/>
+	<role name="postgres"/>
+	<position x="4900" y="1340"/>
+	<column name="name_assemblies" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="id_parts" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+</table>
+
+<table name="3d_models" layer="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<comment><![CDATA[here are the images of the part saved]]></comment>
+	<position x="4460" y="2720"/>
+	<column name="id" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="location" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[the model location]]></comment>
+	</column>
+	<constraint name="3d_models_pk" type="pk-constr" table="parts.&quot;3d_models&quot;">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<view name="view_parts_3d_models" layer="0" collapse-mode="2" max-obj-count="1" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="4020" y="2720"/>
+	<reference>
+		<expression><![CDATA[ SELECT "3d_models".id AS id_3d_model,
+    "3d_models"."3d_model"
+   FROM parts."3d_models";]]></expression>
+	<column name="id_3d_model">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="3d_model">
+		<type name="bytea" length="0"/>
+	</column>
+		<reftable name="parts.&quot;3d_models&quot;"/>
+	</reference>
+</view>
+
+<relationship name="rel_view_parts_3d_models_3d_models" type="reltv" layer="0"
+	 custom-color="#2a7a73"
+	 src-table="public.view_parts_3d_models"
+	 dst-table="parts.&quot;3d_models&quot;"
+	 src-required="false" dst-required="false"/>
+
+<table name="footprints" layer="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="kicad"/>
+	<role name="postgres"/>
+	<position x="4440" y="3400"/>
+	<column name="library" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="footprint" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="footprints_pk" type="pk-constr" table="kicad.footprints">
+		<columns names="library,footprint" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="symbols" layer="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="kicad"/>
+	<role name="postgres"/>
+	<position x="4700" y="3400"/>
+	<column name="library" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="symbol" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="symbols_pk" type="pk-constr" table="kicad.symbols">
+		<columns names="library,symbol" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="parts" layer="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="kicad"/>
+	<role name="postgres"/>
+	<position x="5220" y="3400"/>
+	<column name="id_parts" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="library_footprints" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="footprint_footprints" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="library_symbols" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="symbol_symbols" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+</table>
+
+<view name="view_storage_storage_boxes" layer="0" collapse-mode="2" max-obj-count="1" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="6100" y="1080"/>
+	<reference>
+		<expression><![CDATA[ SELECT storage_boxes.id AS box_id,
+    storage_boxes.id_parts AS part_id,
+    storage_boxes.size AS box_size,
+    storage_boxes.stock AS stocke
+   FROM storage.storage_boxes;]]></expression>
+	<column name="box_id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="part_id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="box_size">
+		<type name="storage.storage_box_sizes" length="0"/>
+	</column>
+	<column name="stocke">
+		<type name="bigint" length="0"/>
+	</column>
+		<reftable name="storage.storage_boxes"/>
+	</reference>
+</view>
+
+<relationship name="rel_view_storage_storage_boxes_storage_boxes" type="reltv" layer="0"
+	 custom-color="#536357"
+	 src-table="public.view_storage_storage_boxes"
+	 dst-table="storage.storage_boxes"
+	 src-required="false" dst-required="false"/>
+
+<view name="view_storage_big_storage_places" layer="0" collapse-mode="2" max-obj-count="1" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="5280" y="1080"/>
+	<reference>
+		<expression><![CDATA[ SELECT big_storage_places.id AS big_storage_place_id,
+    big_storage_places.id_storage_boxes,
+    big_storage_places.cabinet AS big_storage_place_cabinet,
+    big_storage_places.drawer AS big_storage_place_drawer,
+    big_storage_places.drawer_place_row AS big_storage_place_drawer_place_row,
+    big_storage_places.drawer_place_column AS big_storage_place_drawer_place_column
+   FROM storage.big_storage_places;]]></expression>
+	<column name="big_storage_place_id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="id_storage_boxes">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="big_storage_place_cabinet">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="big_storage_place_drawer">
+		<type name="text" length="0"/>
+	</column>
+	<column name="big_storage_place_drawer_place_row">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="big_storage_place_drawer_place_column">
+		<type name="text" length="0"/>
+	</column>
+		<reftable name="storage.big_storage_places"/>
+	</reference>
+</view>
+
+<relationship name="rel_view_storage_big_storage_places_big_storage_places" type="reltv" layer="0"
+	 custom-color="#c5199e"
+	 src-table="public.view_storage_big_storage_places"
+	 dst-table="storage.big_storage_places"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="27.1067" y="-10.2644"/>
+	</label>
+</relationship>
+
+<view name="view_storage_storage_boxes_a_big_storage_places" layer="0" collapse-mode="2" max-obj-count="1" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="5640" y="940"/>
+	<reference>
+		<expression><![CDATA[ SELECT storage_boxes.id AS box_id,
+    storage_boxes.id_parts AS part_id,
+    storage_boxes.size AS box_size,
+    storage_boxes.stock AS stocke,
+    big_storage_places.id AS big_storage_place_id,
+    big_storage_places.cabinet AS big_storage_place_cabinet,
+    big_storage_places.drawer AS big_storage_place_drawer,
+    big_storage_places.drawer_place_row AS big_storage_place_drawer_place_row,
+    big_storage_places.drawer_place_column AS big_storage_place_drawer_place_column
+   FROM (storage.storage_boxes
+     LEFT JOIN storage.big_storage_places ON ((storage_boxes.id = big_storage_places.id_storage_boxes)));]]></expression>
+	<column name="box_id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="part_id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="box_size">
+		<type name="storage.storage_box_sizes" length="0"/>
+	</column>
+	<column name="stocke">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="big_storage_place_id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="big_storage_place_cabinet">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="big_storage_place_drawer">
+		<type name="text" length="0"/>
+	</column>
+	<column name="big_storage_place_drawer_place_row">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="big_storage_place_drawer_place_column">
+		<type name="text" length="0"/>
+	</column>
+		<reftable name="storage.big_storage_places"/>
+		<reftable name="storage.storage_boxes"/>
+	</reference>
+</view>
+
+<relationship name="rel_view_storage_storage_boxes_a_big_storage_places_bi_d41d8c" type="reltv" layer="0"
+	 custom-color="#dc5a43"
+	 src-table="public.view_storage_storage_boxes_a_big_storage_places"
+	 dst-table="storage.big_storage_places"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_view_storage_storage_boxes_a_big_storage_places_st_d41d8c" type="reltv" layer="0"
+	 custom-color="#515730"
+	 src-table="public.view_storage_storage_boxes_a_big_storage_places"
+	 dst-table="storage.storage_boxes"
+	 src-required="false" dst-required="false"/>
+
+<view name="view_kicad_footprints" layer="0" collapse-mode="2" max-obj-count="1" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="4460" y="3200"/>
+	<reference>
+		<expression><![CDATA[ SELECT footprints.library AS kicad_footprint_library,
+    footprints.footprint AS kicad_footprint
+   FROM kicad.footprints;]]></expression>
+	<column name="kicad_footprint_library">
+		<type name="text" length="0"/>
+	</column>
+	<column name="kicad_footprint">
+		<type name="text" length="0"/>
+	</column>
+		<reftable name="kicad.footprints"/>
+	</reference>
+</view>
+
+<relationship name="rel_view_kicad_footprints_footprints" type="reltv" layer="0"
+	 custom-color="#3e74c4"
+	 src-table="public.view_kicad_footprints"
+	 dst-table="kicad.footprints"
+	 src-required="false" dst-required="false"/>
+
+<view name="view_kicad_symbols" layer="0" collapse-mode="2" max-obj-count="1" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="4740" y="3200"/>
+	<reference>
+		<expression><![CDATA[ SELECT symbols.library AS kicad_symbol_library,
+    symbols.symbol AS kicad_symbol
+   FROM kicad.symbols;]]></expression>
+	<column name="kicad_symbol_library">
+		<type name="text" length="0"/>
+	</column>
+	<column name="kicad_symbol">
+		<type name="text" length="0"/>
+	</column>
+		<reftable name="kicad.symbols"/>
+	</reference>
+</view>
+
+<relationship name="rel_view_kicad_symbols_symbols" type="reltv" layer="0"
+	 custom-color="#8da96c"
+	 src-table="public.view_kicad_symbols"
+	 dst-table="kicad.symbols"
+	 src-required="false" dst-required="false"/>
+
+<view name="view_kicad_parts" layer="0" collapse-mode="2" max-obj-count="1" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="4940" y="3960"/>
+	<reference>
+		<expression><![CDATA[ SELECT parts.id_parts AS part_id,
+    footprints.library AS kicad_footprint_library,
+    footprints.footprint AS kicad_footprint,
+    symbols.library AS kicad_symbol_library,
+    symbols.symbol AS kicad_symbol
+   FROM ((kicad.parts
+     JOIN kicad.footprints ON (((parts.library_footprints = footprints.library) AND (parts.footprint_footprints = footprints.footprint))))
+     JOIN kicad.symbols ON (((parts.library_symbols = symbols.library) AND (parts.symbol_symbols = symbols.symbol))));]]></expression>
+	<column name="part_id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="kicad_footprint_library">
+		<type name="text" length="0"/>
+	</column>
+	<column name="kicad_footprint">
+		<type name="text" length="0"/>
+	</column>
+	<column name="kicad_symbol_library">
+		<type name="text" length="0"/>
+	</column>
+	<column name="kicad_symbol">
+		<type name="text" length="0"/>
+	</column>
+		<reftable name="kicad.footprints"/>
+		<reftable name="kicad.symbols"/>
+		<reftable name="kicad.parts"/>
+	</reference>
+</view>
+
+<relationship name="rel_view_kicad_parts_footprints" type="reltv" layer="0"
+	 custom-color="#6e6fcc"
+	 src-table="public.view_kicad_parts"
+	 dst-table="kicad.footprints"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_view_kicad_parts_symbols" type="reltv" layer="0"
+	 custom-color="#bedb8c"
+	 src-table="public.view_kicad_parts"
+	 dst-table="kicad.symbols"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_view_kicad_parts_parts" type="reltv" layer="0"
+	 custom-color="#acbd05"
+	 src-table="public.view_kicad_parts"
+	 dst-table="kicad.parts"
+	 src-required="false" dst-required="false"/>
+
+<view name="view_assemblies_assemblies" layer="0" collapse-mode="2" max-obj-count="1" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="4400" y="1080"/>
+	<reference>
+		<expression><![CDATA[ SELECT assemblies.name AS assembly_name,
+    assemblies.description AS assembly_description,
+    assemblies.git_project AS assembly_git_project
+   FROM assemblies.assemblies;]]></expression>
+	<column name="assembly_name">
+		<type name="text" length="0"/>
+	</column>
+	<column name="assembly_description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="assembly_git_project">
+		<type name="text" length="0"/>
+	</column>
+		<reftable name="assemblies.assemblies"/>
+	</reference>
+</view>
+
+<relationship name="rel_view_assemblies_assemblies_assemblies" type="reltv" layer="0"
+	 custom-color="#c10356"
+	 src-table="public.view_assemblies_assemblies"
+	 dst-table="assemblies.assemblies"
+	 src-required="false" dst-required="false"/>
+
+<function name="plpython3_validator"
+		window-func="false"
+		returns-setof="false"
+		behavior-type="STRICT"
+		function-type="VOLATILE"
+		security-type="SECURITY INVOKER"
+		execution-cost="1"
+		row-amount="0">
+	<schema name="pg_catalog"/>
+	<role name="postgres"/>
+	<language name="c"/>
+	<return-type>
+	<type name="void" length="1"/>
+	</return-type>
+	<parameter name="_param1">
+		<type name="oid" length="0"/>
+	</parameter>
+	<definition library="$libdir/plpython3" symbol="plpython3_validator"/>
+</function>
+
+<function name="plpython3_call_handler"
+		window-func="false"
+		returns-setof="false"
+		behavior-type="CALLED ON NULL INPUT"
+		function-type="VOLATILE"
+		security-type="SECURITY INVOKER"
+		execution-cost="1"
+		row-amount="0">
+	<schema name="pg_catalog"/>
+	<role name="postgres"/>
+	<language name="c"/>
+	<return-type>
+	<type name="language_handler" length="1"/>
+	</return-type>
+	<definition library="$libdir/plpython3" symbol="plpython3_call_handler"/>
+</function>
+
+<function name="plpython3_inline_handler"
+		window-func="false"
+		returns-setof="false"
+		behavior-type="STRICT"
+		function-type="VOLATILE"
+		security-type="SECURITY INVOKER"
+		execution-cost="1"
+		row-amount="0">
+	<schema name="pg_catalog"/>
+	<role name="postgres"/>
+	<language name="c"/>
+	<return-type>
+	<type name="void" length="1"/>
+	</return-type>
+	<parameter name="_param1">
+		<type name="internal" length="0"/>
+	</parameter>
+	<definition library="$libdir/plpython3" symbol="plpython3_inline_handler"/>
+</function>
+
+<language name="plpython3u" trusted="false">
+	<role name="postgres"/>
+	<function ref-type="handler" signature="pg_catalog.plpython3_call_handler()"/>
+	<function ref-type="validator" signature="pg_catalog.plpython3_validator(oid)"/>
+	<function ref-type="inline" signature="pg_catalog.plpython3_inline_handler(internal)"/>
+</language>
+
+<function name="get_next_part_id"
+		window-func="false"
+		returns-setof="false"
+		behavior-type="CALLED ON NULL INPUT"
+		function-type="VOLATILE"
+		security-type="SECURITY INVOKER"
+		execution-cost="1"
+		row-amount="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<comment><![CDATA[returns the next avalible part id]]></comment>
+	<language name="plpython3u"/>
+	<return-type>
+	<type name="bigint" length="1"/>
+	</return-type>
+	<definition><![CDATA[plan = plpy.prepare("SELECT id FROM parts.parts ORDER BY id")
+ids = plpy.execute(plan)
+res = -10
+for id in range(ids.nrows()):
+    res = id
+    if ids[id]['id'] != id:
+        return id
+return 	res + 1]]></definition>
+</function>
+
+<table name="part-types" layer="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<comment><![CDATA[this table contains all the posible types a part can have]]></comment>
+	<position x="5820" y="1740"/>
+	<column name="type" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="types_pk" type="pk-constr" table="parts.&quot;part-types&quot;">
+		<columns names="type" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<usertype name="value-types" configuration="enumeration">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<enumeration values="bigint,text,double precision"/>
+</usertype>
+
+<table name="type-attributes" layer="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<position x="6560" y="1740"/>
+</table>
+
+<table name="part-attributes" layer="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<comment><![CDATA[this table contains all the posible attributes a part can have]]></comment>
+	<position x="5800" y="2000"/>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="universal" not-null="true">
+		<type name="bool" length="0"/>
+		<comment><![CDATA[when true it means that any part type can have this attribut]]></comment>
+	</column>
+	<constraint name="attributes_pk" type="pk-constr" table="parts.&quot;part-attributes&quot;">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="unit" index="4"/>
+		<object name="value-type" index="3"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="units_fk" index="2"/>
+		<object name="value-types_fk" index="1"/>
+	</customidxs>
+</table>
+
+<table name="properties" layer="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<position x="6540" y="2260"/>
+	<column name="value" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+
+	<customidxs object-type="column">
+		<object name="attribut" index="1"/>
+		<object name="part_id" index="0"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="part-attributes_fk" index="1"/>
+		<object name="parts_fk" index="0"/>
+	</customidxs>
+</table>
+
+<relationship name="parts_has_many_properties" type="rel1n" layer="0"
+	 src-col-pattern="part_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#6376f9"
+	 src-table="parts.parts"
+	 dst-table="parts.properties"
+	 src-required="true" dst-required="false"/>
+
+<table name="value-types" layer="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<position x="6540" y="1920"/>
+	<column name="type" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="value-types_pk" type="pk-constr" table="parts.&quot;value-types&quot;">
+		<columns names="type" ref-type="src-columns"/>
+	</constraint>
+	<initial-data>
+<![CDATA[type⸣
+integer⸣
+float⸣
+boolean⸣
+string]]>
+	</initial-data>
+</table>
+
+<relationship name="value-types_has_many_part-attributes" type="rel1n" layer="0"
+	 src-col-pattern="value-type"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#c8073a"
+	 src-table="parts.&quot;value-types&quot;"
+	 dst-table="parts.&quot;part-attributes&quot;"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-9.60752" y="6.95846"/>
+	</label>
+</relationship>
+
+<table name="units" layer="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<comment><![CDATA[All the saved values are saved as a base unit]]></comment>
+	<position x="6540" y="2060"/>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="short-name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="base-unit_pk" type="pk-constr" table="parts.units">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="unit_has_many_part-attributes" type="rel1n" layer="0"
+	 src-col-pattern="unit"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#1849d6"
+	 src-table="parts.units"
+	 dst-table="parts.&quot;part-attributes&quot;"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="4.39248" y="-7.81966"/>
+	</label>
+</relationship>
+
+<relationship name="part-types_has_many_parts" type="rel1n" layer="0"
+	 src-col-pattern="type"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#c63082"
+	 src-table="parts.&quot;part-types&quot;"
+	 dst-table="parts.parts"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="part-types_has_many_type-attributes" type="rel1n" layer="0"
+	 src-col-pattern="part-type"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#c83f8a"
+	 src-table="parts.&quot;part-types&quot;"
+	 dst-table="parts.&quot;type-attributes&quot;"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="part-attributes_has_many_properties" type="rel1n" layer="0"
+	 src-col-pattern="attribut"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#7f4403"
+	 src-table="parts.&quot;part-attributes&quot;"
+	 dst-table="parts.properties"
+	 src-required="true" dst-required="false"/>
+
+<table name="subunits" layer="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<comment><![CDATA[here are the sub units(z.B. from Meter there is the subunit mimimeter)]]></comment>
+	<position x="7160" y="2040"/>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="short-name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="factor" not-null="true">
+		<type name="double precision" length="0"/>
+		<comment><![CDATA[the faktor with that the (base)unit is multiplyt]]></comment>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="subunits_pk" type="pk-constr" table="parts.subunits">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="base-unit-name" index="1"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="units_fk" index="1"/>
+	</customidxs>
+</table>
+
+<relationship name="units_has_many_subunits" type="rel1n" layer="0"
+	 src-col-pattern="base-unit-name"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#24ecfa"
+	 src-table="parts.units"
+	 dst-table="parts.subunits"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-6.60752" y="17.4267"/>
+	</label>
+</relationship>
+
+<table name="manufacturers" layer="0" collapse-mode="2" max-obj-count="1" z-value="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<position x="4060" y="2560"/>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="manufacturers_pk" type="pk-constr" table="parts.manufacturers">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="manufacturers_has_many_part_manufacturers" type="rel1n" layer="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#f72799"
+	 src-table="parts.manufacturers"
+	 dst-table="parts.part_manufacturers"
+	 src-required="true" dst-required="false"/>
+
+<textbox name="42" layer="0" z-value="0" font-size="9">
+	<position x="9100" y="5180"/>
+	<comment><![CDATA[42]]></comment>
+</textbox>
+
+<relationship name="part-attributes_has_many_type-attributes" type="rel1n" layer="0"
+	 src-col-pattern="part-attribut"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#c9ea84"
+	 src-table="parts.&quot;part-attributes&quot;"
+	 dst-table="parts.&quot;type-attributes&quot;"
+	 src-required="true" dst-required="false"/>
+
+<constraint name="3d_models_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="SET NULL" ref-table="parts.&quot;3d_models&quot;" table="parts.parts">
+	<columns names="id_3d_models" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="parts_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="parts.parts" table="parts.documantations">
+	<columns names="id_parts" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="parts_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="parts.parts" table="parts.images">
+	<columns names="id_parts" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="storage_boxes_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="SET NULL" ref-table="storage.storage_boxes" table="storage.big_storage_places">
+	<columns names="id_storage_boxes" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="parts_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="parts.parts" table="storage.storage_boxes">
+	<columns names="id_parts" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="parts_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="parts.parts" table="parts.part_manufacturers">
+	<columns names="id_parts" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="assemblies_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="assemblies.assemblies" table="assemblies.assembly_parts">
+	<columns names="name_assemblies" ref-type="src-columns"/>
+	<columns names="name" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="parts_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="parts.parts" table="assemblies.assembly_parts">
+	<columns names="id_parts" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="parts_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="parts.parts" table="kicad.parts">
+	<columns names="id_parts" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="footprints_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="kicad.footprints" table="kicad.parts">
+	<columns names="library_footprints,footprint_footprints" ref-type="src-columns"/>
+	<columns names="library,footprint" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="symbols_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="kicad.symbols" table="kicad.parts">
+	<columns names="library_symbols,symbol_symbols" ref-type="src-columns"/>
+	<columns names="library,symbol" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_parts_3d_models" type="relfk" layer="0"
+	 custom-color="#209c43"
+	 src-table="parts.parts"
+	 dst-table="parts.&quot;3d_models&quot;" reference-fk="3d_models_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_documantations_parts" type="relfk" layer="0"
+	 custom-color="#e0e9c9"
+	 src-table="parts.documantations"
+	 dst-table="parts.parts" reference-fk="parts_fk"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_images_parts" type="relfk" layer="0"
+	 custom-color="#0fd07b"
+	 src-table="parts.images"
+	 dst-table="parts.parts" reference-fk="parts_fk"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_big_storage_places_storage_boxes" type="relfk" layer="0"
+	 custom-color="#6a504d"
+	 src-table="storage.big_storage_places"
+	 dst-table="storage.storage_boxes" reference-fk="storage_boxes_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_storage_boxes_parts" type="relfk" layer="0"
+	 custom-color="#3a299a"
+	 src-table="storage.storage_boxes"
+	 dst-table="parts.parts" reference-fk="parts_fk"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_part_manufacturers_parts" type="relfk" layer="0"
+	 custom-color="#749aa6"
+	 src-table="parts.part_manufacturers"
+	 dst-table="parts.parts" reference-fk="parts_fk"
+	 src-required="false" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-2.87315" y="7.65325"/>
+	</label>
+</relationship>
+
+<relationship name="rel_assembly_parts_assemblies" type="relfk" layer="0"
+	 custom-color="#b565c4"
+	 src-table="assemblies.assembly_parts"
+	 dst-table="assemblies.assemblies" reference-fk="assemblies_fk"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_assembly_parts_parts" type="relfk" layer="0"
+	 custom-color="#b09bf1"
+	 src-table="assemblies.assembly_parts"
+	 dst-table="parts.parts" reference-fk="parts_fk"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_parts_parts" type="relfk" layer="0"
+	 custom-color="#6a1a1c"
+	 src-table="kicad.parts"
+	 dst-table="parts.parts" reference-fk="parts_fk"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_parts_footprints" type="relfk" layer="0"
+	 custom-color="#745192"
+	 src-table="kicad.parts"
+	 dst-table="kicad.footprints" reference-fk="footprints_fk"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_parts_symbols" type="relfk" layer="0"
+	 custom-color="#c4d081"
+	 src-table="kicad.parts"
+	 dst-table="kicad.symbols" reference-fk="symbols_fk"
+	 src-required="false" dst-required="true"/>
+
+<permission>
+	<object name="public" type="schema"/>
+	<roles names="postgres"/>
+	<privileges create="true" usage="true"/>
+</permission>
+<permission>
+	<object name="public" type="schema"/>
+	<privileges create="true" usage="true"/>
+</permission>
+</dbmodel>
