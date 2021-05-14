@@ -21,7 +21,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Widgets PrintSupport REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets PrintSupport REQUIRED)
 
-find_or_install_package(LableLibrary /silo0/Projekte/assortment_system/lable-library/ 0.1.5)
+find_or_install_package(LabelLibrary /silo0/Projekte/assortment_system/label-library/ 0.1.5)
 
 add_executable(middleware
   main.cpp
@@ -30,5 +30,5 @@ target_link_libraries(middleware
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::PrintSupport
-    LableLibrary::LableLibrary
+    LabelLibrary::LabelLibrary
 )
