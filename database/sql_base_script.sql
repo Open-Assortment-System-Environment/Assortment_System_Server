@@ -49,17 +49,14 @@ CREATE SCHEMA kicad;
 ALTER SCHEMA kicad OWNER TO postgres;
 -- ddl-end --
 
-SET search_path TO pg_catalog,public,parts,storage,assemblies,kicad;
+-- object: global | type: SCHEMA --
+-- DROP SCHEMA IF EXISTS global CASCADE;
+CREATE SCHEMA global;
+-- ddl-end --
+ALTER SCHEMA global OWNER TO postgres;
 -- ddl-end --
 
--- object: parts.types_enum | type: TYPE --
--- DROP TYPE IF EXISTS parts.types_enum CASCADE;
-CREATE TYPE parts.types_enum AS
- ENUM ('unknown','<base>');
--- ddl-end --
-ALTER TYPE parts.types_enum OWNER TO postgres;
--- ddl-end --
-COMMENT ON TYPE parts.types_enum IS E'the types of parts';
+SET search_path TO pg_catalog,public,parts,storage,assemblies,kicad,global;
 -- ddl-end --
 
 -- object: parts.parts | type: TABLE --
@@ -69,8 +66,8 @@ CREATE TABLE parts.parts (
 	name text NOT NULL,
 	description text,
 	weight double precision,
-	type parts.types_enum NOT NULL,
 	id_3d_models bigint,
+	type text NOT NULL,
 	CONSTRAINT parts_pk PRIMARY KEY (id)
 
 );
@@ -79,43 +76,17 @@ COMMENT ON COLUMN parts.parts.name IS E'The name of the part (may be identical t
 -- ddl-end --
 COMMENT ON COLUMN parts.parts.description IS E'An description of the part';
 -- ddl-end --
-COMMENT ON COLUMN parts.parts.type IS E'the part type';
--- ddl-end --
 ALTER TABLE parts.parts OWNER TO postgres;
--- ddl-end --
-
--- object: parts.manufacturers | type: TYPE --
--- DROP TYPE IF EXISTS parts.manufacturers CASCADE;
-CREATE TYPE parts.manufacturers AS
- ENUM ('texas_instruments');
--- ddl-end --
-ALTER TYPE parts.manufacturers OWNER TO postgres;
--- ddl-end --
-
--- object: parts.get_parts_type | type: FUNCTION --
--- DROP FUNCTION IF EXISTS parts.get_parts_type(bigint) CASCADE;
-CREATE FUNCTION parts.get_parts_type (id_in bigint)
-	RETURNS parts.types_enum
-	LANGUAGE sql
-	VOLATILE 
-	CALLED ON NULL INPUT
-	SECURITY INVOKER
-	COST 1
-	AS $$
-SELECT parts.type FROM parts.parts WHERE parts.id = id_in;
-$$;
--- ddl-end --
-ALTER FUNCTION parts.get_parts_type(bigint) OWNER TO postgres;
 -- ddl-end --
 
 -- object: parts.documantations | type: TABLE --
 -- DROP TABLE IF EXISTS parts.documantations CASCADE;
 CREATE TABLE parts.documantations (
-	location text NOT NULL,
+	id bigint NOT NULL,
 	id_parts bigint NOT NULL,
 	name text NOT NULL,
 	description text,
-	CONSTRAINT documantations_pk PRIMARY KEY (location)
+	CONSTRAINT documantations_pk PRIMARY KEY (id)
 
 );
 -- ddl-end --
@@ -129,226 +100,39 @@ ALTER TABLE parts.documantations OWNER TO postgres;
 -- object: parts.images | type: TABLE --
 -- DROP TABLE IF EXISTS parts.images CASCADE;
 CREATE TABLE parts.images (
-	image_id bigint NOT NULL,
+	id bigint NOT NULL,
 	id_parts bigint NOT NULL,
-	image bytea NOT NULL,
-	CONSTRAINT images_pk PRIMARY KEY (image_id)
+	description text,
+	CONSTRAINT images_pk PRIMARY KEY (id)
 
 );
 -- ddl-end --
 COMMENT ON TABLE parts.images IS E'here are the images of the part saved';
 -- ddl-end --
-COMMENT ON COLUMN parts.images.image IS E'the image';
--- ddl-end --
 ALTER TABLE parts.images OWNER TO postgres;
 -- ddl-end --
 
--- object: storage.storage_box_sizes | type: TYPE --
--- DROP TYPE IF EXISTS storage.storage_box_sizes CASCADE;
-CREATE TYPE storage.storage_box_sizes AS
- ENUM ('20x70x70','40x70x70','60x70x70');
--- ddl-end --
-ALTER TYPE storage.storage_box_sizes OWNER TO postgres;
--- ddl-end --
-
--- object: storage.box_types | type: TYPE --
--- DROP TYPE IF EXISTS storage.box_types CASCADE;
-CREATE TYPE storage.box_types AS
- ENUM ('standard');
--- ddl-end --
-ALTER TYPE storage.box_types OWNER TO postgres;
--- ddl-end --
-
--- object: storage.big_storage_places | type: TABLE --
--- DROP TABLE IF EXISTS storage.big_storage_places CASCADE;
-CREATE TABLE storage.big_storage_places (
-	id bigint NOT NULL,
-	id_storage_boxes bigint,
-	cabinet bigint,
-	drawer text,
-	drawer_place_row bigint,
-	drawer_place_column text,
-	CONSTRAINT storage_places_pk PRIMARY KEY (id)
-
-);
--- ddl-end --
-COMMENT ON COLUMN storage.big_storage_places.drawer_place_row IS E'that is the row of 70x70 Square';
--- ddl-end --
-COMMENT ON COLUMN storage.big_storage_places.drawer_place_column IS E'that is the column of the 70x70 Square';
--- ddl-end --
-ALTER TABLE storage.big_storage_places OWNER TO postgres;
--- ddl-end --
-
--- object: storage.storage_boxes | type: TABLE --
--- DROP TABLE IF EXISTS storage.storage_boxes CASCADE;
-CREATE TABLE storage.storage_boxes (
-	id bigint NOT NULL,
-	size storage.storage_box_sizes,
-	type storage.box_types,
-	stock bigint,
-	id_parts bigint NOT NULL,
-	CONSTRAINT storage_boxes_pk PRIMARY KEY (id)
-
-);
--- ddl-end --
-COMMENT ON COLUMN storage.storage_boxes.id IS E'the id of the storage id';
--- ddl-end --
-ALTER TABLE storage.storage_boxes OWNER TO postgres;
--- ddl-end --
-
--- object: parts.parts_manufacturers | type: TABLE --
--- DROP TABLE IF EXISTS parts.parts_manufacturers CASCADE;
-CREATE TABLE parts.parts_manufacturers (
+-- object: parts.part_manufacturers | type: TABLE --
+-- DROP TABLE IF EXISTS parts.part_manufacturers CASCADE;
+CREATE TABLE parts.part_manufacturers (
 	manufacturer_id text NOT NULL,
-	manufacturer parts.manufacturers NOT NULL,
 	id_parts bigint NOT NULL,
-	CONSTRAINT parts_manufacturers_pk PRIMARY KEY (manufacturer_id,manufacturer)
+	name_manufacturers text NOT NULL,
+	CONSTRAINT parts_manufacturers_pk PRIMARY KEY (manufacturer_id)
 
 );
 -- ddl-end --
-COMMENT ON COLUMN parts.parts_manufacturers.manufacturer_id IS E'is the id/name of the manufacturer and could be identical to parts.name';
+COMMENT ON COLUMN parts.part_manufacturers.manufacturer_id IS E'is the id/name of the part given by the manufacturer and could be identical to parts.name';
 -- ddl-end --
-ALTER TABLE parts.parts_manufacturers OWNER TO postgres;
--- ddl-end --
-
--- object: public.view_parts_parts_a_manufacturers | type: VIEW --
--- DROP VIEW IF EXISTS public.view_parts_parts_a_manufacturers CASCADE;
-CREATE VIEW public.view_parts_parts_a_manufacturers
-AS 
-
-SELECT parts.id AS part_id,
-    parts.name AS part_name,
-    parts.description AS part_description,
-    parts.weight AS part_weight,
-    parts.type AS part_type,
-    parts_manufacturers.manufacturer AS part_manufacturer,
-    parts_manufacturers.manufacturer_id AS part_manufacturer_id,
-    parts.id_3d_models AS id_3d_model
-   FROM (parts.parts
-     LEFT JOIN parts.parts_manufacturers ON ((parts.id = parts_manufacturers.id_parts)))
-  WHERE ((parts_manufacturers.id_parts IS NULL) OR (parts.id = parts_manufacturers.id_parts));
--- ddl-end --
-ALTER VIEW public.view_parts_parts_a_manufacturers OWNER TO postgres;
--- ddl-end --
-
--- object: public.view_parts_parts | type: VIEW --
--- DROP VIEW IF EXISTS public.view_parts_parts CASCADE;
-CREATE VIEW public.view_parts_parts
-AS 
-
-SELECT parts.id AS part_id,
-    parts.name AS part_name,
-    parts.description AS part_description,
-    parts.weight AS part_weight,
-    parts.type AS part_type,
-    parts.id_3d_models AS id_3d_model
-   FROM parts.parts;
--- ddl-end --
-ALTER VIEW public.view_parts_parts OWNER TO postgres;
--- ddl-end --
-
--- object: parts.unknown_parts | type: TABLE --
--- DROP TABLE IF EXISTS parts.unknown_parts CASCADE;
-CREATE TABLE parts.unknown_parts (
-	id_parts bigint NOT NULL,
-	CONSTRAINT "parts-type-check" CHECK ((parts.get_parts_type(id_parts) = 'unknown'::parts.types_enum)),
-	CONSTRAINT unknown_parts_pk PRIMARY KEY (id_parts),
-	CONSTRAINT unknown_parts_uq UNIQUE (id_parts)
-
-);
--- ddl-end --
-COMMENT ON TABLE parts.unknown_parts IS E'These are the propety of the parts';
--- ddl-end --
-COMMENT ON CONSTRAINT "parts-type-check" ON parts.unknown_parts  IS E'this cheks if the part is set as unknown in parts';
--- ddl-end --
-ALTER TABLE parts.unknown_parts OWNER TO postgres;
--- ddl-end --
-
--- object: public.view_parts_unknown_parts | type: VIEW --
--- DROP VIEW IF EXISTS public.view_parts_unknown_parts CASCADE;
-CREATE VIEW public.view_parts_unknown_parts
-AS 
-
-SELECT parts.id AS part_id,
-    parts.name AS part_name,
-    parts.description AS part_description,
-    parts.weight AS part_weight,
-    parts.type AS part_type,
-    unknown_parts.id_parts AS id_u_parts,
-    parts.id_3d_models AS id_3d_model
-   FROM (parts.parts
-     LEFT JOIN parts.unknown_parts ON ((parts.id = unknown_parts.id_parts)));
--- ddl-end --
-ALTER VIEW public.view_parts_unknown_parts OWNER TO postgres;
--- ddl-end --
-
--- object: public.view_parts_unknown_parts_a_manufacturers | type: VIEW --
--- DROP VIEW IF EXISTS public.view_parts_unknown_parts_a_manufacturers CASCADE;
-CREATE VIEW public.view_parts_unknown_parts_a_manufacturers
-AS 
-
-SELECT parts.id AS part_id,
-    parts.name AS part_name,
-    parts.description AS part_description,
-    parts.weight AS part_weight,
-    parts.type AS part_type,
-    parts_manufacturers.manufacturer AS part_manufacturer,
-    parts_manufacturers.manufacturer_id AS part_manufacturer_id,
-    unknown_parts.id_parts AS id_u_parts,
-    parts.id_3d_models AS id_3d_model
-   FROM ((parts.parts
-     LEFT JOIN parts.parts_manufacturers ON ((parts.id = parts_manufacturers.id_parts)))
-     LEFT JOIN parts.unknown_parts ON ((parts.id = unknown_parts.id_parts)));
--- ddl-end --
-ALTER VIEW public.view_parts_unknown_parts_a_manufacturers OWNER TO postgres;
--- ddl-end --
-
--- object: public.view_parts_documantations | type: VIEW --
--- DROP VIEW IF EXISTS public.view_parts_documantations CASCADE;
-CREATE VIEW public.view_parts_documantations
-AS 
-
-SELECT documantations.location AS documantations_location,
-    documantations.id_parts AS part_id,
-    documantations.name AS documantation_name,
-    documantations.description AS documantations_description
-   FROM parts.documantations;
--- ddl-end --
-ALTER VIEW public.view_parts_documantations OWNER TO postgres;
--- ddl-end --
-
--- object: public.view_parts_images | type: VIEW --
--- DROP VIEW IF EXISTS public.view_parts_images CASCADE;
-CREATE VIEW public.view_parts_images
-AS 
-
-SELECT images.image_id,
-    images.id_parts AS part_id,
-    images.image
-   FROM parts.images;
--- ddl-end --
-ALTER VIEW public.view_parts_images OWNER TO postgres;
--- ddl-end --
-
--- object: public.view_parts_manufacturers | type: VIEW --
--- DROP VIEW IF EXISTS public.view_parts_manufacturers CASCADE;
-CREATE VIEW public.view_parts_manufacturers
-AS 
-
-SELECT parts_manufacturers.id_parts AS part_id,
-    parts_manufacturers.manufacturer AS part_manufacturer,
-    parts_manufacturers.manufacturer_id AS part_manufacturer_id
-   FROM parts.parts_manufacturers;
--- ddl-end --
-ALTER VIEW public.view_parts_manufacturers OWNER TO postgres;
+ALTER TABLE parts.part_manufacturers OWNER TO postgres;
 -- ddl-end --
 
 -- object: assemblies.assemblies | type: TABLE --
 -- DROP TABLE IF EXISTS assemblies.assemblies CASCADE;
 CREATE TABLE assemblies.assemblies (
 	name text NOT NULL,
-	description text,
-	git_project text,
+	description text NOT NULL,
+	git_project text NOT NULL,
 	CONSTRAINT assemblies_pk PRIMARY KEY (name)
 
 );
@@ -370,36 +154,25 @@ ALTER TABLE assemblies.assembly_parts OWNER TO postgres;
 -- DROP TABLE IF EXISTS parts."3d_models" CASCADE;
 CREATE TABLE parts."3d_models" (
 	id bigint NOT NULL,
-	"3d_model" bytea NOT NULL,
+	type text NOT NULL,
 	CONSTRAINT "3d_models_pk" PRIMARY KEY (id)
 
 );
 -- ddl-end --
 COMMENT ON TABLE parts."3d_models" IS E'here are the images of the part saved';
 -- ddl-end --
-COMMENT ON COLUMN parts."3d_models"."3d_model" IS E'the image';
+COMMENT ON COLUMN parts."3d_models".type IS E'the model type(STL, WRL, ...)';
 -- ddl-end --
 ALTER TABLE parts."3d_models" OWNER TO postgres;
--- ddl-end --
-
--- object: public.view_parts_3d_models | type: VIEW --
--- DROP VIEW IF EXISTS public.view_parts_3d_models CASCADE;
-CREATE VIEW public.view_parts_3d_models
-AS 
-
-SELECT "3d_models".id AS id_3d_model,
-    "3d_models"."3d_model"
-   FROM parts."3d_models";
--- ddl-end --
-ALTER VIEW public.view_parts_3d_models OWNER TO postgres;
 -- ddl-end --
 
 -- object: kicad.footprints | type: TABLE --
 -- DROP TABLE IF EXISTS kicad.footprints CASCADE;
 CREATE TABLE kicad.footprints (
-	library text NOT NULL,
-	footprint text NOT NULL,
-	CONSTRAINT footprints_pk PRIMARY KEY (library,footprint)
+	id bigint NOT NULL,
+	library text,
+	footprint text,
+	CONSTRAINT footprints_pk PRIMARY KEY (id)
 
 );
 -- ddl-end --
@@ -409,9 +182,10 @@ ALTER TABLE kicad.footprints OWNER TO postgres;
 -- object: kicad.symbols | type: TABLE --
 -- DROP TABLE IF EXISTS kicad.symbols CASCADE;
 CREATE TABLE kicad.symbols (
-	library text NOT NULL,
-	symbol text NOT NULL,
-	CONSTRAINT symbols_pk PRIMARY KEY (library,symbol)
+	id bigint NOT NULL,
+	library text,
+	symbol text,
+	CONSTRAINT symbols_pk PRIMARY KEY (id)
 
 );
 -- ddl-end --
@@ -422,117 +196,11 @@ ALTER TABLE kicad.symbols OWNER TO postgres;
 -- DROP TABLE IF EXISTS kicad.parts CASCADE;
 CREATE TABLE kicad.parts (
 	id_parts bigint NOT NULL,
-	library_footprints text NOT NULL,
-	footprint_footprints text NOT NULL,
-	library_symbols text NOT NULL,
-	symbol_symbols text NOT NULL
+	id_footprints bigint NOT NULL,
+	id_symbols bigint NOT NULL
 );
 -- ddl-end --
 ALTER TABLE kicad.parts OWNER TO postgres;
--- ddl-end --
-
--- object: public.view_storage_storage_boxes | type: VIEW --
--- DROP VIEW IF EXISTS public.view_storage_storage_boxes CASCADE;
-CREATE VIEW public.view_storage_storage_boxes
-AS 
-
-SELECT storage_boxes.id AS box_id,
-    storage_boxes.id_parts AS part_id,
-    storage_boxes.size AS box_size,
-    storage_boxes.stock AS stocke
-   FROM storage.storage_boxes;
--- ddl-end --
-ALTER VIEW public.view_storage_storage_boxes OWNER TO postgres;
--- ddl-end --
-
--- object: public.view_storage_big_storage_places | type: VIEW --
--- DROP VIEW IF EXISTS public.view_storage_big_storage_places CASCADE;
-CREATE VIEW public.view_storage_big_storage_places
-AS 
-
-SELECT big_storage_places.id AS big_storage_place_id,
-    big_storage_places.id_storage_boxes,
-    big_storage_places.cabinet AS big_storage_place_cabinet,
-    big_storage_places.drawer AS big_storage_place_drawer,
-    big_storage_places.drawer_place_row AS big_storage_place_drawer_place_row,
-    big_storage_places.drawer_place_column AS big_storage_place_drawer_place_column
-   FROM storage.big_storage_places;
--- ddl-end --
-ALTER VIEW public.view_storage_big_storage_places OWNER TO postgres;
--- ddl-end --
-
--- object: public.view_storage_storage_boxes_a_big_storage_places | type: VIEW --
--- DROP VIEW IF EXISTS public.view_storage_storage_boxes_a_big_storage_places CASCADE;
-CREATE VIEW public.view_storage_storage_boxes_a_big_storage_places
-AS 
-
-SELECT storage_boxes.id AS box_id,
-    storage_boxes.id_parts AS part_id,
-    storage_boxes.size AS box_size,
-    storage_boxes.stock AS stocke,
-    big_storage_places.id AS big_storage_place_id,
-    big_storage_places.cabinet AS big_storage_place_cabinet,
-    big_storage_places.drawer AS big_storage_place_drawer,
-    big_storage_places.drawer_place_row AS big_storage_place_drawer_place_row,
-    big_storage_places.drawer_place_column AS big_storage_place_drawer_place_column
-   FROM (storage.storage_boxes
-     LEFT JOIN storage.big_storage_places ON ((storage_boxes.id = big_storage_places.id_storage_boxes)));
--- ddl-end --
-ALTER VIEW public.view_storage_storage_boxes_a_big_storage_places OWNER TO postgres;
--- ddl-end --
-
--- object: public.view_kicad_footprints | type: VIEW --
--- DROP VIEW IF EXISTS public.view_kicad_footprints CASCADE;
-CREATE VIEW public.view_kicad_footprints
-AS 
-
-SELECT footprints.library AS kicad_footprint_library,
-    footprints.footprint AS kicad_footprint
-   FROM kicad.footprints;
--- ddl-end --
-ALTER VIEW public.view_kicad_footprints OWNER TO postgres;
--- ddl-end --
-
--- object: public.view_kicad_symbols | type: VIEW --
--- DROP VIEW IF EXISTS public.view_kicad_symbols CASCADE;
-CREATE VIEW public.view_kicad_symbols
-AS 
-
-SELECT symbols.library AS kicad_symbol_library,
-    symbols.symbol AS kicad_symbol
-   FROM kicad.symbols;
--- ddl-end --
-ALTER VIEW public.view_kicad_symbols OWNER TO postgres;
--- ddl-end --
-
--- object: public.view_kicad_parts | type: VIEW --
--- DROP VIEW IF EXISTS public.view_kicad_parts CASCADE;
-CREATE VIEW public.view_kicad_parts
-AS 
-
-SELECT parts.id_parts AS part_id,
-    footprints.library AS kicad_footprint_library,
-    footprints.footprint AS kicad_footprint,
-    symbols.library AS kicad_symbol_library,
-    symbols.symbol AS kicad_symbol
-   FROM ((kicad.parts
-     JOIN kicad.footprints ON (((parts.library_footprints = footprints.library) AND (parts.footprint_footprints = footprints.footprint))))
-     JOIN kicad.symbols ON (((parts.library_symbols = symbols.library) AND (parts.symbol_symbols = symbols.symbol))));
--- ddl-end --
-ALTER VIEW public.view_kicad_parts OWNER TO postgres;
--- ddl-end --
-
--- object: public.view_assemblies_assemblies | type: VIEW --
--- DROP VIEW IF EXISTS public.view_assemblies_assemblies CASCADE;
-CREATE VIEW public.view_assemblies_assemblies
-AS 
-
-SELECT assemblies.name AS assembly_name,
-    assemblies.description AS assembly_description,
-    assemblies.git_project AS assembly_git_project
-   FROM assemblies.assemblies;
--- ddl-end --
-ALTER VIEW public.view_assemblies_assemblies OWNER TO postgres;
 -- ddl-end --
 
 -- object: pg_catalog.plpython3_validator | type: FUNCTION --
@@ -579,10 +247,7 @@ ALTER FUNCTION pg_catalog.plpython3_inline_handler(internal) OWNER TO postgres;
 
 -- object: plpython3u | type: LANGUAGE --
 -- DROP LANGUAGE IF EXISTS plpython3u CASCADE;
-CREATE  LANGUAGE plpython3u
-	HANDLER pg_catalog.plpython3_call_handler
-VALIDATOR pg_catalog.plpython3_validator
-INLINE pg_catalog.plpython3_inline_handler;
+CREATE  LANGUAGE plpython3u;
 -- ddl-end --
 ALTER LANGUAGE plpython3u OWNER TO postgres;
 -- ddl-end --
@@ -612,69 +277,445 @@ ALTER FUNCTION parts.get_next_part_id() OWNER TO postgres;
 COMMENT ON FUNCTION parts.get_next_part_id() IS E'returns the next avalible part id';
 -- ddl-end --
 
--- object: parts."<base>_parts" | type: TABLE --
--- DROP TABLE IF EXISTS parts."<base>_parts" CASCADE;
-CREATE TABLE parts."<base>_parts" (
-	id_parts bigint NOT NULL,
-	CONSTRAINT "parts-type-check" CHECK ((parts.get_parts_type(id_parts) = '<base>'::parts.types_enum)),
-	CONSTRAINT "<base>_parts_pk" PRIMARY KEY (id_parts),
-	CONSTRAINT "<base>_parts_uq" UNIQUE (id_parts)
+-- object: parts.part_types | type: TABLE --
+-- DROP TABLE IF EXISTS parts.part_types CASCADE;
+CREATE TABLE parts.part_types (
+	type text NOT NULL,
+	description text NOT NULL,
+	CONSTRAINT types_pk PRIMARY KEY (type)
 
 );
 -- ddl-end --
-COMMENT ON TABLE parts."<base>_parts" IS E'These are the propety of the parts';
+COMMENT ON TABLE parts.part_types IS E'this table contains all the posible types a part can have';
 -- ddl-end --
-COMMENT ON CONSTRAINT "parts-type-check" ON parts."<base>_parts"  IS E'this cheks if the part is set as <base> in parts';
--- ddl-end --
-ALTER TABLE parts."<base>_parts" OWNER TO postgres;
+ALTER TABLE parts.part_types OWNER TO postgres;
 -- ddl-end --
 
--- object: public."view_parts_<base>_parts_a_manufacturers" | type: VIEW --
--- DROP VIEW IF EXISTS public."view_parts_<base>_parts_a_manufacturers" CASCADE;
-CREATE VIEW public."view_parts_<base>_parts_a_manufacturers"
-AS 
-
-SELECT parts.id AS part_id,
-    parts.name AS part_name,
-    parts.description AS part_description,
-    parts.weight AS part_weight,
-    parts.type AS part_type,
-    parts_manufacturers.manufacturer AS part_manufacturer,
-    parts_manufacturers.manufacturer_id AS part_manufacturer_id,
-    <base>_parts.id_parts AS id_u_parts,
-	<base_par>,
-    parts.id_3d_models AS id_3d_model
-   FROM ((parts.parts
-     LEFT JOIN parts.parts_manufacturers ON ((parts.id = parts_manufacturers.id_parts)))
-     LEFT JOIN parts.<base>_parts ON ((parts.id = <base>_parts.id_parts)));
+-- object: parts."value-types" | type: TYPE --
+-- DROP TYPE IF EXISTS parts."value-types" CASCADE;
+CREATE TYPE parts."value-types" AS
+ ENUM ('bigint','text','double precision');
 -- ddl-end --
-ALTER VIEW public."view_parts_<base>_parts_a_manufacturers" OWNER TO postgres;
+ALTER TYPE parts."value-types" OWNER TO postgres;
 -- ddl-end --
 
--- object: public.view_parts_unknown_parts_cp | type: VIEW --
--- DROP VIEW IF EXISTS public.view_parts_unknown_parts_cp CASCADE;
-CREATE VIEW public.view_parts_unknown_parts_cp
-AS 
-
-SELECT parts.id AS part_id,
-    parts.name AS part_name,
-    parts.description AS part_description,
-    parts.weight AS part_weight,
-    parts.type AS part_type,
-    <base>_parts.id_parts AS id_u_parts,
-	<base_par>,
-    parts.id_3d_models AS id_3d_model
-   FROM (parts.parts
-     LEFT JOIN parts.<base>_parts ON ((parts.id = <base>_parts.id_parts)));
+-- object: parts.type_attributes | type: TABLE --
+-- DROP TABLE IF EXISTS parts.type_attributes CASCADE;
+CREATE TABLE parts.type_attributes (
+	"part-attribut" text NOT NULL,
+	"part-type" text NOT NULL
+);
 -- ddl-end --
-ALTER VIEW public.view_parts_unknown_parts_cp OWNER TO postgres;
+ALTER TABLE parts.type_attributes OWNER TO postgres;
+-- ddl-end --
+
+-- object: parts.part_attributes | type: TABLE --
+-- DROP TABLE IF EXISTS parts.part_attributes CASCADE;
+CREATE TABLE parts.part_attributes (
+	name text NOT NULL,
+	description text NOT NULL,
+	universal bool NOT NULL,
+	"value-type" text NOT NULL,
+	unit text NOT NULL,
+	CONSTRAINT attributes_pk PRIMARY KEY (name)
+
+);
+-- ddl-end --
+COMMENT ON TABLE parts.part_attributes IS E'this table contains all the posible attributes a part can have';
+-- ddl-end --
+COMMENT ON COLUMN parts.part_attributes.universal IS E'when true it means that any part type can have this attribut';
+-- ddl-end --
+ALTER TABLE parts.part_attributes OWNER TO postgres;
+-- ddl-end --
+
+-- object: parts.properties | type: TABLE --
+-- DROP TABLE IF EXISTS parts.properties CASCADE;
+CREATE TABLE parts.properties (
+	part_id bigint NOT NULL,
+	attribut text NOT NULL,
+	value text NOT NULL
+);
+-- ddl-end --
+ALTER TABLE parts.properties OWNER TO postgres;
+-- ddl-end --
+
+-- object: parts_fk | type: CONSTRAINT --
+-- ALTER TABLE parts.properties DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
+ALTER TABLE parts.properties ADD CONSTRAINT parts_fk FOREIGN KEY (part_id)
+REFERENCES parts.parts (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: parts.value_types | type: TABLE --
+-- DROP TABLE IF EXISTS parts.value_types CASCADE;
+CREATE TABLE parts.value_types (
+	type text NOT NULL,
+	description text NOT NULL,
+	CONSTRAINT "value-types_pk" PRIMARY KEY (type)
+
+);
+-- ddl-end --
+ALTER TABLE parts.value_types OWNER TO postgres;
+-- ddl-end --
+
+INSERT INTO parts.value_types (type, description) VALUES (E'integer', E'howl numbers');
+-- ddl-end --
+INSERT INTO parts.value_types (type, description) VALUES (E'double', E'floats');
+-- ddl-end --
+INSERT INTO parts.value_types (type, description) VALUES (E'string', E'text');
+-- ddl-end --
+INSERT INTO parts.value_types (type, description) VALUES (E'boolean', E'true and false');
+-- ddl-end --
+
+-- object: value_types_fk | type: CONSTRAINT --
+-- ALTER TABLE parts.part_attributes DROP CONSTRAINT IF EXISTS value_types_fk CASCADE;
+ALTER TABLE parts.part_attributes ADD CONSTRAINT value_types_fk FOREIGN KEY ("value-type")
+REFERENCES parts.value_types (type) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: global.units | type: TABLE --
+-- DROP TABLE IF EXISTS global.units CASCADE;
+CREATE TABLE global.units (
+	name text NOT NULL,
+	"short-name" text NOT NULL,
+	description text NOT NULL,
+	CONSTRAINT "base-unit_pk" PRIMARY KEY (name)
+
+);
+-- ddl-end --
+COMMENT ON TABLE global.units IS E'All the saved values are saved as a base unit';
+-- ddl-end --
+ALTER TABLE global.units OWNER TO postgres;
+-- ddl-end --
+
+-- object: part_types_fk | type: CONSTRAINT --
+-- ALTER TABLE parts.parts DROP CONSTRAINT IF EXISTS part_types_fk CASCADE;
+ALTER TABLE parts.parts ADD CONSTRAINT part_types_fk FOREIGN KEY (type)
+REFERENCES parts.part_types (type) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: part_types_fk | type: CONSTRAINT --
+-- ALTER TABLE parts.type_attributes DROP CONSTRAINT IF EXISTS part_types_fk CASCADE;
+ALTER TABLE parts.type_attributes ADD CONSTRAINT part_types_fk FOREIGN KEY ("part-type")
+REFERENCES parts.part_types (type) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: part_attributes_fk | type: CONSTRAINT --
+-- ALTER TABLE parts.properties DROP CONSTRAINT IF EXISTS part_attributes_fk CASCADE;
+ALTER TABLE parts.properties ADD CONSTRAINT part_attributes_fk FOREIGN KEY (attribut)
+REFERENCES parts.part_attributes (name) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: global.subunits | type: TABLE --
+-- DROP TABLE IF EXISTS global.subunits CASCADE;
+CREATE TABLE global.subunits (
+	name text NOT NULL,
+	"base-unit-name" text NOT NULL,
+	"short-name" text NOT NULL,
+	factor double precision NOT NULL,
+	description text,
+	CONSTRAINT subunits_pk PRIMARY KEY (name)
+
+);
+-- ddl-end --
+COMMENT ON TABLE global.subunits IS E'here are the sub units(z.B. from Meter there is the subunit mimimeter)';
+-- ddl-end --
+COMMENT ON COLUMN global.subunits.factor IS E'the faktor with that the (base)unit is multiplyt';
+-- ddl-end --
+ALTER TABLE global.subunits OWNER TO postgres;
+-- ddl-end --
+
+-- object: units_fk | type: CONSTRAINT --
+-- ALTER TABLE global.subunits DROP CONSTRAINT IF EXISTS units_fk CASCADE;
+ALTER TABLE global.subunits ADD CONSTRAINT units_fk FOREIGN KEY ("base-unit-name")
+REFERENCES global.units (name) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: parts.manufacturers | type: TABLE --
+-- DROP TABLE IF EXISTS parts.manufacturers CASCADE;
+CREATE TABLE parts.manufacturers (
+	name text NOT NULL,
+	CONSTRAINT manufacturers_pk PRIMARY KEY (name)
+
+);
+-- ddl-end --
+ALTER TABLE parts.manufacturers OWNER TO postgres;
+-- ddl-end --
+
+-- object: manufacturers_fk | type: CONSTRAINT --
+-- ALTER TABLE parts.part_manufacturers DROP CONSTRAINT IF EXISTS manufacturers_fk CASCADE;
+ALTER TABLE parts.part_manufacturers ADD CONSTRAINT manufacturers_fk FOREIGN KEY (name_manufacturers)
+REFERENCES parts.manufacturers (name) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: part_attributes_fk | type: CONSTRAINT --
+-- ALTER TABLE parts.type_attributes DROP CONSTRAINT IF EXISTS part_attributes_fk CASCADE;
+ALTER TABLE parts.type_attributes ADD CONSTRAINT part_attributes_fk FOREIGN KEY ("part-attribut")
+REFERENCES parts.part_attributes (name) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: storage.storage_boxes | type: TABLE --
+-- DROP TABLE IF EXISTS storage.storage_boxes CASCADE;
+CREATE TABLE storage.storage_boxes (
+	id bigint NOT NULL,
+	storage_box_size bigint NOT NULL,
+	storage_box_type text NOT NULL,
+	CONSTRAINT storage_boxes__pk PRIMARY KEY (id)
+
+);
+-- ddl-end --
+ALTER TABLE storage.storage_boxes OWNER TO postgres;
+-- ddl-end --
+
+-- object: storage.storage_box_sizes | type: TABLE --
+-- DROP TABLE IF EXISTS storage.storage_box_sizes CASCADE;
+CREATE TABLE storage.storage_box_sizes (
+	id bigint NOT NULL,
+	hight double precision NOT NULL,
+	width double precision NOT NULL,
+	depth double precision NOT NULL,
+	CONSTRAINT storage_box_sizes_pk PRIMARY KEY (id)
+
+);
+-- ddl-end --
+COMMENT ON COLUMN storage.storage_box_sizes.hight IS E'the box hight in mm';
+-- ddl-end --
+COMMENT ON COLUMN storage.storage_box_sizes.width IS E'the box width in mm';
+-- ddl-end --
+COMMENT ON COLUMN storage.storage_box_sizes.depth IS E'the box depth in mm';
+-- ddl-end --
+ALTER TABLE storage.storage_box_sizes OWNER TO postgres;
+-- ddl-end --
+
+-- object: storage_box_sizes_fk | type: CONSTRAINT --
+-- ALTER TABLE storage.storage_boxes DROP CONSTRAINT IF EXISTS storage_box_sizes_fk CASCADE;
+ALTER TABLE storage.storage_boxes ADD CONSTRAINT storage_box_sizes_fk FOREIGN KEY (storage_box_size)
+REFERENCES storage.storage_box_sizes (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: storage.storage_box_types | type: TABLE --
+-- DROP TABLE IF EXISTS storage.storage_box_types CASCADE;
+CREATE TABLE storage.storage_box_types (
+	type text NOT NULL,
+	description text NOT NULL,
+	CONSTRAINT storage_box_types_pk PRIMARY KEY (type)
+
+);
+-- ddl-end --
+ALTER TABLE storage.storage_box_types OWNER TO postgres;
+-- ddl-end --
+
+-- object: storage_box_types_fk | type: CONSTRAINT --
+-- ALTER TABLE storage.storage_boxes DROP CONSTRAINT IF EXISTS storage_box_types_fk CASCADE;
+ALTER TABLE storage.storage_boxes ADD CONSTRAINT storage_box_types_fk FOREIGN KEY (storage_box_type)
+REFERENCES storage.storage_box_types (type) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: storage.part_stoge_boxes | type: TABLE --
+-- DROP TABLE IF EXISTS storage.part_stoge_boxes CASCADE;
+CREATE TABLE storage.part_stoge_boxes (
+	box bigint NOT NULL,
+	part bigint NOT NULL,
+	quantity double precision NOT NULL,
+	unit text NOT NULL
+);
+-- ddl-end --
+ALTER TABLE storage.part_stoge_boxes OWNER TO postgres;
+-- ddl-end --
+
+-- object: storage_boxes_fk | type: CONSTRAINT --
+-- ALTER TABLE storage.part_stoge_boxes DROP CONSTRAINT IF EXISTS storage_boxes_fk CASCADE;
+ALTER TABLE storage.part_stoge_boxes ADD CONSTRAINT storage_boxes_fk FOREIGN KEY (box)
+REFERENCES storage.storage_boxes (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: parts_fk | type: CONSTRAINT --
+-- ALTER TABLE storage.part_stoge_boxes DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
+ALTER TABLE storage.part_stoge_boxes ADD CONSTRAINT parts_fk FOREIGN KEY (part)
+REFERENCES parts.parts (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: units_fk | type: CONSTRAINT --
+-- ALTER TABLE parts.part_attributes DROP CONSTRAINT IF EXISTS units_fk CASCADE;
+ALTER TABLE parts.part_attributes ADD CONSTRAINT units_fk FOREIGN KEY (unit)
+REFERENCES global.units (name) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: units_fk | type: CONSTRAINT --
+-- ALTER TABLE storage.part_stoge_boxes DROP CONSTRAINT IF EXISTS units_fk CASCADE;
+ALTER TABLE storage.part_stoge_boxes ADD CONSTRAINT units_fk FOREIGN KEY (unit)
+REFERENCES global.units (name) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: storage.storage_drawers | type: TABLE --
+-- DROP TABLE IF EXISTS storage.storage_drawers CASCADE;
+CREATE TABLE storage.storage_drawers (
+	id bigint NOT NULL,
+	size bigint NOT NULL,
+	CONSTRAINT storage_drawers_pk PRIMARY KEY (id)
+
+);
+-- ddl-end --
+ALTER TABLE storage.storage_drawers OWNER TO postgres;
+-- ddl-end --
+
+-- object: storage.storage_drawer_sizes | type: TABLE --
+-- DROP TABLE IF EXISTS storage.storage_drawer_sizes CASCADE;
+CREATE TABLE storage.storage_drawer_sizes (
+	id bigint NOT NULL,
+	hight double precision NOT NULL,
+	width bigint NOT NULL,
+	depth bigint NOT NULL,
+	CONSTRAINT storage_box_sizes_pk_cp PRIMARY KEY (id)
+
+);
+-- ddl-end --
+COMMENT ON COLUMN storage.storage_drawer_sizes.hight IS E'the box hight in mm';
+-- ddl-end --
+COMMENT ON COLUMN storage.storage_drawer_sizes.width IS E'the number of boxes in the width';
+-- ddl-end --
+COMMENT ON COLUMN storage.storage_drawer_sizes.depth IS E'the number of boxes in the depth';
+-- ddl-end --
+ALTER TABLE storage.storage_drawer_sizes OWNER TO postgres;
+-- ddl-end --
+
+-- object: storage_drawer_sizes_fk | type: CONSTRAINT --
+-- ALTER TABLE storage.storage_drawers DROP CONSTRAINT IF EXISTS storage_drawer_sizes_fk CASCADE;
+ALTER TABLE storage.storage_drawers ADD CONSTRAINT storage_drawer_sizes_fk FOREIGN KEY (size)
+REFERENCES storage.storage_drawer_sizes (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: storage.storage_box_drawers | type: TABLE --
+-- DROP TABLE IF EXISTS storage.storage_box_drawers CASCADE;
+CREATE TABLE storage.storage_box_drawers (
+	drawer bigint NOT NULL,
+	id_storage_boxes bigint,
+	width text NOT NULL,
+	depth bigint NOT NULL
+);
+-- ddl-end --
+COMMENT ON COLUMN storage.storage_box_drawers.width IS E'the width coordinate\nstarting with A';
+-- ddl-end --
+COMMENT ON COLUMN storage.storage_box_drawers.depth IS E'the depth coordinate\nstarting with 0';
+-- ddl-end --
+ALTER TABLE storage.storage_box_drawers OWNER TO postgres;
+-- ddl-end --
+
+-- object: storage_drawers_fk | type: CONSTRAINT --
+-- ALTER TABLE storage.storage_box_drawers DROP CONSTRAINT IF EXISTS storage_drawers_fk CASCADE;
+ALTER TABLE storage.storage_box_drawers ADD CONSTRAINT storage_drawers_fk FOREIGN KEY (drawer)
+REFERENCES storage.storage_drawers (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: storage_boxes_fk | type: CONSTRAINT --
+-- ALTER TABLE storage.storage_box_drawers DROP CONSTRAINT IF EXISTS storage_boxes_fk CASCADE;
+ALTER TABLE storage.storage_box_drawers ADD CONSTRAINT storage_boxes_fk FOREIGN KEY (id_storage_boxes)
+REFERENCES storage.storage_boxes (id) MATCH FULL
+ON DELETE SET NULL ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: storage.storage_cabinets | type: TABLE --
+-- DROP TABLE IF EXISTS storage.storage_cabinets CASCADE;
+CREATE TABLE storage.storage_cabinets (
+	id bigint NOT NULL,
+	drawer_number bigint NOT NULL,
+	storage_drawer_size bigint,
+	location text,
+	CONSTRAINT storage_cabinets_pk PRIMARY KEY (id)
+
+);
+-- ddl-end --
+ALTER TABLE storage.storage_cabinets OWNER TO postgres;
+-- ddl-end --
+
+-- object: storage_drawer_sizes_fk | type: CONSTRAINT --
+-- ALTER TABLE storage.storage_cabinets DROP CONSTRAINT IF EXISTS storage_drawer_sizes_fk CASCADE;
+ALTER TABLE storage.storage_cabinets ADD CONSTRAINT storage_drawer_sizes_fk FOREIGN KEY (storage_drawer_size)
+REFERENCES storage.storage_drawer_sizes (id) MATCH FULL
+ON DELETE SET NULL ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: storage.storage_drawer_cabinets | type: TABLE --
+-- DROP TABLE IF EXISTS storage.storage_drawer_cabinets CASCADE;
+CREATE TABLE storage.storage_drawer_cabinets (
+	id_storage_cabinets bigint NOT NULL,
+	id_storage_drawers bigint NOT NULL,
+	place bigint NOT NULL
+);
+-- ddl-end --
+ALTER TABLE storage.storage_drawer_cabinets OWNER TO postgres;
+-- ddl-end --
+
+-- object: storage_cabinets_fk | type: CONSTRAINT --
+-- ALTER TABLE storage.storage_drawer_cabinets DROP CONSTRAINT IF EXISTS storage_cabinets_fk CASCADE;
+ALTER TABLE storage.storage_drawer_cabinets ADD CONSTRAINT storage_cabinets_fk FOREIGN KEY (id_storage_cabinets)
+REFERENCES storage.storage_cabinets (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: storage_drawers_fk | type: CONSTRAINT --
+-- ALTER TABLE storage.storage_drawer_cabinets DROP CONSTRAINT IF EXISTS storage_drawers_fk CASCADE;
+ALTER TABLE storage.storage_drawer_cabinets ADD CONSTRAINT storage_drawers_fk FOREIGN KEY (id_storage_drawers)
+REFERENCES storage.storage_drawers (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: storage_drawer_cabinets_uq | type: CONSTRAINT --
+-- ALTER TABLE storage.storage_drawer_cabinets DROP CONSTRAINT IF EXISTS storage_drawer_cabinets_uq CASCADE;
+ALTER TABLE storage.storage_drawer_cabinets ADD CONSTRAINT storage_drawer_cabinets_uq UNIQUE (id_storage_drawers);
+-- ddl-end --
+
+-- object: footprints_fk | type: CONSTRAINT --
+-- ALTER TABLE kicad.parts DROP CONSTRAINT IF EXISTS footprints_fk CASCADE;
+ALTER TABLE kicad.parts ADD CONSTRAINT footprints_fk FOREIGN KEY (id_footprints)
+REFERENCES kicad.footprints (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: symbols_fk | type: CONSTRAINT --
+-- ALTER TABLE kicad.parts DROP CONSTRAINT IF EXISTS symbols_fk CASCADE;
+ALTER TABLE kicad.parts ADD CONSTRAINT symbols_fk FOREIGN KEY (id_symbols)
+REFERENCES kicad.symbols (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: parts."3d_models_parts" | type: TABLE --
+-- DROP TABLE IF EXISTS parts."3d_models_parts" CASCADE;
+CREATE TABLE parts."3d_models_parts" (
+	id_3d_models bigint NOT NULL,
+	id_parts bigint NOT NULL
+);
+-- ddl-end --
+ALTER TABLE parts."3d_models_parts" OWNER TO postgres;
 -- ddl-end --
 
 -- object: "3d_models_fk" | type: CONSTRAINT --
--- ALTER TABLE parts.parts DROP CONSTRAINT IF EXISTS "3d_models_fk" CASCADE;
-ALTER TABLE parts.parts ADD CONSTRAINT "3d_models_fk" FOREIGN KEY (id_3d_models)
+-- ALTER TABLE parts."3d_models_parts" DROP CONSTRAINT IF EXISTS "3d_models_fk" CASCADE;
+ALTER TABLE parts."3d_models_parts" ADD CONSTRAINT "3d_models_fk" FOREIGN KEY (id_3d_models)
 REFERENCES parts."3d_models" (id) MATCH FULL
-ON DELETE SET NULL ON UPDATE CASCADE;
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: parts_fk | type: CONSTRAINT --
+-- ALTER TABLE parts."3d_models_parts" DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
+ALTER TABLE parts."3d_models_parts" ADD CONSTRAINT parts_fk FOREIGN KEY (id_parts)
+REFERENCES parts.parts (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: parts_fk | type: CONSTRAINT --
@@ -691,30 +732,9 @@ REFERENCES parts.parts (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
--- object: storage_boxes_fk | type: CONSTRAINT --
--- ALTER TABLE storage.big_storage_places DROP CONSTRAINT IF EXISTS storage_boxes_fk CASCADE;
-ALTER TABLE storage.big_storage_places ADD CONSTRAINT storage_boxes_fk FOREIGN KEY (id_storage_boxes)
-REFERENCES storage.storage_boxes (id) MATCH FULL
-ON DELETE SET NULL ON UPDATE CASCADE;
--- ddl-end --
-
 -- object: parts_fk | type: CONSTRAINT --
--- ALTER TABLE storage.storage_boxes DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
-ALTER TABLE storage.storage_boxes ADD CONSTRAINT parts_fk FOREIGN KEY (id_parts)
-REFERENCES parts.parts (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
--- ddl-end --
-
--- object: parts_fk | type: CONSTRAINT --
--- ALTER TABLE parts.parts_manufacturers DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
-ALTER TABLE parts.parts_manufacturers ADD CONSTRAINT parts_fk FOREIGN KEY (id_parts)
-REFERENCES parts.parts (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
--- ddl-end --
-
--- object: parts_fk | type: CONSTRAINT --
--- ALTER TABLE parts.unknown_parts DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
-ALTER TABLE parts.unknown_parts ADD CONSTRAINT parts_fk FOREIGN KEY (id_parts)
+-- ALTER TABLE parts.part_manufacturers DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
+ALTER TABLE parts.part_manufacturers ADD CONSTRAINT parts_fk FOREIGN KEY (id_parts)
 REFERENCES parts.parts (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
@@ -736,27 +756,6 @@ ON DELETE RESTRICT ON UPDATE CASCADE;
 -- object: parts_fk | type: CONSTRAINT --
 -- ALTER TABLE kicad.parts DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
 ALTER TABLE kicad.parts ADD CONSTRAINT parts_fk FOREIGN KEY (id_parts)
-REFERENCES parts.parts (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
--- ddl-end --
-
--- object: footprints_fk | type: CONSTRAINT --
--- ALTER TABLE kicad.parts DROP CONSTRAINT IF EXISTS footprints_fk CASCADE;
-ALTER TABLE kicad.parts ADD CONSTRAINT footprints_fk FOREIGN KEY (library_footprints,footprint_footprints)
-REFERENCES kicad.footprints (library,footprint) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
--- ddl-end --
-
--- object: symbols_fk | type: CONSTRAINT --
--- ALTER TABLE kicad.parts DROP CONSTRAINT IF EXISTS symbols_fk CASCADE;
-ALTER TABLE kicad.parts ADD CONSTRAINT symbols_fk FOREIGN KEY (library_symbols,symbol_symbols)
-REFERENCES kicad.symbols (library,symbol) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
--- ddl-end --
-
--- object: parts_fk | type: CONSTRAINT --
--- ALTER TABLE parts."<base>_parts" DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
-ALTER TABLE parts."<base>_parts" ADD CONSTRAINT parts_fk FOREIGN KEY (id_parts)
 REFERENCES parts.parts (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
