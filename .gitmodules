@@ -1,0 +1,3 @@
+[submodule "middleware/QtWebApp"]
+	path = middleware/QtWebApp
+	url = https://github.com/tobiasfalk/QtWebApp_cmake_target.git
