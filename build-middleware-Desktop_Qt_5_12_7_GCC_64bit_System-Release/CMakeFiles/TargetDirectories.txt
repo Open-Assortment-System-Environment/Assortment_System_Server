@@ -1,0 +1,4 @@
+/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_5_12_7_GCC_64bit_System-Release/CMakeFiles/rebuild_cache.dir
+/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_5_12_7_GCC_64bit_System-Release/CMakeFiles/edit_cache.dir
+/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_5_12_7_GCC_64bit_System-Release/CMakeFiles/middleware.dir
+/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_5_12_7_GCC_64bit_System-Release/CMakeFiles/middleware_autogen.dir

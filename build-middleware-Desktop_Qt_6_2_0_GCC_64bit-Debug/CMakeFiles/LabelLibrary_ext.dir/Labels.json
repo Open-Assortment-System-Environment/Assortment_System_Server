@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_6_2_0_GCC_64bit-Debug/CMakeFiles/LabelLibrary_ext"
+		},
+		{
+			"file" : "/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_6_2_0_GCC_64bit-Debug/CMakeFiles/LabelLibrary_ext.rule"
+		},
+		{
+			"file" : "/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_6_2_0_GCC_64bit-Debug/CMakeFiles/LabelLibrary_ext-complete.rule"
+		},
+		{
+			"file" : "/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_6_2_0_GCC_64bit-Debug/LabelLibrary_ext-prefix/src/LabelLibrary_ext-stamp/LabelLibrary_ext-build.rule"
+		},
+		{
+			"file" : "/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_6_2_0_GCC_64bit-Debug/LabelLibrary_ext-prefix/src/LabelLibrary_ext-stamp/LabelLibrary_ext-configure.rule"
+		},
+		{
+			"file" : "/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_6_2_0_GCC_64bit-Debug/LabelLibrary_ext-prefix/src/LabelLibrary_ext-stamp/LabelLibrary_ext-download.rule"
+		},
+		{
+			"file" : "/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_6_2_0_GCC_64bit-Debug/LabelLibrary_ext-prefix/src/LabelLibrary_ext-stamp/LabelLibrary_ext-install.rule"
+		},
+		{
+			"file" : "/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_6_2_0_GCC_64bit-Debug/LabelLibrary_ext-prefix/src/LabelLibrary_ext-stamp/LabelLibrary_ext-mkdir.rule"
+		},
+		{
+			"file" : "/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_6_2_0_GCC_64bit-Debug/LabelLibrary_ext-prefix/src/LabelLibrary_ext-stamp/LabelLibrary_ext-patch.rule"
+		},
+		{
+			"file" : "/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_6_2_0_GCC_64bit-Debug/LabelLibrary_ext-prefix/src/LabelLibrary_ext-stamp/LabelLibrary_ext-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"LabelLibrary_ext"
+		],
+		"name" : "LabelLibrary_ext"
+	}
+}

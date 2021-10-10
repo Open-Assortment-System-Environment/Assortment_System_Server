@@ -1,0 +1,69 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.19"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "middleware",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "middleware::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-middleware-Debug-6eb735847da0e75b81d7.json",
+					"name" : "middleware",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "middleware_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-middleware_autogen-Debug-e3c238c158d8ca64e36f.json",
+					"name" : "middleware_autogen",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_5_12_7_GCC_64bit_System-Debug",
+		"source" : "/silo0/GitHubDesktop/Assortment_System_Server/middleware"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}
