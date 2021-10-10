@@ -72,3 +72,4 @@ Thumbs.db
 *.exe
 
 middleware/QtWebApp
+middleware/CMakeLists.txt.user
