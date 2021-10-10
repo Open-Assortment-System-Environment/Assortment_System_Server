@@ -2,6 +2,8 @@
 set(COMMANDTHREAD_SRC
     commandthread.h
     commandthread.cpp
+    stopC1.cpp
+    helpC2.cpp
 )
 
 # creat SHARED lib

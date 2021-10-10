@@ -4,23 +4,27 @@ CommandThread::CommandThread(QCoreApplication *app)
 {
     APP = app;
     initCommandMap();
+    in = new QTextStream(stdin);
+    out = new QTextStream(stdout);
 }
 
 void CommandThread::run()
 {
     while(true)
     {
-        QTextStream s(stdin);
-        QString value = s.readLine();
-        QString comm = value;
-        QString par = "";
-        if(value.indexOf(":") > 0)
+        QString value = in->readLine();
+        if(value.length() != 0)
         {
-            QStringList commANDpar = value.split(':');
-            comm = commANDpar[0];
-            par = commANDpar[1];
+            QString comm = value;
+            QString par = "";
+            if(value.indexOf(":") > 0)
+            {
+                QStringList commANDpar = value.split(':');
+                comm = commANDpar[0];
+                par = commANDpar[1];
+            }
+            parsCommand(comm, par);
         }
-        parsCommand(comm, par);
     }
 }
 
@@ -54,45 +58,5 @@ void CommandThread::parsCommand(QString comm, QString par, bool help)
 
 void CommandThread::unknownC0()
 {
-    qInfo() << "Unknown command";
-}
-
-void CommandThread::stopC1(QString parameters)
-{
-    if(parameters == "help")
-    {
-        qInfo() << helpStopC1;
-    }
-    else
-    {
-        qInfo() << "STOPING APP";
-        APP->exit(0);
-    }
-}
-
-void CommandThread::helpC2(QString parameters)
-{
-    if(parameters == "help")
-    {
-        qInfo() << "Command: " << "help";
-        qInfo() << "id: " << "2";
-        qInfo() << helpHelpC2;
-    }
-    else if(parameters.length() > 0 && commandMap[parameters] != 0)
-    {
-        qInfo() << "Command: " << parameters;
-        qInfo() << "id: " << commandMap[parameters];
-        parsCommand(parameters, "help", true);
-    }
-    else
-    {
-        QList<QString> comKeys = commandMap.keys();
-        foreach(QString key, comKeys)
-        {
-            qInfo() << "Command: " << key;
-            qInfo() << "id: " << commandMap[key];
-            parsCommand(key, "help", true);
-
-        }
-    }
+    qInfo().noquote() << "Unknown command";
 }

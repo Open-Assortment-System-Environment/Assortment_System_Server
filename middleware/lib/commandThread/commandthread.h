@@ -5,12 +5,21 @@
 #include <QDebug>
 #include <QCoreApplication>
 
+#include <iostream>
+
 
 class CommandThread : public QThread
 {
 public:
     CommandThread(QCoreApplication *app);
 private:
+    QTextStream& qStdOut()
+    {
+        static QTextStream ts( stdout );
+        return ts;
+    }
+    QTextStream *in;
+    QTextStream *out;
     ///
     /// \brief commandMap for identefien the id of the command
     ///
