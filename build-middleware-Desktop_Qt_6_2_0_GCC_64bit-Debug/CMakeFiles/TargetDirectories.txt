@@ -1,5 +1,0 @@
-/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_6_2_0_GCC_64bit-Debug/CMakeFiles/rebuild_cache.dir
-/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_6_2_0_GCC_64bit-Debug/CMakeFiles/edit_cache.dir
-/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_6_2_0_GCC_64bit-Debug/CMakeFiles/middleware.dir
-/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_6_2_0_GCC_64bit-Debug/CMakeFiles/middleware_autogen_timestamp_deps.dir
-/silo0/GitHubDesktop/Assortment_System_Server/build-middleware-Desktop_Qt_6_2_0_GCC_64bit-Debug/CMakeFiles/middleware_autogen.dir

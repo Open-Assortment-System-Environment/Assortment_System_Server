@@ -1,1 +1,0 @@
-cmd='/opt/Qt/Tools/CMake/bin/cmake;-DCMAKE_BUILD_TYPE=Debug;-DCMAKE_C_COMPILER=/usr/bin/gcc-10;-DCMAKE_CXX_COMPILER=/usr/bin/g++-10;-DCMAKE_INSTALL_PREFIX:PATH=/usr/local/lib/assortment_system/middleware/EXT_INSTALLS/;-DQT_QMAKE_EXECUTABLE=/usr/bin/qmake-qt5;-DEXT_INSTALL_PREFIX=/usr/local/lib/assortment_system/middleware/EXT_INSTALLS/;-GNinja;<SOURCE_DIR><SOURCE_SUBDIR>'

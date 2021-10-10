@@ -1,3 +1,0 @@
-repository='/silo0/Projekte/assortment_system/label-library/'
-module=''
-tag='origin'
