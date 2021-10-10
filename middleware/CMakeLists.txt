@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 
+# set project
 project(middleware LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -9,16 +10,42 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+# set config variables
+set(CONFIG_DIR "/etc/as_middleware/" CACHE STRING "Sets the folder for the config files, for developments use other dir")
+
+# add install for Config dir
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/etc/ DESTINATION ${CONFIG_DIR})
+
+# configure files
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/global_main.in.h ${CMAKE_BINARY_DIR}/global_main.h)
+
+# set C++ settings
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# find packages
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets REQUIRED)
 
+# add subdirectorys
+add_subdirectory(QtWebApp/)
+add_subdirectory(lib/)
+
+# creat sorce variables
+set(MAIN_SOURCE
+    ${CMAKE_BINARY_DIR}/global_main.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+)
+
+# creat executable
 add_executable(middleware
-  main.cpp
+  ${MAIN_SOURCE}
 )
 target_link_libraries(middleware
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Widgets
+    QtWebApp_Httpserver
+    QtWebApp_Logging
+    QtWebApp_Templateengine
+    commandThread
 )

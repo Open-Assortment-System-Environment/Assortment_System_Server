@@ -1,8 +1,16 @@
 #include <QApplication>
 
+#include "global_main.h"
+
+#include "commandthread.h"
+
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
+    qInfo() << "Config dir: " << CONFIG_DIR;
 
-    return a.exec();
+    CommandThread commandThread(&app);
+    commandThread.start();
+
+    return app.exec();
 }
