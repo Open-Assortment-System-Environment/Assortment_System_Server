@@ -1,10 +1,12 @@
 #ifndef COMMANDTHREAD_H
 #define COMMANDTHREAD_H
 
+// Qt Includes
 #include <QThread>
 #include <QDebug>
 #include <QCoreApplication>
 
+// std c++ Includes
 #include <iostream>
 
 

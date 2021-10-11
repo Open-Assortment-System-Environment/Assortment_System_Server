@@ -1,11 +1,14 @@
+// Qt Includes
 #include <QApplication>
 
-#include "global_main.h"
-
-#include "commandthread.h"
-
+// QtWebApp Includes
 #include "httplistener.h"
 
+// local Includes
+#include "global_main.h"
+
+// target Includes
+#include "commandthread.h"
 #include "requestmapper.h"
 
 int main(int argc, char *argv[])

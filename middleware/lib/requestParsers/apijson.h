@@ -1,9 +1,11 @@
 #ifndef APIJSON_H
 #define APIJSON_H
 
+// Qt Includes
 #include <QJsonDocument>
 #include <QJsonObject>
 
+// QtWebApp Includes
 #include "httprequesthandler.h"
 
 class ApiJSON : public stefanfrings::HttpRequestHandler
