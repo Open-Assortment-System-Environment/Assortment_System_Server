@@ -1,0 +1,28 @@
+{
+  "request":
+  {
+    "request_type": "search",
+    "search": "parts",
+    "by":
+    [
+      {
+        "name": "param_name",
+        "from": "param_from_value",
+        "to": "param_to_value",
+        "priorety": "search_priorety"
+      },
+      {
+        "name": "param_name",
+        "from": "param_from_value",
+        "to": "param_to_value",
+        "priorety": "search_priorety"
+      },
+      {
+        "name": "param_name",
+        "from": "param_from_value",
+        "to": "param_to_value",
+        "priorety": "search_priorety"
+      }
+    ]
+  }
+}

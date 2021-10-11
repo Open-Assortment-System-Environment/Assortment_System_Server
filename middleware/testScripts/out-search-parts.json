@@ -1,0 +1,84 @@
+{
+  "request":
+  {
+    "request_type": "search",
+    "search": "parts",
+    "by":
+    [
+      {
+        "name": "param_name",
+        "from": "param_from_value",
+        "to": "param_to_value",
+        "priorety": "search_priorety"
+      },
+      {
+        "name": "param_name",
+        "from": "param_from_value",
+        "to": "param_to_value",
+        "priorety": "search_priorety"
+      },
+      {
+        "name": "param_name",
+        "from": "param_from_value",
+        "to": "param_to_value",
+        "priorety": "search_priorety"
+      }
+    ]
+  },
+
+  "result":
+  {
+    "parts":
+    [
+      {
+        "id": 0,
+        "name": "part_name",
+        "description": "part_description",
+        "weight": null,
+        "id_3d_models": null,
+        "type": "part_type",
+        "custom_parameters":
+        [
+          {
+            "name": "param_name",
+            "value": "param_value",
+            "priorety": "search_priorety"
+          },
+          {
+            "name": "param_name",
+            "value": "param_value",
+            "priorety": "search_priorety"
+          },
+          {
+            "name": "param_name",
+            "value": "param_value",
+            "priorety": "search_priorety"
+          }
+        ]
+      },
+      {
+        "id": 42,
+        "name": "part_name",
+        "description": "part_description",
+        "weight": 4.242,
+        "id_3d_models": 42,
+        "type": "part_type",
+        "custom_parameters":
+        [
+          {
+            "name": "param_name",
+            "value": "param_value"
+          },
+          {
+            "name": "param_name",
+            "value": "param_value"
+          },
+          {
+            "name": "param_name",
+            "value": "param_value"
+          }
+        ]
+      }
+    ]
+  }
+}

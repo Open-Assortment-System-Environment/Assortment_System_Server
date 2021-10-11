@@ -1,0 +1,7 @@
+{
+  "request":
+  {
+    "request_type": "get_all",
+    "which": "parts"
+  }
+}
