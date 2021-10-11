@@ -1,2 +1,3 @@
 add_subdirectory(commandThread/)
-add_subdirectory(requestParser/)
+add_subdirectory(requestParsers/)
+add_subdirectory(requestMapper/)

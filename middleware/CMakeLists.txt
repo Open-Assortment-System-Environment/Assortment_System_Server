@@ -48,4 +48,5 @@ target_link_libraries(middleware
     QtWebApp_Logging
     QtWebApp_Templateengine
     commandThread
+    requestMapper
 )
