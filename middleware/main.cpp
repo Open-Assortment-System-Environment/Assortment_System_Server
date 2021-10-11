@@ -19,14 +19,14 @@ int main(int argc, char *argv[])
     commandThread.start();
 
     QString configFile = CONFIG_DIR;
-    configFile+=  "/config.ini";
+    configFile +=  "/config.ini";
     QSettings* listenerSettings = new QSettings(configFile, QSettings::IniFormat,&app);
     qDebug("config file loaded");
 
     listenerSettings->beginGroup("listener");
 
     // Start the HTTP server
-    new HttpListener(listenerSettings,new RequestMapper(&app),&app);
+    new stefanfrings::HttpListener(listenerSettings,new RequestMapper(&app),&app);
 
     return app.exec();
 }
