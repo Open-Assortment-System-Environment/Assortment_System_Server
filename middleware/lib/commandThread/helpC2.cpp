@@ -8,19 +8,19 @@ void CommandThread::helpC2(QString parameters)
         qInfo().noquote() << "id: " << "2";
         qInfo().noquote() << helpHelpC2;
     }
-    else if(parameters.length() > 0 && commandMap[parameters] != 0)
+    else if(parameters.length() > 0 && commandMap->value(parameters) != 0)
     {
         qInfo().noquote() << "Command: " << parameters;
-        qInfo().noquote() << "id: " << commandMap[parameters];
+        qInfo().noquote() << "id: " << commandMap->value(parameters);
         parsCommand(parameters, "help", true);
     }
     else
     {
-        QList<QString> comKeys = commandMap.keys();
+        QList<QString> comKeys = commandMap->keys();
         foreach(QString key, comKeys)
         {
             qInfo().noquote() << "Command: " << key;
-            qInfo().noquote() << "id: " << commandMap[key];
+            qInfo().noquote() << "id: " << commandMap->value(key);
             parsCommand(key, "help", true);
             qInfo().noquote() << "";
 

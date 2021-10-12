@@ -25,7 +25,7 @@ private:
     ///
     /// \brief commandMap for identefien the id of the command
     ///
-    QMap<QString, int> commandMap;
+    QMap<QString, int> *commandMap = new QMap<QString, int>;
     ///
     /// \brief helpStopC1 help text of stop
     ///

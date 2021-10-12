@@ -9,6 +9,7 @@ void CommandThread::stopC1(QString parameters)
     else
     {
         qInfo().noquote() << "STOPING APP";
+        this->deleteLater();
         APP->exit(0);
     }
 }

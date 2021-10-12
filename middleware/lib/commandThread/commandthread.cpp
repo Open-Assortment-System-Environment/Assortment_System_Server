@@ -31,13 +31,13 @@ void CommandThread::run()
 void CommandThread::initCommandMap()
 {
     // no 0
-    commandMap.insert("stop", 1);
-    commandMap.insert("help", 2);
+    commandMap->insert("stop", 1);
+    commandMap->insert("help", 2);
 }
 
 void CommandThread::parsCommand(QString comm, QString par, bool help)
 {
-    switch (commandMap[comm])
+    switch (commandMap->value(comm))
     {
         case 0: //when the Command is not known
             unknownC0();
