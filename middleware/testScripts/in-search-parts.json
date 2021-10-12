@@ -1,6 +1,7 @@
 {
   "request":
   {
+    "completeed": false,
     "request_type": "search",
     "search": "parts",
     "by":
