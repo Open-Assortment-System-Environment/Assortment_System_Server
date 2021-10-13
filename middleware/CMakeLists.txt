@@ -12,6 +12,7 @@ set(CMAKE_AUTORCC ON)
 
 # set config variables
 set(CONFIG_DIR "/etc/as_middleware/" CACHE STRING "Sets the folder for the config files, for developments use other dir")
+set(PROGRMA_DATA "/etc/as_middleware/data/" CACHE STRING "Sets the folder where data from the server are stored, such as datasheets")
 
 # add install for Config dir
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/etc/ DESTINATION ${CONFIG_DIR})
@@ -47,6 +48,11 @@ target_link_libraries(middleware
     QtWebApp_Httpserver
     QtWebApp_Logging
     QtWebApp_Templateengine
+    global_lib
     commandThread
     requestMapper
+    dbRequest
 )
+
+message(STATUS ${CMAKE_C_COMPILER})
+message(STATUS ${CMAKE_CXX_COMPILER})

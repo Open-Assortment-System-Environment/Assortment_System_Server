@@ -9,19 +9,18 @@
 // std c++ Includes
 #include <iostream>
 
-
+///
+/// \brief The CommandThread class the cammand thread class is caled at the beginning and contains an while(true) loop for waitong that the user puts in commands and then to pars them
+///
 class CommandThread : public QThread
 {
 public:
+    ///
+    /// \brief CommandThread constustor
+    /// \param app the Qt Aplication, this is needed to stop the Program
+    ///
     CommandThread(QCoreApplication *app);
 private:
-    QTextStream& qStdOut()
-    {
-        static QTextStream ts( stdout );
-        return ts;
-    }
-    QTextStream *in;
-    QTextStream *out;
     ///
     /// \brief commandMap for identefien the id of the command
     ///

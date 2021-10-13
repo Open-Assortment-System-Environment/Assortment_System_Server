@@ -2,5 +2,6 @@
 #define GLOBAL_MAIN_IN_H
 
 #define CONFIG_DIR "${CONFIG_DIR}"
+#define PROGRMA_DATA "${PROGRMA_DATA}"
 
 #endif // GLOBAL_MAIN_IN_H

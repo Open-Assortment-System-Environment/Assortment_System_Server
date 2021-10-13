@@ -3,13 +3,17 @@
 
 // QtWebApp Includes
 #include "httplistener.h"
+#include "staticfilecontroller.h"
 
 // local Includes
 #include "global_main.h"
 
 // target Includes
+#include "global.h"
 #include "commandthread.h"
 #include "requestmapper.h"
+#include "dbrequest.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -21,12 +25,24 @@ int main(int argc, char *argv[])
     CommandThread commandThread(&app);
     commandThread.start();
 
-    QString configFile = CONFIG_DIR;
+    // set configfile location
+    configFile = CONFIG_DIR;
     configFile +=  "/config.ini";
-    QSettings* listenerSettings = new QSettings(configFile, QSettings::IniFormat,&app);
-    qDebug("config file loaded");
 
+
+    DBRequest ABC;
+    ABC.test();
+
+    // set lisstener settings objektc
+    QSettings* listenerSettings = new QSettings(configFile, QSettings::IniFormat,&app);
     listenerSettings->beginGroup("listener");
+
+    // Static file controller
+    QSettings* fileSettings=new QSettings(configFile,QSettings::IniFormat,&app);
+    fileSettings->beginGroup("files");
+    fileSettings->setValue("path", PROGRMA_DATA);
+    staticFileController=new stefanfrings::StaticFileController(fileSettings,&app);
+
 
     // Start the HTTP server
     new stefanfrings::HttpListener(listenerSettings,new RequestMapper(&app),&app);

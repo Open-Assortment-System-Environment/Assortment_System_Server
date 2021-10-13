@@ -4,15 +4,14 @@ CommandThread::CommandThread(QCoreApplication *app)
 {
     APP = app;
     initCommandMap();
-    in = new QTextStream(stdin);
-    out = new QTextStream(stdout);
 }
 
 void CommandThread::run()
 {
+    QTextStream in(stdin);
     while(true)
     {
-        QString value = in->readLine();
+        QString value = in.readLine();
         if(value.length() != 0)
         {
             QString comm = value;

@@ -11,6 +11,7 @@ add_library(requestMapper SHARED ${REQUESTMAPPER_SRC})
 target_link_libraries(requestMapper PUBLIC
     Qt${QT_VERSION_MAJOR}::Core
     QtWebApp_Httpserver
+    global_lib
     requestParsers
 )
 

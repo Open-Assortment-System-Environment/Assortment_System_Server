@@ -12,6 +12,9 @@ void RequestMapper::service(stefanfrings::HttpRequest& request, stefanfrings::Ht
     if (path=="/api/json") {
         ApiJSON().service(request, response);
     }
+    else if (path.startsWith("/files")) {
+        staticFileController->service(request,response);
+    }
     else {
         response.setStatus(404,"Not found");
         response.write("The URL is wrong, no such document.",true);

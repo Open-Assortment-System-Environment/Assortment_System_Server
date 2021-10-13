@@ -3,14 +3,14 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-alpha" use-changelog="false" last-position="5241,1468" last-zoom="0.9" max-obj-count="42"
+<dbmodel pgmodeler-ver="0.9.4-alpha" use-changelog="false" last-position="2992,1673" last-zoom="0.7" max-obj-count="42"
 	 default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
 	 layer-name-colors="#000000"
 	 layer-rect-colors="#c9aaaf"
 	 show-layer-names="false" show-layer-rects="false">
-<database name="assortm" encoding="UTF8" lc-collate="de_DE.UTF-8" lc-ctype="de_DE.UTF-8" is-template="false" allow-conns="true">
+<database name="Assortment_System_Server_DB" encoding="UTF8" lc-collate="de_DE.UTF-8" lc-ctype="de_DE.UTF-8" is-template="false" allow-conns="true">
 	<role name="postgres"/>
 	<tablespace name="pg_default"/>
 </database>
