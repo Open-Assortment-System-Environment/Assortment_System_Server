@@ -8,6 +8,8 @@
 // QtWebApp Includes
 #include "httprequesthandler.h"
 
+#include "dbrequest.h"
+
 ///
 /// \brief The ApiJSON class parses and handels the JSON Api requests
 ///
@@ -15,6 +17,12 @@ class ApiJSON : public stefanfrings::HttpRequestHandler
 {
     Q_OBJECT
 private:
+    ///
+    /// \brief parsJSON parses the Json requset
+    /// \param request the request to pars
+    /// \param response the reponse that is created
+    ///
+    void parsJSON(QJsonObject& request, QJsonObject& result);
 public:
     ///
     /// \brief ApiJSON the constructor
@@ -28,13 +36,6 @@ public:
     /// \param response the respons to send
     ///
     void service(stefanfrings::HttpRequest& request, stefanfrings::HttpResponse& response);
-
-    ///
-    /// \brief parsJSON parses the Json requset
-    /// \param request the request to pars
-    /// \param response the reponse that is created
-    ///
-    void parsJSON(QJsonObject& request, QJsonObject& result);
 };
 
 #endif // APIJSON_H

@@ -5,8 +5,10 @@ set(DBREQEST_SRC
 )
 
 # finde packeges
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Sql REQUIRED)
+find_package(PostgreSQL REQUIRED)
+find_package(QT NAMES Qt6 COMPONENTS Core Sql REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Sql REQUIRED)
+
 
 # creat SHARED lib
 add_library(dbRequest SHARED ${DBREQEST_SRC})

@@ -6,6 +6,11 @@ CommandThread::CommandThread(QCoreApplication *app)
     initCommandMap();
 }
 
+CommandThread::~CommandThread()
+{
+    delete commandMap;
+}
+
 void CommandThread::run()
 {
     QTextStream in(stdin);
@@ -46,7 +51,7 @@ void CommandThread::parsCommand(QString comm, QString par, bool help)
             stopC1(par);
         break;
 
-        case 2: //stop command
+        case 2: //help command
             if(!help)
             {
                 helpC2(par);

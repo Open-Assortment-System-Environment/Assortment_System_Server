@@ -8,6 +8,8 @@ void CommandThread::stopC1(QString parameters)
     }
     else
     {
+        delete commandMap;
+        delete staticFileController;
         qInfo().noquote() << "STOPING APP";
         this->deleteLater();
         APP->exit(0);

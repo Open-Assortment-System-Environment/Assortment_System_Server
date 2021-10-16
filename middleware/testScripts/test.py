@@ -7,7 +7,7 @@ URL = "http://127.0.0.1:8080/api/json"
 
 # defining a params dict for the parameters to be sent to the API
 #f = open("in-search-parts.json")
-f = open("out-get-parts-all.json")
+f = open("in-get-parts-all.json")
 
 #PARAMS = json.loads(f.read())
 #print(PARAMS)

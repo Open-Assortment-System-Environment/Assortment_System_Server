@@ -9,6 +9,9 @@
 // std c++ Includes
 #include <iostream>
 
+
+#include "global.h"
+
 ///
 /// \brief The CommandThread class the cammand thread class is caled at the beginning and contains an while(true) loop for waitong that the user puts in commands and then to pars them
 ///
@@ -20,6 +23,7 @@ public:
     /// \param app the Qt Aplication, this is needed to stop the Program
     ///
     CommandThread(QCoreApplication *app);
+    ~CommandThread();
 private:
     ///
     /// \brief commandMap for identefien the id of the command

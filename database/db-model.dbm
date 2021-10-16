@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 CAUTION: Do not modify this file unless you know what you are doing.
-         Unexpected results may occur if the code is changed deliberately.
+ Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-alpha" use-changelog="false" last-position="2992,1673" last-zoom="0.7" max-obj-count="42"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="4853,2668" last-zoom="0.95" max-obj-count="42"
 	 default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -31,6 +31,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </schema>
 
 <schema name="kicad" layers="0" rect-visible="true" fill-color="#3b34a3">
+	<role name="postgres"/>
+</schema>
+
+<schema name="global" layers="0" rect-visible="true" fill-color="#ceb0d3">
+	<role name="postgres"/>
+</schema>
+
+<schema name="vendors" layers="0" rect-visible="true" fill-color="#ba082d">
 	<role name="postgres"/>
 </schema>
 
@@ -400,10 +408,11 @@ Zero•An Attrivute for test purpeses•true•string•Zero]]>
 	<customidxs object-type="constraint">
 		<object name="part_attributes_fk" index="1"/>
 		<object name="parts_fk" index="0"/>
+		<object name="properties_pk" index="2"/>
 	</customidxs>
 	<initial-data>
 <![CDATA[part_id•value•attribut⸣
--1•"Zero"•Zero]]>
+-1•Zero•Zero]]>
 	</initial-data>
 </table>
 
@@ -455,10 +464,6 @@ boolean•true and false]]>
 		<position x="-16.4044" y="7.08409"/>
 	</label>
 </relationship>
-
-<schema name="global" layers="0" rect-visible="true" fill-color="#ceb0d3">
-	<role name="postgres"/>
-</schema>
 
 <table name="units" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
 	<schema name="global"/>
@@ -1059,10 +1064,6 @@ url•an link to the website]]>
 	 src-table="global.file_type"
 	 dst-table="parts.documantations"
 	 src-required="true" dst-required="false"/>
-
-<schema name="vendors" layers="0" rect-visible="true" fill-color="#ba082d">
-	<role name="postgres"/>
-</schema>
 
 <table name="vendors" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
 	<schema name="vendors"/>

@@ -68,11 +68,14 @@ void ApiJSON::service(stefanfrings::HttpRequest &request, stefanfrings::HttpResp
 void ApiJSON::parsJSON(QJsonObject &request, QJsonObject &result)
 {
     // temp test code
-    QJsonValue name = request.value("request_type");
+    /*QJsonValue name = request.value("request_type");
     request["request_type"] = "42ABC42";
-    result.insert("test", 42);
+    result.insert("test", 42);*/
 
     // pars json and search DB
+    DBRequest *dbR = new DBRequest(this);
+    dbR->creatAndSendRequest(request, result);
+    delete dbR;
 
     // Mark request as completed
     request["completeed"] = true;

@@ -29,10 +29,6 @@ int main(int argc, char *argv[])
     configFile = CONFIG_DIR;
     configFile +=  "/config.ini";
 
-
-    DBRequest ABC;
-    ABC.test();
-
     // set lisstener settings objektc
     QSettings* listenerSettings = new QSettings(configFile, QSettings::IniFormat,&app);
     listenerSettings->beginGroup("listener");

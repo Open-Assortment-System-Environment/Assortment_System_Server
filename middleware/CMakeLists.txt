@@ -28,6 +28,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets REQUIRED)
 
+message(STATUS Qt${QT_VERSION_MAJOR})
+message(STATUS ${CMAKE_PREFIX_PATH})
+
 # add subdirectorys
 add_subdirectory(QtWebApp/)
 add_subdirectory(lib/)
@@ -51,7 +54,6 @@ target_link_libraries(middleware
     global_lib
     commandThread
     requestMapper
-    dbRequest
 )
 
 message(STATUS ${CMAKE_C_COMPILER})

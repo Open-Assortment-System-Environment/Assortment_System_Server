@@ -12,6 +12,7 @@ add_library(commandThread SHARED ${COMMANDTHREAD_SRC})
 # link libs
 target_link_libraries(commandThread PUBLIC
     Qt${QT_VERSION_MAJOR}::Core
+    global_lib
 )
 
 # add include fir to target
