@@ -10,19 +10,20 @@
         "name": "param_name",
         "from": "param_from_value",
         "to": "param_to_value",
-        "priorety": "search_priorety"
+        "priorety": "search_priorety",
+        "type": "from_to"
       },
       {
         "name": "param_name",
-        "from": "param_from_value",
-        "to": "param_to_value",
-        "priorety": "search_priorety"
+        "value": "abc",
+        "priorety": "search_priorety",
+        "type": "value"
       },
       {
         "name": "param_name",
-        "from": "param_from_value",
-        "to": "param_to_value",
-        "priorety": "search_priorety"
+        "values": ["v1", "v2", "vn"],
+        "priorety": "search_priorety",
+        "type": "values"
       }
     ]
   }
