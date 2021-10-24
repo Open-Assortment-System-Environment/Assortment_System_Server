@@ -76,7 +76,4 @@ void ApiJSON::parsJSON(QJsonObject &request, QJsonObject &result)
     DBRequest *dbR = new DBRequest(this);
     dbR->creatAndSendRequest(request, result);
     delete dbR;
-
-    // Mark request as completed
-    request["completeed"] = true;
 }
