@@ -17,17 +17,25 @@
 #include <QJsonArray>
 
 #include "global.h"
+#include "dbsearch.h"
 
 class DBRequest : public QObject
 {
     Q_OBJECT
 private:
     ///
-    /// \brief getAll returns all values in an table specifyed in te request
+    /// \brief getAll creats the result with all values in an table specifyed in the request
     /// \param request
     /// \param result
     ///
     void getAll(QJsonObject& request, QJsonObject& result);
+
+    ///
+    /// \brief search creats the result with all values in an table specifyed in the request
+    /// \param request
+    /// \param result
+    ///
+    void search(QJsonObject& request, QJsonObject& result);
 
     ///
     /// \brief initRequestMap initalieses the requestMap with data

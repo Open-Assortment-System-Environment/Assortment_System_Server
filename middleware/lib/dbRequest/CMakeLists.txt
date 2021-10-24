@@ -1,7 +1,9 @@
 # set dbRequest Sources
 set(DBREQEST_SRC
-    dbrequest.h
+    dbrequest.h     # main DBRequest class
     dbrequest.cpp
+    dbsearch.h      # DBSearch class, for searching objekts in the DB
+    dbsearch.cpp
 )
 
 # finde packeges
