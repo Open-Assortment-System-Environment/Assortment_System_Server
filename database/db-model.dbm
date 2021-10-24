@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="4853,2668" last-zoom="0.95" max-obj-count="42"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="3522,707" last-zoom="0.7" max-obj-count="42"
 	 default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -42,109 +42,20 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<role name="postgres"/>
 </schema>
 
-<table name="parts" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
+<sequence name="part_id_seq" cycle="false" start="1" increment="1" min-value="0" max-value="9223372036854775807" cache="1">
 	<schema name="parts"/>
 	<role name="postgres"/>
-	<position x="5540" y="3140"/>
-	<column name="id" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="name" not-null="true">
-		<type name="text" length="0"/>
-		<comment><![CDATA[The name of the part (may be identical to the manufacture_id)]]></comment>
-	</column>
-	<column name="description">
-		<type name="text" length="0"/>
-		<comment><![CDATA[An description of the part]]></comment>
-	</column>
-	<column name="weight">
-		<type name="double precision" length="0"/>
-	</column>
-	<column name="id_3d_models">
-		<type name="bigint" length="0"/>
-	</column>
-	<constraint name="parts_pk" type="pk-constr" table="parts.parts">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
+</sequence>
 
-	<customidxs object-type="column">
-		<object name="type" index="5"/>
-	</customidxs>
-
-	<customidxs object-type="constraint">
-		<object name="part_types_fk" index="1"/>
-	</customidxs>
-	<initial-data>
-<![CDATA[id•name•description•weight•id_3d_models•type⸣
--1•Zero•a Part for test purposes•••Zero]]>
-	</initial-data>
-</table>
-
-<table name="documantations" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
+<sequence name="documantation_id_seq" cycle="false" start="1" increment="1" min-value="0" max-value="9223372036854775807" cache="1">
 	<schema name="parts"/>
 	<role name="postgres"/>
-	<comment><![CDATA[Here are the documantaion file stored, like the datasheets and manuels]]></comment>
-	<position x="6760" y="3580"/>
-	<column name="id" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="id_parts" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="name" not-null="true">
-		<type name="text" length="0"/>
-	</column>
-	<column name="description">
-		<type name="text" length="0"/>
-		<comment><![CDATA[an short description of what is dislplayed in the file]]></comment>
-	</column>
-	<column name="path" not-null="true">
-		<type name="text" length="0"/>
-		<comment><![CDATA[the path to the file]]></comment>
-	</column>
-	<constraint name="documantations_pk" type="pk-constr" table="parts.documantations">
-		<columns names="id,id_parts" ref-type="src-columns"/>
-	</constraint>
+</sequence>
 
-	<customidxs object-type="column">
-		<object name="type" index="5"/>
-	</customidxs>
-
-	<customidxs object-type="constraint">
-		<object name="file_type_fk" index="2"/>
-	</customidxs>
-</table>
-
-<table name="images" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+<sequence name="image_id_seq" cycle="false" start="1" increment="1" min-value="0" max-value="9223372036854775807" cache="1">
 	<schema name="parts"/>
 	<role name="postgres"/>
-	<comment><![CDATA[here are the images of the part saved]]></comment>
-	<position x="6760" y="3880"/>
-	<column name="id" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="id_parts" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="description">
-		<type name="text" length="0"/>
-	</column>
-	<column name="path" not-null="true">
-		<type name="text" length="0"/>
-		<comment><![CDATA[the path to the file]]></comment>
-	</column>
-	<constraint name="images_pk" type="pk-constr" table="parts.images">
-		<columns names="id,id_parts" ref-type="src-columns"/>
-	</constraint>
-
-	<customidxs object-type="column">
-		<object name="type" index="4"/>
-	</customidxs>
-
-	<customidxs object-type="constraint">
-		<object name="file_type_fk" index="2"/>
-	</customidxs>
-</table>
+</sequence>
 
 <table name="part_manufacturers" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
 	<schema name="parts"/>
@@ -200,22 +111,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="3d_models" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
+<sequence name="3d_model_id" cycle="false" start="1" increment="1" min-value="0" max-value="9223372036854775807" cache="1">
 	<schema name="parts"/>
 	<role name="postgres"/>
-	<comment><![CDATA[here are the images of the part saved]]></comment>
-	<position x="4980" y="3840"/>
-	<column name="id" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="type" not-null="true">
-		<type name="text" length="0"/>
-		<comment><![CDATA[the model type(STL, WRL, ...)]]></comment>
-	</column>
-	<constraint name="3d_models_pk" type="pk-constr" table="parts.&quot;3d_models&quot;">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-</table>
+</sequence>
 
 <table name="footprints" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
 	<schema name="kicad"/>
@@ -416,19 +315,43 @@ Zero•An Attrivute for test purpeses•true•string•Zero]]>
 	</initial-data>
 </table>
 
-<relationship name="parts_has_many_properties" type="rel1n" layers="0"
-	 src-col-pattern="part_id"
-	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
-	 src-fk-pattern="{st}_fk"
-	 custom-color="#6376f9"
-	 src-table="parts.parts"
-	 dst-table="parts.properties"
-	 src-required="true" dst-required="false">
-	<label ref-type="name-label">
-		<position x="101.092" y="17.3206"/>
-	</label>
-	<special-pk-cols indexes="0"/>
-</relationship>
+<table name="parts" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<position x="5540" y="3140"/>
+	<column name="id" not-null="true" sequence="parts.part_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[The name of the part (may be identical to the manufacture_id)]]></comment>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+		<comment><![CDATA[An description of the part]]></comment>
+	</column>
+	<column name="weight">
+		<type name="double precision" length="0"/>
+	</column>
+	<constraint name="parts_pk" type="pk-constr" table="parts.parts">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="parts_UNIQUE" type="uq-constr" table="parts.parts">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="type" index="4"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="part_types_fk" index="1"/>
+	</customidxs>
+	<initial-data>
+<![CDATA[id•name•description•weight•type⸣
+-1•Zero•a Part for test purposes••Zero]]>
+	</initial-data>
+</table>
 
 <table name="value_types" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
 	<schema name="parts"/>
@@ -620,11 +543,21 @@ Zero•zero•an unit for test purposes]]>
 	<special-pk-cols indexes="0"/>
 </relationship>
 
+<sequence name="box_id_seq" cycle="false" start="1" increment="1" min-value="0" max-value="9223372036854775807" cache="1">
+	<schema name="storage"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="box_size_id_seq" cycle="false" start="1" increment="1" min-value="0" max-value="9223372036854775807" cache="1">
+	<schema name="storage"/>
+	<role name="postgres"/>
+</sequence>
+
 <table name="boxes" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
 	<schema name="storage"/>
 	<role name="postgres"/>
 	<position x="6960" y="1700"/>
-	<column name="id" not-null="true">
+	<column name="id" not-null="true" sequence="storage.box_id_seq">
 		<type name="bigint" length="0"/>
 	</column>
 	<constraint name="storage_boxes__pk" type="pk-constr" table="storage.boxes">
@@ -641,39 +574,6 @@ Zero•zero•an unit for test purposes]]>
 		<object name="box_types_fk" index="2"/>
 	</customidxs>
 </table>
-
-<table name="box_sizes" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
-	<schema name="storage"/>
-	<role name="postgres"/>
-	<position x="7620" y="1640"/>
-	<column name="id" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="hight" not-null="true">
-		<type name="double precision" length="0"/>
-		<comment><![CDATA[the box hight in mm]]></comment>
-	</column>
-	<column name="width" not-null="true">
-		<type name="double precision" length="0"/>
-		<comment><![CDATA[the box width in mm]]></comment>
-	</column>
-	<column name="depth" not-null="true">
-		<type name="double precision" length="0"/>
-		<comment><![CDATA[the box depth in mm]]></comment>
-	</column>
-	<constraint name="storage_box_sizes_pk" type="pk-constr" table="storage.box_sizes">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-</table>
-
-<relationship name="storage_box_sizes_has_many_storage_boxes" type="rel1n" layers="0"
-	 src-col-pattern="storage_box_size"
-	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
-	 src-fk-pattern="{st}_fk"
-	 custom-color="#b4f224"
-	 src-table="storage.box_sizes"
-	 dst-table="storage.boxes"
-	 src-required="true" dst-required="false"/>
 
 <table name="box_types" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
 	<schema name="storage"/>
@@ -771,25 +671,10 @@ Zero•zero•an unit for test purposes]]>
 	</label>
 </relationship>
 
-<table name="drawers" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
+<sequence name="drawer_id_seq" cycle="false" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
 	<schema name="storage"/>
 	<role name="postgres"/>
-	<position x="6540" y="1440"/>
-	<column name="id" not-null="true">
-		<type name="bigint" length="0"/>
-	</column>
-	<constraint name="storage_drawers_pk" type="pk-constr" table="storage.drawers">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-
-	<customidxs object-type="column">
-		<object name="size" index="1"/>
-	</customidxs>
-
-	<customidxs object-type="constraint">
-		<object name="drawer_sizes_fk" index="1"/>
-	</customidxs>
-</table>
+</sequence>
 
 <table name="drawer_sizes" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="storage"/>
@@ -815,14 +700,25 @@ Zero•zero•an unit for test purposes]]>
 	</constraint>
 </table>
 
-<relationship name="storage_drawer_sizes_has_many_storage_drawers" type="rel1n" layers="0"
-	 src-col-pattern="size"
-	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
-	 src-fk-pattern="{st}_fk"
-	 custom-color="#52eea7"
-	 src-table="storage.drawer_sizes"
-	 dst-table="storage.drawers"
-	 src-required="true" dst-required="false"/>
+<table name="drawers" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="storage"/>
+	<role name="postgres"/>
+	<position x="6540" y="1440"/>
+	<column name="id" not-null="true" sequence="storage.drawer_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="storage_drawers_pk" type="pk-constr" table="storage.drawers">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="size" index="1"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="drawer_sizes_fk" index="1"/>
+	</customidxs>
+</table>
 
 <table name="box_drawer" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="storage"/>
@@ -875,11 +771,16 @@ starting with 0]]></comment>
 	<special-pk-cols indexes="0"/>
 </relationship>
 
+<sequence name="cabinet_id_seq" cycle="false" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+	<schema name="storage"/>
+	<role name="postgres"/>
+</sequence>
+
 <table name="cabinets" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="storage"/>
 	<role name="postgres"/>
 	<position x="6000" y="1160"/>
-	<column name="id" not-null="true">
+	<column name="id" not-null="true" sequence="storage.cabinet_id_seq">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="drawer_number" not-null="true">
@@ -900,15 +801,6 @@ starting with 0]]></comment>
 		<object name="drawer_sizes_fk" index="1"/>
 	</customidxs>
 </table>
-
-<relationship name="storage_drawer_sizes_has_many_storage_cabinets" type="rel1n" layers="0"
-	 src-col-pattern="storage_drawer_size"
-	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
-	 src-fk-pattern="{st}_fk"
-	 custom-color="#8c4ecb"
-	 src-table="storage.drawer_sizes"
-	 dst-table="storage.cabinets"
-	 src-required="false" dst-required="false"/>
 
 <table name="drawer_cabinet" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="storage"/>
@@ -955,42 +847,22 @@ starting with 0]]></comment>
 	<special-pk-cols indexes="0"/>
 </relationship>
 
-<function name="get_next_parts_id"
-		window-func="false"
-		returns-setof="false"
-		behavior-type="CALLED ON NULL INPUT"
-		function-type="VOLATILE"
-		security-type="SECURITY INVOKER"
-		parallel-type="PARALLEL UNSAFE"
-		execution-cost="1"
-		row-amount="0">
+<table name="3d_models" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
 	<schema name="parts"/>
 	<role name="postgres"/>
-	<comment><![CDATA[returns the next avalible part id]]></comment>
-	<language name="plpython3u"/>
-	<return-type>
-	<type name="bigint" length="1"/>
-	</return-type>
-	<definition><![CDATA[plan = plpy.prepare("SELECT id FROM parts.parts ORDER BY id")
-ids = plpy.execute(plan)
-res = -10
-for id in range(ids.nrows()):
-    res = id
-    if ids[id]['id'] != id:
-        return id
-return 	res + 1]]></definition>
-</function>
-
-<relationship name="3d_models_has_many_3d_models_parts" type="rel1n" layers="0"
-	 src-col-pattern="{sc}_{st}"
-	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
-	 src-fk-pattern="{st}_fk"
-	 custom-color="#18571d"
-	 src-table="parts.&quot;3d_models&quot;"
-	 dst-table="parts.&quot;3d_models_parts&quot;"
-	 src-required="true" dst-required="false">
-	<special-pk-cols indexes="0"/>
-</relationship>
+	<comment><![CDATA[here are the images of the part saved]]></comment>
+	<position x="4980" y="3840"/>
+	<column name="id" not-null="true" sequence="parts.&quot;3d_model_id&quot;">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="type" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[the model type(STL, WRL, ...)]]></comment>
+	</column>
+	<constraint name="3d_models_pk" type="pk-constr" table="parts.&quot;3d_models&quot;">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
 
 <relationship name="parts_has_many_3d_models_parts" type="rel1n" layers="0"
 	 src-col-pattern="part_id"
@@ -1024,14 +896,36 @@ url•an link to the website]]>
 	</initial-data>
 </table>
 
-<relationship name="file_type_has_many_images" type="rel1n" layers="0"
-	 src-col-pattern="type"
-	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
-	 src-fk-pattern="{st}_fk"
-	 custom-color="#8b46da"
-	 src-table="global.file_type"
-	 dst-table="parts.images"
-	 src-required="true" dst-required="false"/>
+<table name="images" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<comment><![CDATA[here are the images of the part saved]]></comment>
+	<position x="6760" y="3880"/>
+	<column name="id" not-null="true" sequence="parts.image_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="id_parts" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="path" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[the path to the file]]></comment>
+	</column>
+	<constraint name="images_pk" type="pk-constr" table="parts.images">
+		<columns names="id,id_parts" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="type" index="4"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="file_type_fk" index="2"/>
+	</customidxs>
+</table>
 
 <table name="file_extensions" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
 	<schema name="global"/>
@@ -1056,14 +950,40 @@ url•an link to the website]]>
 	<special-pk-cols indexes="0"/>
 </relationship>
 
-<relationship name="file_type_has_many_documantations" type="rel1n" layers="0"
-	 src-col-pattern="type"
-	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
-	 src-fk-pattern="{st}_fk"
-	 custom-color="#039bc6"
-	 src-table="global.file_type"
-	 dst-table="parts.documantations"
-	 src-required="true" dst-required="false"/>
+<table name="documantations" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
+	<schema name="parts"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Here are the documantaion file stored, like the datasheets and manuels]]></comment>
+	<position x="6760" y="3580"/>
+	<column name="id" not-null="true" sequence="parts.documantation_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="id_parts" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+		<comment><![CDATA[an short description of what is dislplayed in the file]]></comment>
+	</column>
+	<column name="path" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[the path to the file]]></comment>
+	</column>
+	<constraint name="documantations_pk" type="pk-constr" table="parts.documantations">
+		<columns names="id,id_parts" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="type" index="5"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="file_type_fk" index="2"/>
+	</customidxs>
+</table>
 
 <table name="vendors" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
 	<schema name="vendors"/>
@@ -1191,84 +1111,6 @@ url•an link to the website]]>
 	 dst-table="parts.purchase_price"
 	 src-required="true" dst-required="false"/>
 
-<function name="get_next_3d_models_id"
-		window-func="false"
-		returns-setof="false"
-		behavior-type="CALLED ON NULL INPUT"
-		function-type="VOLATILE"
-		security-type="SECURITY INVOKER"
-		parallel-type="PARALLEL UNSAFE"
-		execution-cost="1"
-		row-amount="0">
-	<schema name="parts"/>
-	<role name="postgres"/>
-	<comment><![CDATA[returns the next avalible 3d_model id]]></comment>
-	<language name="plpython3u"/>
-	<return-type>
-	<type name="bigint" length="1"/>
-	</return-type>
-	<definition><![CDATA[plan = plpy.prepare("SELECT id FROM parts.\"3d_models\" ORDER BY id")
-ids = plpy.execute(plan)
-res = -10
-for id in range(ids.nrows()):
-    res = id
-    if ids[id]['id'] != id:
-        return id
-return 	res + 1]]></definition>
-</function>
-
-<function name="get_next_images_id"
-		window-func="false"
-		returns-setof="false"
-		behavior-type="CALLED ON NULL INPUT"
-		function-type="VOLATILE"
-		security-type="SECURITY INVOKER"
-		parallel-type="PARALLEL UNSAFE"
-		execution-cost="1"
-		row-amount="0">
-	<schema name="parts"/>
-	<role name="postgres"/>
-	<comment><![CDATA[returns the next avalible image id]]></comment>
-	<language name="plpython3u"/>
-	<return-type>
-	<type name="bigint" length="1"/>
-	</return-type>
-	<definition><![CDATA[plan = plpy.prepare("SELECT id FROM parts.images ORDER BY id")
-ids = plpy.execute(plan)
-res = -10
-for id in range(ids.nrows()):
-    res = id
-    if ids[id]['id'] != id:
-        return id
-return 	res + 1]]></definition>
-</function>
-
-<function name="get_next_documantations_id"
-		window-func="false"
-		returns-setof="false"
-		behavior-type="CALLED ON NULL INPUT"
-		function-type="VOLATILE"
-		security-type="SECURITY INVOKER"
-		parallel-type="PARALLEL UNSAFE"
-		execution-cost="1"
-		row-amount="0">
-	<schema name="parts"/>
-	<role name="postgres"/>
-	<comment><![CDATA[returns the next avalible documantations id]]></comment>
-	<language name="plpython3u"/>
-	<return-type>
-	<type name="bigint" length="1"/>
-	</return-type>
-	<definition><![CDATA[plan = plpy.prepare("SELECT id FROM parts.documantations ORDER BY id")
-ids = plpy.execute(plan)
-res = -10
-for id in range(ids.nrows()):
-    res = id
-    if ids[id]['id'] != id:
-        return id
-return 	res + 1]]></definition>
-</function>
-
 <relationship name="footprints_has_many_parts" type="rel1n" layers="0"
 	 src-col-pattern="{sc}_{st}"
 	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
@@ -1379,6 +1221,100 @@ return 	res + 1]]></definition>
 	 table="storage.part_box">
 		<function signature="storage.part_box_history_f_iu()"/>
 </trigger>
+
+<relationship name="parts_has_many_properties" type="rel1n" layers="0"
+	 src-col-pattern="part_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#6376f9"
+	 src-table="parts.parts"
+	 dst-table="parts.properties"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="101.092" y="17.3206"/>
+	</label>
+	<special-pk-cols indexes="0"/>
+</relationship>
+
+<relationship name="file_type_has_many_documantations" type="rel1n" layers="0"
+	 src-col-pattern="type"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#039bc6"
+	 src-table="global.file_type"
+	 dst-table="parts.documantations"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="file_type_has_many_images" type="rel1n" layers="0"
+	 src-col-pattern="type"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#8b46da"
+	 src-table="global.file_type"
+	 dst-table="parts.images"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="3d_models_has_many_3d_models_parts" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#18571d"
+	 src-table="parts.&quot;3d_models&quot;"
+	 dst-table="parts.&quot;3d_models_parts&quot;"
+	 src-required="true" dst-required="false">
+	<special-pk-cols indexes="0"/>
+</relationship>
+
+<table name="box_sizes" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="storage"/>
+	<role name="postgres"/>
+	<position x="7620" y="1640"/>
+	<column name="id" not-null="true" sequence="storage.box_size_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="hight" not-null="true">
+		<type name="double precision" length="0"/>
+		<comment><![CDATA[the box hight in mm]]></comment>
+	</column>
+	<column name="width" not-null="true">
+		<type name="double precision" length="0"/>
+		<comment><![CDATA[the box width in mm]]></comment>
+	</column>
+	<column name="depth" not-null="true">
+		<type name="double precision" length="0"/>
+		<comment><![CDATA[the box depth in mm]]></comment>
+	</column>
+	<constraint name="storage_box_sizes_pk" type="pk-constr" table="storage.box_sizes">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="storage_box_sizes_has_many_storage_boxes" type="rel1n" layers="0"
+	 src-col-pattern="storage_box_size"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#b4f224"
+	 src-table="storage.box_sizes"
+	 dst-table="storage.boxes"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="storage_drawer_sizes_has_many_storage_drawers" type="rel1n" layers="0"
+	 src-col-pattern="size"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#52eea7"
+	 src-table="storage.drawer_sizes"
+	 dst-table="storage.drawers"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="storage_drawer_sizes_has_many_storage_cabinets" type="rel1n" layers="0"
+	 src-col-pattern="storage_drawer_size"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#8c4ecb"
+	 src-table="storage.drawer_sizes"
+	 dst-table="storage.cabinets"
+	 src-required="false" dst-required="false"/>
 
 <constraint name="parts_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="parts.parts" table="parts.documantations">
