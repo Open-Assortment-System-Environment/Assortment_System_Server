@@ -29,6 +29,10 @@ private:
     ///
     QJsonObject *reqest;
     ///
+    /// \brief reqestSearchBy is the array of values to be searched by
+    ///
+    QJsonArray *reqestSearchBy;
+    ///
     /// \brief result is the result in to witch all is to be writen and than returned to the client
     ///
     QJsonObject *result;
@@ -40,68 +44,90 @@ private:
     /// \brief errorString the error that accured
     ///
     QString errorString;
+    ///
+    /// \brief searchWahtMap for identefien the id of what to search for(part, assambly, ...)
+    ///
+    QMap<QString, int> *searchWhatMap = new QMap<QString, int>;
+    ///
+    /// \brief searchTypeMap for identefien the id of the search type(from_to, value, ...)
+    ///
+    QMap<QString, int> *searchTypeMap = new QMap<QString, int>;
 
     // functions
 
     ///
-    /// \brief searchPartByAttribut returns a list of ids that have the Atribute with this value(search type: value)
+    /// \brief initSearchWhatMap initalies the searchWhatMap with all the difrent types of searchable items
+    ///
+    void initSearchWhatMap();
+    ///
+    /// \brief initSearchTypeMap initalies the searchTypeMap with all the searchable types
+    ///
+    void initSearchTypeMap();
+
+    ///
+    /// \brief searchPart searches a part in the DB
+    ///
+    void searchParts();
+
+    ///
+    /// \brief searchPartsByAttribut returns a list of ids that have the Atribute with this value(search type: value)
     /// \param attribut the Atribut to be searched
     /// \param value the value it has to be
     /// \return the lsit of id's
     ///
-    QList<QVariant> searchPartByAttribut(QString attribut, QString value);
+    QList<QVariant> searchPartsByAttribut(QString attribut, QString value);
     ///
-    /// \brief searchPartByAttribut returns a list of ids that have the Atribute with this value(search type: from_to)
+    /// \brief searchPartsByAttribut returns a list of ids that have the Atribute with this value(search type: from_to)
     /// \param attribut the Atribut to be searched
     /// \param valueFrom the value from where the range starts
     /// \param valueTo the value from where the list ends
     /// \return the lsit of id's
     ///
-    QList<QVariant> searchPartByAttribut(QString attribut, QString valueFrom, QString valueTo);
+    QList<QVariant> searchPartsByAttribut(QString attribut, QString valueFrom, QString valueTo);
     ///
-    /// \brief searchPartByAttribut returns a list of ids that have the Atribute with this value(search type: value)
+    /// \brief searchPartsByAttribut returns a list of ids that have the Atribute with this value(search type: value)
     /// \param attribut the Atribut to be searched
     /// \param value the values it has to be
     /// \return the lsit of id's
     ///
-    QList<QVariant> searchPartByAttribut(QString attribut, QList<QString> values);
+    QList<QVariant> searchPartsByAttribut(QString attribut, QList<QString> values);
 
     ///
-    /// \brief searchPartByAttribut returns a list of ids that have the Atribute with this value(search type: value) plus the only thoses that exist in the ids list
+    /// \brief searchPartsByAttribut returns a list of ids that have the Atribute with this value(search type: value) plus the only thoses that exist in the ids list
     /// \param ids the list of ids that is considerd
     /// \param attribut the Atribut to be searched
     /// \param value the value it has to be
     /// \return the lsit of id's
     ///
-    QList<QVariant> searchPartByAttribut(QList<QVariant> ids, QString attribut, QString value);
+    QList<QVariant> searchPartsByAttribut(QList<QVariant> ids, QString attribut, QString value);
     ///
-    /// \brief searchPartByAttribut returns a list of ids that have the Atribute with this value(search type: from_to) plus the only thoses that exist in the ids list
+    /// \brief searchPartsByAttribut returns a list of ids that have the Atribute with this value(search type: from_to) plus the only thoses that exist in the ids list
     /// \param ids the list of ids that is considerd
     /// \param attribut the Atribut to be searched
     /// \param valueFrom the value from where the range starts
     /// \param valueTo the value from where the list ends
     /// \return the lsit of id's
     ///
-    QList<QVariant> searchPartByAttribut(QList<QVariant> ids, QString attribut, QString valueFrom, QString valueTo);
+    QList<QVariant> searchPartsByAttribut(QList<QVariant> ids, QString attribut, QString valueFrom, QString valueTo);
     ///
-    /// \brief searchPartByAttribut returns a list of ids that have the Atribute with this value(search type: value) plus the only thoses that exist in the ids list
+    /// \brief searchPartsByAttribut returns a list of ids that have the Atribute with this value(search type: value) plus the only thoses that exist in the ids list
     /// \param ids the list of ids that is considerd
     /// \param attribut the Atribut to be searched
     /// \param value the values it has to be
     /// \return the lsit of id's
     ///
-    QList<QVariant> searchPartByAttribut(QList<QVariant> ids, QString attribut, QList<QString> values);
+    QList<QVariant> searchParByAttribut(QList<QVariant> ids, QString attribut, QList<QString> values);
 
     ///
-    /// \brief searchPartByAttributQuery runs the actual qry and is used by all the searchPartByAttribut functions
+    /// \brief searchPartsByAttributQuery runs the actual qry and is used by all the searchPartsByAttribut functions
     /// \param qryString the qry string to use
     /// \param ids the ids that are returned
     /// \return returns true if sucsasfull
     ///
-    bool searchPartByAttributQuery(QString qryString, QList<QVariant> &ids, QString &LastQryError);
+    bool searchPartsByAttributQuery(QString qryString, QList<QVariant> &ids, QString &LastQryError);
 
     ///
-    /// \brief creatIdsString creats the ids string for all the searchPartByAttribut that get a list of ids that ar to be considerd
+    /// \brief creatIdsString creats the ids string for all the searchPartsByAttribut that get a list of ids that ar to be considerd
     /// \param ids the input list of ids
     /// \param idsString the output string
     /// \return returns true if all wend sucsesfull and if ther ar ids in it at all

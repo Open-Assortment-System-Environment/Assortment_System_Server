@@ -1,33 +1,31 @@
 #include "dbsearch.h"
 
-QJsonObject *DBSearch::getReqest() const
+void DBSearch::initSearchWhatMap()
 {
-    return reqest;
+    // no 0
+    searchWhatMap->insert("parts", 1);
 }
 
-void DBSearch::setReqest(QJsonObject *newReqest)
+void DBSearch::initSearchTypeMap()
 {
-    reqest = newReqest;
+    // no 0
+    searchTypeMap->insert("value", 1);
+    searchTypeMap->insert("values", 2);
+    searchTypeMap->insert("from_to", 3);
 }
 
-QJsonObject *DBSearch::getResult() const
+void DBSearch::searchParts()
 {
-    return result;
 }
 
-void DBSearch::setResult(QJsonObject *newResult)
-{
-    result = newResult;
-}
-
-QList<QVariant> DBSearch::searchPartByAttribut(QString attribut, QString value)
+QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QString value)
 {
     QList<QVariant> ret;
     if((attribut.length() > 0) && (value.length() > 0))
     {
         QString qryString = "SELECT part_id FFROM parts.properties WHERE (attribut = '" + attribut + "' AND value = '" + value + "') ORDER BY part_id ASC;";// create Querry string
         QString lastQryError = "";
-        if(!(searchPartByAttributQuery(qryString, ret, lastQryError)))
+        if(!(searchPartsByAttributQuery(qryString, ret, lastQryError)))
         {
             qDebug() << "Last querry error: " << lastQryError;
             error = true;
@@ -42,7 +40,7 @@ QList<QVariant> DBSearch::searchPartByAttribut(QString attribut, QString value)
     return ret;
 }
 
-QList<QVariant> DBSearch::searchPartByAttribut(QString attribut, QString valueFrom, QString valueTo)
+QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QString valueFrom, QString valueTo)
 {
     QList<QVariant> ret;
     if((attribut.length() > 0) && (valueFrom.length() > 0) && (valueTo.length() > 0))
@@ -57,7 +55,7 @@ QList<QVariant> DBSearch::searchPartByAttribut(QString attribut, QString valueFr
         }
 
         QString lastQryError = "";
-        if(!(searchPartByAttributQuery(qryString, ret, lastQryError)))
+        if(!(searchPartsByAttributQuery(qryString, ret, lastQryError)))
         {
             qDebug() << "Last querry error: " << lastQryError;
             error = true;
@@ -72,7 +70,7 @@ QList<QVariant> DBSearch::searchPartByAttribut(QString attribut, QString valueFr
     return ret;
 }
 
-QList<QVariant> DBSearch::searchPartByAttribut(QString attribut, QList<QString> values)
+QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QList<QString> values)
 {
     QList<QVariant> ret;
     bool noNullString = true;
@@ -95,7 +93,7 @@ QList<QVariant> DBSearch::searchPartByAttribut(QString attribut, QList<QString> 
         QString qryString = "SELECT part_id FFROM parts.properties WHERE (attribut = '" + attribut + "' AND value IN (" + qryValues + ")) ORDER BY part_id ASC;";// create Querry string
 
         QString lastQryError = "";
-        if(!(searchPartByAttributQuery(qryString, ret, lastQryError)))
+        if(!(searchPartsByAttributQuery(qryString, ret, lastQryError)))
         {
             qDebug() << "Last querry error: " << lastQryError;
             error = true;
@@ -110,7 +108,7 @@ QList<QVariant> DBSearch::searchPartByAttribut(QString attribut, QList<QString> 
     return ret;
 }
 
-QList<QVariant> DBSearch::searchPartByAttribut(QList<QVariant> ids, QString attribut, QString value)
+QList<QVariant> DBSearch::searchPartsByAttribut(QList<QVariant> ids, QString attribut, QString value)
 {
     QList<QVariant> ret;
     if((attribut.length() > 0) && (value.length() > 0))
@@ -120,7 +118,7 @@ QList<QVariant> DBSearch::searchPartByAttribut(QList<QVariant> ids, QString attr
         {
             QString qryString = "SELECT part_id FFROM parts.properties WHERE (attribut = '" + attribut + "' AND value = '" + value + "' AND part_id IN (" + idsString + ")) ORDER BY part_id ASC;";// create Querry string
             QString lastQryError = "";
-            if(!(searchPartByAttributQuery(qryString, ret, lastQryError)))
+            if(!(searchPartsByAttributQuery(qryString, ret, lastQryError)))
             {
                 qDebug() << "Last querry error: " << lastQryError;
                 error = true;
@@ -141,7 +139,7 @@ QList<QVariant> DBSearch::searchPartByAttribut(QList<QVariant> ids, QString attr
     return ret;
 }
 
-QList<QVariant> DBSearch::searchPartByAttribut(QList<QVariant> ids, QString attribut, QString valueFrom, QString valueTo)
+QList<QVariant> DBSearch::searchPartsByAttribut(QList<QVariant> ids, QString attribut, QString valueFrom, QString valueTo)
 {
     QList<QVariant> ret;
     if((attribut.length() > 0) && (valueFrom.length() > 0) && (valueTo.length() > 0))
@@ -159,7 +157,7 @@ QList<QVariant> DBSearch::searchPartByAttribut(QList<QVariant> ids, QString attr
             }
 
             QString lastQryError = "";
-            if(!(searchPartByAttributQuery(qryString, ret, lastQryError)))
+            if(!(searchPartsByAttributQuery(qryString, ret, lastQryError)))
             {
                 qDebug() << "Last querry error: " << lastQryError;
                 error = true;
@@ -206,7 +204,7 @@ QList<QVariant> DBSearch::searchParByAttribut(QList<QVariant> ids, QString attri
             QString qryString = "SELECT part_id FFROM parts.properties WHERE (attribut = '" + attribut + "' AND value IN (" + qryValues + ") AND part_id IN (" + idsString + ")) ORDER BY part_id ASC;";// create Querry string
 
             QString lastQryError = "";
-            if(!(searchPartByAttributQuery(qryString, ret, lastQryError)))
+            if(!(searchPartsByAttributQuery(qryString, ret, lastQryError)))
             {
                 qDebug() << "Last querry error: " << lastQryError;
                 error = true;
@@ -227,7 +225,7 @@ QList<QVariant> DBSearch::searchParByAttribut(QList<QVariant> ids, QString attri
     return ret;
 }
 
-bool DBSearch::searchPartByAttributQuery(QString qryString, QList<QVariant> &ids, QString &lastQryError)
+bool DBSearch::searchPartsByAttributQuery(QString qryString, QList<QVariant> &ids, QString &lastQryError)
 {
     QSqlQuery qry(*db); // create an DB Querry
     qry.prepare(qryString); // give DB Querry the QRY string
@@ -281,6 +279,7 @@ DBSearch::DBSearch(QSqlDatabase *DB, QObject *parent)
     db = DB;
     error = false;
     errorString = "";
+    initSearchWhatMap();
 }
 
 DBSearch::DBSearch(QSqlDatabase *DB, QJsonObject *Reqest, QJsonObject *Result, QObject *parent)
@@ -288,6 +287,40 @@ DBSearch::DBSearch(QSqlDatabase *DB, QJsonObject *Reqest, QJsonObject *Result, Q
     db = DB;
     result = Result;
     reqest = Reqest;
+    reqestSearchBy = new QJsonArray(reqest->value("by").toArray());
     error = false;
     errorString = "";
+    initSearchWhatMap();
 }
+
+void DBSearch::searchStart()
+{
+    switch (searchWhatMap->value(reqest->value("search").toString()))
+    {
+        case 1: // parts
+            searchParts();
+        break;
+    }
+}
+
+QJsonObject *DBSearch::getReqest() const
+{
+    return reqest;
+}
+
+void DBSearch::setReqest(QJsonObject *newReqest)
+{
+    reqest = newReqest;
+    reqestSearchBy = new QJsonArray(reqest->value("by").toArray());
+}
+
+QJsonObject *DBSearch::getResult() const
+{
+    return result;
+}
+
+void DBSearch::setResult(QJsonObject *newResult)
+{
+    result = newResult;
+}
+

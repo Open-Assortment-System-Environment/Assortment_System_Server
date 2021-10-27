@@ -19,6 +19,8 @@
 #include "global.h"
 #include "dbsearch.h"
 
+
+
 class DBRequest : public QObject
 {
     Q_OBJECT
