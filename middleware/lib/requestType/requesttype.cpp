@@ -20,7 +20,7 @@ void RequestType::setRequest(QJsonObject request)
     *request_type_values = request.toVariantMap(); // put all the other tuf in to this map
 }
 
-QJsonObject RequestType::getRequest()
+QJsonObject RequestType::getRequestAsJSON()
 {
     QJsonObject ret = QJsonObject::fromVariantMap(*request_type_values); // create an JSON Object based on the values map and than ister the base parameters
     ret.insert("completed", completed);
