@@ -27,11 +27,11 @@ void DBRequest::getAll(QJsonObject &request, QJsonObject &result)
                 delete partObject;
             }
             result.insert("parts", *partsArray);
-            request["completeed"] = true; // Mark request as completed
+            request["completed"] = true; // Mark request as completed
         } else // when the qry was not sucsasfull than put an error
         {
             qDebug() << "Last querry error: " << qry.lastError().text();
-            request["completeed"] = false; // Mark request as not completed
+            request["completed"] = false; // Mark request as not completed
             result.insert("ERROR", ("ERROR with DB Request; Last querry error: " + qry.lastError().text()));
         }
     }

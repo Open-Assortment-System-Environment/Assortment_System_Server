@@ -1,7 +1,7 @@
 {
   "request":
   {
-    "completeed":true,
+    "completed":true,
     "request_type": "get_all",
     "which": "parts.parts"
   },

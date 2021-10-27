@@ -36,7 +36,7 @@ void ApiJSON::service(stefanfrings::HttpRequest &request, stefanfrings::HttpResp
             QJsonObject jsonResult;
 
             // Check if request is already completed
-            if(jsonLastRequest["completeed"] == false)
+            if(jsonLastRequest["completed"] == false)
             {
                 // pars request
                 parsJSON(jsonLastRequest, jsonResult);

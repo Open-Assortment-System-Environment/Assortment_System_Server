@@ -17,13 +17,6 @@
 ///
 class CommandThread : public QThread
 {
-public:
-    ///
-    /// \brief CommandThread constustor
-    /// \param app the Qt Aplication, this is needed to stop the Program
-    ///
-    CommandThread(QCoreApplication *app);
-    ~CommandThread();
 private:
     ///
     /// \brief commandMap for identefien the id of the command
@@ -43,6 +36,9 @@ private:
     /// \brief APP the pointer to the QApplication
     ///
     QCoreApplication *APP;
+
+    // functions
+
     void run();
 
     ///
@@ -87,6 +83,14 @@ private:
     /// displays all helps
     ///
     void helpC2(QString parameters);
+
+public:
+    ///
+    /// \brief CommandThread constustor
+    /// \param app the Qt Aplication, this is needed to stop the Program
+    ///
+    CommandThread(QCoreApplication *app);
+    ~CommandThread();
 };
 
 #endif // COMMANDTHREAD_H
