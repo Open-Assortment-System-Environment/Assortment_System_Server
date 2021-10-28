@@ -7,23 +7,29 @@ bool ResultType::getError() const
 
 void ResultType::setError(bool newError)
 {
-    error = newError;
+    if(newError)
+    {
+        error = true;
+    }
 }
 
 void ResultType::setError(bool newError, const QString &newErrorString)
 {
-    error = newError;
-    errorString = newErrorString;
+    if(newError)
+    {
+        error = true;
+    }
+    errorString.append(newErrorString);
 }
 
-const QString &ResultType::getErrorString() const
+const QStringList &ResultType::getErrorString() const
 {
     return errorString;
 }
 
 void ResultType::setErrorString(const QString &newErrorString)
 {
-    errorString = newErrorString;
+    errorString.append(newErrorString);
 }
 QMap<QString, QVariant> *ResultType::getResult_values() const
 {
@@ -41,7 +47,8 @@ QJsonObject ResultType::getResult_values_AsJSON() const
     if(error)
     {
         ret.insert("ERROR", error);
-        ret.insert("ERROR_STRING", errorString);
+        QVariant varList = errorString;
+        ret.insert("ERROR_STRING", varList.toJsonValue());
     } else
     {
         ret = QJsonObject::fromVariantMap(*result_values);
