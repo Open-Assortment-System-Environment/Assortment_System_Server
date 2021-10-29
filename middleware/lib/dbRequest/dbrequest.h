@@ -68,8 +68,17 @@ private:
     ///
     QMap<QString, int> *requestMap = new QMap<QString, int>;
 public:
+    ///
+    /// \brief DBRequest is the basic constructor
+    /// \param parent is the QT parent objekt
+    ///
     explicit DBRequest(QObject *parent = nullptr);
     ~DBRequest();
+    ///
+    /// \brief creatAndSendRequest thakes the request makes an DB request out of it and models the reult data
+    /// \param request the request data to use
+    /// \param result the output result
+    ///
     void creatAndSendRequest(QJsonObject& request, QJsonObject& result);
 
 signals:
