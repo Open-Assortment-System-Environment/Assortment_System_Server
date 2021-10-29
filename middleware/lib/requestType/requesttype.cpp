@@ -43,7 +43,7 @@ const QString &RequestType::getRequest_type() const
     return request_type;
 }
 
-QVariant RequestType::value(QString &key)
+QVariant RequestType::value(QString key)
 {
     return request_type_values->value(key);
 }

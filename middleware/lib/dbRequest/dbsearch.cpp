@@ -282,12 +282,13 @@ DBSearch::DBSearch(QSqlDatabase *DB, QObject *parent)
     initSearchWhatMap();
 }
 
-DBSearch::DBSearch(QSqlDatabase *DB, QJsonObject *Reqest, QJsonObject *Result, QObject *parent)
+DBSearch::DBSearch(QSqlDatabase *DB, RequestType *Reqest, ResultType *Result, QObject *parent)
 {
     db = DB;
     result = Result;
     reqest = Reqest;
-    reqestSearchBy = new QJsonArray(reqest->value("by").toArray());
+    reqestSearchBy = new QMap<QString, QVariant>;
+    *reqestSearchBy = reqest->value("by").toMap();
     error = false;
     errorString = "";
     initSearchWhatMap();
@@ -303,23 +304,24 @@ void DBSearch::searchStart()
     }
 }
 
-QJsonObject *DBSearch::getReqest() const
+RequestType *DBSearch::getReqest() const
 {
     return reqest;
 }
 
-void DBSearch::setReqest(QJsonObject *newReqest)
+void DBSearch::setReqest(RequestType *newReqest)
 {
     reqest = newReqest;
-    reqestSearchBy = new QJsonArray(reqest->value("by").toArray());
+    reqestSearchBy = new QMap<QString, QVariant>;
+    *reqestSearchBy = reqest->value("by").toMap();
 }
 
-QJsonObject *DBSearch::getResult() const
+ResultType *DBSearch::getResult() const
 {
     return result;
 }
 
-void DBSearch::setResult(QJsonObject *newResult)
+void DBSearch::setResult(ResultType *newResult)
 {
     result = newResult;
 }

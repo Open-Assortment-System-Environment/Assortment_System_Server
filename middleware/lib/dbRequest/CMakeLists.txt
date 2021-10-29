@@ -20,6 +20,8 @@ target_link_libraries(dbRequest PUBLIC
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Sql
     global_lib
+    resultType
+    requestType
 )
 
 # add include fir to target

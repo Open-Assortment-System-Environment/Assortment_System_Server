@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QSettings>
+#include <QVariant>
 
 #include <QSqlQuery>
 #include <QSqlResult>
@@ -10,11 +11,8 @@
 #include <QSqlError>
 #include <QSqlRecord>
 
-#include <QJsonDocument>
-#include <QJsonParseError>
-#include <QJsonObject>
-#include <QJsonValue>
-#include <QJsonArray>
+#include "resulttype.h"
+#include "requesttype.h"
 
 class DBSearch : public QObject
 {
@@ -27,15 +25,15 @@ private:
     ///
     /// \brief reqest is the request that is to be used and handeld
     ///
-    QJsonObject *reqest;
+    RequestType *reqest;
     ///
     /// \brief reqestSearchBy is the array of values to be searched by
     ///
-    QJsonArray *reqestSearchBy;
+    QMap<QString, QVariant> *reqestSearchBy;
     ///
     /// \brief result is the result in to witch all is to be writen and than returned to the client
     ///
-    QJsonObject *result;
+    ResultType *result;
     ///
     /// \brief error turns true if an error accurded while searching th DB
     ///
@@ -147,7 +145,7 @@ public:
     /// \param Result the pointer to the Result Object
     /// \param parent qt parent Object
     ///
-    explicit DBSearch(QSqlDatabase *DB, QJsonObject *Reqest, QJsonObject *Result, QObject *parent = nullptr);
+    explicit DBSearch(QSqlDatabase *DB, RequestType *Reqest, ResultType *Result, QObject *parent = nullptr);
 
     ///
     /// \brief searchStart starts the search thrugh the DB
@@ -158,23 +156,23 @@ public:
     /// \brief getReqest returns the the pointer to the Reqest Object
     /// \return the Reqest Object pointer
     ///
-    QJsonObject *getReqest() const;
+    RequestType *getReqest() const;
     ///
     /// \brief setReqest sets the Request Object pointer
     /// \param newReqest the new Request Pointer
     ///
-    void setReqest(QJsonObject *newReqest);
+    void setReqest(RequestType *newReqest);
 
     ///
     /// \brief getResult returns the the pointer to the Result Object
     /// \return the Result Object pointer
     ///
-    QJsonObject *getResult() const;
+    ResultType *getResult() const;
     ///
     /// \brief setResult sets the Result Object pointer
     /// \param newResult the new Result Pointer
     ///
-    void setResult(QJsonObject *newResult);
+    void setResult(ResultType *newResult);
 
 signals:
 

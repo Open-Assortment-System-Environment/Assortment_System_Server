@@ -79,8 +79,7 @@ public:
     /// \param key the key to use
     /// \return the value
     ///
-    QVariant value(QString &key);
-
+    QVariant value(QString key);
 signals:
 
 };
