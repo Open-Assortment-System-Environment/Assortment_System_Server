@@ -2,7 +2,7 @@
 
 void DBRequest::getAll(RequestType& request, ResultType& result)
 {
-    QJsonArray *partsArray = new QJsonArray; // creat result parts JSON Array
+    QList<QVariant> *partsArray = new QList<QVariant>; // creat result parts JSON Array
     if (dbOpenConOk) // check if an usable DB connection was opend
     {
         QSqlQuery qry(*db); // create an DB Querry
@@ -13,16 +13,16 @@ void DBRequest::getAll(RequestType& request, ResultType& result)
 
         if(qry.exec()) // execute qry and check if it was sucsafull, if yes then pars the qry
         {
-            QMap< QString, QVariant> *resMap = new QMap< QString, QVariant>; // this is the map that is used for te result values
+            QMap<QString, QVariant> *resMap = new QMap<QString, QVariant>; // this is the map that is used for te result values
             while(qry.next()) // go thrugh all qry elements and put them in to the partsArray
             {
-                QJsonObject *partObject = new QJsonObject;
+                QMap<QString, QVariant> *partObject = new QMap<QString, QVariant>;
                 QSqlRecord rec = qry.record();
                 for(int i=0; i<rec.count(); ++i)
                 {
                     partObject->insert(rec.fieldName(i), qry.value(i).toJsonValue());
                 }
-                QJsonValue *partValue = new QJsonValue(*partObject);
+                QVariant *partValue = new QVariant(*partObject);
                 partsArray->append(*partValue);
                 delete partValue;
                 delete partObject;

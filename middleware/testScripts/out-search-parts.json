@@ -43,18 +43,15 @@
         [
           {
             "name": "param_name",
-            "value": "param_value",
-            "priorety": "search_priorety"
+            "value": "param_value"
           },
           {
             "name": "param_name",
-            "value": "param_value",
-            "priorety": "search_priorety"
+            "value": "param_value"
           },
           {
             "name": "param_name",
-            "value": "param_value",
-            "priorety": "search_priorety"
+            "value": "param_value"
           }
         ]
       },
