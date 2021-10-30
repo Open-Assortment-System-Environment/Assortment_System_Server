@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="3522,707" last-zoom="0.7" max-obj-count="42"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="269,73" last-zoom="0.2" max-obj-count="42"
 	 default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -78,7 +78,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="assemblies" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
 	<schema name="assemblies"/>
 	<role name="postgres"/>
-	<position x="4940" y="2400"/>
+	<position x="4940" y="2380"/>
 	<column name="name" not-null="true">
 		<type name="text" length="0"/>
 	</column>
@@ -96,7 +96,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="assembly_parts" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
 	<schema name="assemblies"/>
 	<role name="postgres"/>
-	<position x="5420" y="2400"/>
+	<position x="5420" y="2380"/>
 	<column name="assembly" not-null="true">
 		<type name="text" length="0"/>
 	</column>

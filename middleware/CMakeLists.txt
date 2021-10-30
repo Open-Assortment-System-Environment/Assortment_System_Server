@@ -34,6 +34,7 @@ message(STATUS ${CMAKE_PREFIX_PATH})
 # add subdirectorys
 add_subdirectory(QtWebApp/)
 add_subdirectory(lib/)
+add_subdirectory(doc/)
 
 # creat sorce variables
 set(MAIN_SOURCE
