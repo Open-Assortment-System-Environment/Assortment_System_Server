@@ -10,6 +10,9 @@
 #include <QJsonValue>
 #include <QJsonArray>
 
+///
+/// \brief The ResultType class is an objeckt to manage and store the result data
+///
 class ResultType : public QObject
 {
     Q_OBJECT
@@ -26,13 +29,14 @@ private:
     ///
     /// \brief result_values are all the values that are containd in the result
     ///
-    QMap<QString, QVariant> *result_values = new QMap<QString, QVariant>;
+    QMap<QString, QVariant> *result_values;
 public:
     ///
     /// \brief ResultType is the basic constructor
     /// \param parent is the qt paren objekt
     ///
     explicit ResultType(QObject *parent = nullptr);
+    ~ResultType();
 
     ///
     /// \brief getError returns the error state

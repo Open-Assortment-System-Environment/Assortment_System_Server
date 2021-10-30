@@ -1,6 +1,6 @@
 #include "dbrequest.h"
 
-void DBRequest::getAll(QJsonObject &request, QJsonObject &result)
+void DBRequest::getAll(RequestType& request, ResultType& result)
 {
     QJsonArray *partsArray = new QJsonArray; // creat result parts JSON Array
     if (dbOpenConOk) // check if an usable DB connection was opend
@@ -13,6 +13,7 @@ void DBRequest::getAll(QJsonObject &request, QJsonObject &result)
 
         if(qry.exec()) // execute qry and check if it was sucsafull, if yes then pars the qry
         {
+            QMap< QString, QVariant> *resMap = new QMap< QString, QVariant>; // this is the map that is used for te result values
             while(qry.next()) // go thrugh all qry elements and put them in to the partsArray
             {
                 QJsonObject *partObject = new QJsonObject;
@@ -26,21 +27,22 @@ void DBRequest::getAll(QJsonObject &request, QJsonObject &result)
                 delete partValue;
                 delete partObject;
             }
-            result.insert("parts", *partsArray);
-            request["completed"] = true; // Mark request as completed
+            resMap->insert("parts", *partsArray);
+            result.setResult_values(resMap);
+            request.setCompleted(true); // Mark request as completed
         } else // when the qry was not sucsasfull than put an error
         {
             qDebug() << "Last querry error: " << qry.lastError().text();
-            request["completed"] = false; // Mark request as not completed
-            result.insert("ERROR", ("ERROR with DB Request; Last querry error: " + qry.lastError().text()));
+            request.setCompleted(false); // Mark request as not completed
+            result.setError(true, ("ERROR with DB Request; Last querry error: " + qry.lastError().text()));
         }
     }
     delete partsArray; // delet partsArray
 }
 
-void DBRequest::search(QJsonObject &request, QJsonObject &result)
+void DBRequest::search(RequestType& request, ResultType& result)
 {
-    DBSearch *searchObj = new DBSearch(db, &request, &result, this); // creat DBSearch Object and giv it the db connection with the request and the result
+    searchObj = new DBSearch(db, &request, &result, this); // creat DBSearch Object and giv it the db connection with the request and the result
     searchObj->searchStart(); // start searching the DB
     delete searchObj; // delet DBSearch Object after the search has ended
 }
@@ -89,10 +91,10 @@ DBRequest::~DBRequest()
     delete db;
 }
 
-void DBRequest::creatAndSendRequest(QJsonObject &request, QJsonObject &result)
+void DBRequest::creatAndSendRequest(RequestType& request, ResultType& result)
 {
     // look up requestMap and run correct Function
-    switch (requestMap->value(request.value("request_type").toString()))
+    switch (requestMap->value(request.getRequest_type()))
     {
         case 1:
             getAll(request, result);

@@ -61,3 +61,8 @@ ResultType::ResultType(QObject *parent) : QObject(parent)
 {
 
 }
+
+ResultType::~ResultType()
+{
+    delete result_values;
+}

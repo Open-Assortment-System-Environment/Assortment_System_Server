@@ -14,6 +14,9 @@
 #include "resulttype.h"
 #include "requesttype.h"
 
+///
+/// \brief The DBSearch class is an class that search for somthing in the DB
+///
 class DBSearch : public QObject
 {
     Q_OBJECT
@@ -27,9 +30,9 @@ private:
     ///
     RequestType *reqest;
     ///
-    /// \brief reqestSearchBy is the array of values to be searched by
+    /// \brief reqeustSearchBy is the array of values to be searched by
     ///
-    QMap<QString, QVariant> *reqestSearchBy;
+    QList<QVariant> *reqeustSearchBy;
     ///
     /// \brief result is the result in to witch all is to be writen and than returned to the client
     ///
@@ -85,10 +88,10 @@ private:
     ///
     /// \brief searchPartsByAttribut returns a list of ids that have the Atribute with this value(search type: value)
     /// \param attribut the Atribut to be searched
-    /// \param value the values it has to be
+    /// \param values the values it has to be
     /// \return the lsit of id's
     ///
-    QList<QVariant> searchPartsByAttribut(QString attribut, QList<QString> values);
+    QList<QVariant> searchPartsByAttribut(QString attribut, QList<QVariant>);
 
     ///
     /// \brief searchPartsByAttribut returns a list of ids that have the Atribute with this value(search type: value) plus the only thoses that exist in the ids list
@@ -97,7 +100,7 @@ private:
     /// \param value the value it has to be
     /// \return the lsit of id's
     ///
-    QList<QVariant> searchPartsByAttribut(QList<QVariant> ids, QString attribut, QString value);
+    QList<QVariant> searchPartsByAttribut(QString attribut, QString value, QList<QVariant> ids);
     ///
     /// \brief searchPartsByAttribut returns a list of ids that have the Atribute with this value(search type: from_to) plus the only thoses that exist in the ids list
     /// \param ids the list of ids that is considerd
@@ -106,20 +109,21 @@ private:
     /// \param valueTo the value from where the list ends
     /// \return the lsit of id's
     ///
-    QList<QVariant> searchPartsByAttribut(QList<QVariant> ids, QString attribut, QString valueFrom, QString valueTo);
+    QList<QVariant> searchPartsByAttribut(QString attribut, QString valueFrom, QString valueTo, QList<QVariant> ids);
     ///
     /// \brief searchPartsByAttribut returns a list of ids that have the Atribute with this value(search type: value) plus the only thoses that exist in the ids list
     /// \param ids the list of ids that is considerd
     /// \param attribut the Atribut to be searched
-    /// \param value the values it has to be
+    /// \param values the values it has to be
     /// \return the lsit of id's
     ///
-    QList<QVariant> searchParByAttribut(QList<QVariant> ids, QString attribut, QList<QString> values);
+    QList<QVariant> searchPartsByAttribut(QString attribut, QList<QVariant>, QList<QVariant> ids);
 
     ///
     /// \brief searchPartsByAttributQuery runs the actual qry and is used by all the searchPartsByAttribut functions
     /// \param qryString the qry string to use
     /// \param ids the ids that are returned
+    /// \param LastQryError is the las error returnd by the DB Qry
     /// \return returns true if sucsasfull
     ///
     bool searchPartsByAttributQuery(QString qryString, QList<QVariant> &ids, QString &LastQryError);

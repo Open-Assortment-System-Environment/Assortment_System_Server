@@ -10,7 +10,9 @@
 #include <QJsonValue>
 #include <QJsonArray>
 
-
+///
+/// \brief The RequestType class is an objeckt to manage and store the request data
+///
 class RequestType : public QObject
 {
     Q_OBJECT

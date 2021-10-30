@@ -16,6 +16,42 @@ void DBSearch::initSearchTypeMap()
 
 void DBSearch::searchParts()
 {
+    QList<QVariant> ids;
+    switch (searchTypeMap->value(reqeustSearchBy->at(0).toMap().value("type").toString()))
+    {
+        case 1: // value
+            ids = searchPartsByAttribut(reqeustSearchBy->at(0).toMap().value("name").toString(), reqeustSearchBy->at(0).toMap().value("value").toString());
+        break;
+
+        case 2: // values
+            ids = searchPartsByAttribut(reqeustSearchBy->at(0).toMap().value("name").toString(), reqeustSearchBy->at(0).toMap().value("value").toList());
+        break;
+
+        case 3: // from_to
+            ids = searchPartsByAttribut(reqeustSearchBy->at(0).toMap().value("name").toString(), reqeustSearchBy->at(0).toMap().value("from").toString(), reqeustSearchBy->at(0).toMap().value("to").toString());
+        break;
+    }
+
+    if(reqeustSearchBy->length() >= 1)
+    {
+        for(int i = 1; i < reqeustSearchBy->length(); i++)
+        {
+            switch (searchTypeMap->value(reqeustSearchBy->at(i).toMap().value("type").toString()))
+            {
+                case 1: // value
+                    ids = searchPartsByAttribut(reqeustSearchBy->at(i).toMap().value("name").toString(), reqeustSearchBy->at(i).toMap().value("value").toString(), ids);
+                break;
+
+                case 2: // values
+                    ids = searchPartsByAttribut(reqeustSearchBy->at(i).toMap().value("name").toString(), reqeustSearchBy->at(i).toMap().value("value").toList(), ids);
+                break;
+
+                case 3: // from_to
+                    ids = searchPartsByAttribut(reqeustSearchBy->at(i).toMap().value("name").toString(), reqeustSearchBy->at(i).toMap().value("from").toString(), reqeustSearchBy->at(i).toMap().value("to").toString(), ids);
+                break;
+            }
+        }
+    }
 }
 
 QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QString value)
@@ -70,22 +106,22 @@ QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QString valueF
     return ret;
 }
 
-QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QList<QString> values)
+QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QList<QVariant> values)
 {
     QList<QVariant> ret;
     bool noNullString = true;
     QString qryValues = "'";
     for(int i = 0; i < values.length(); i++)
     {
-        if(values[i].length() <= 0)
+        if(values[i].toString().length() <= 0)
         {
             noNullString = false;
         } else if(i < (values.length() - 1))
         {
-            qryValues.append(values[i] + "', ");
+            qryValues.append(values[i].toString() + "', ");
         }if(i == (values.length() - 1))
         {
-            qryValues.append(values[i] + "'");
+            qryValues.append(values[i].toString() + "'");
         }
     }
     if((attribut.length() > 0) && (values.length() > 0) && noNullString)
@@ -108,7 +144,7 @@ QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QList<QString>
     return ret;
 }
 
-QList<QVariant> DBSearch::searchPartsByAttribut(QList<QVariant> ids, QString attribut, QString value)
+QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QString value, QList<QVariant> ids)
 {
     QList<QVariant> ret;
     if((attribut.length() > 0) && (value.length() > 0))
@@ -139,7 +175,7 @@ QList<QVariant> DBSearch::searchPartsByAttribut(QList<QVariant> ids, QString att
     return ret;
 }
 
-QList<QVariant> DBSearch::searchPartsByAttribut(QList<QVariant> ids, QString attribut, QString valueFrom, QString valueTo)
+QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QString valueFrom, QString valueTo, QList<QVariant> ids)
 {
     QList<QVariant> ret;
     if((attribut.length() > 0) && (valueFrom.length() > 0) && (valueTo.length() > 0))
@@ -178,22 +214,22 @@ QList<QVariant> DBSearch::searchPartsByAttribut(QList<QVariant> ids, QString att
     return ret;
 }
 
-QList<QVariant> DBSearch::searchParByAttribut(QList<QVariant> ids, QString attribut, QList<QString> values)
+QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QList<QVariant> values, QList<QVariant> ids)
 {
     QList<QVariant> ret;
     bool noNullString = true;
     QString qryValues = "'";
     for(int i = 0; i < values.length(); i++)
     {
-        if(values[i].length() <= 0)
+        if(values[i].toString().length() <= 0)
         {
             noNullString = false;
         } else if(i < (values.length() - 1))
         {
-            qryValues.append(values[i] + "', ");
+            qryValues.append(values[i].toString() + "', ");
         }if(i == (values.length() - 1))
         {
-            qryValues.append(values[i] + "'");
+            qryValues.append(values[i].toString() + "'");
         }
     }
     if((attribut.length() > 0) && (values.length() > 0) && noNullString)
@@ -286,9 +322,7 @@ DBSearch::DBSearch(QSqlDatabase *DB, RequestType *Reqest, ResultType *Result, QO
 {
     db = DB;
     result = Result;
-    reqest = Reqest;
-    reqestSearchBy = new QMap<QString, QVariant>;
-    *reqestSearchBy = reqest->value("by").toMap();
+    setReqest(Reqest);
     error = false;
     errorString = "";
     initSearchWhatMap();
@@ -312,8 +346,8 @@ RequestType *DBSearch::getReqest() const
 void DBSearch::setReqest(RequestType *newReqest)
 {
     reqest = newReqest;
-    reqestSearchBy = new QMap<QString, QVariant>;
-    *reqestSearchBy = reqest->value("by").toMap();
+    reqeustSearchBy = new QList<QVariant>;
+    *reqeustSearchBy = reqest->value("by").toList();
 }
 
 ResultType *DBSearch::getResult() const

@@ -5,11 +5,19 @@ ApiJSON::ApiJSON(QObject* parent)
     // empty
 }
 
+ApiJSON::~ApiJSON()
+{
+    delete requestObj;
+    delete resultObj;
+}
+
 void ApiJSON::service(stefanfrings::HttpRequest &request, stefanfrings::HttpResponse &response)
 {
     // request Data
     QByteArray requestData = request.getBody();
     QByteArray responseData = "";
+    requestObj = new RequestType;
+    resultObj = new ResultType;
 
     // Check Request data
     if(requestData.isEmpty() == true)
@@ -39,7 +47,9 @@ void ApiJSON::service(stefanfrings::HttpRequest &request, stefanfrings::HttpResp
             if(jsonLastRequest["completed"] == false)
             {
                 // pars request
-                parsJSON(jsonLastRequest, jsonResult);
+                requestObj->setRequest(jsonLastRequest);
+                parsJSON(*requestObj, *resultObj);
+                jsonResult = resultObj->getResult_values_AsJSON();
             }
             else
             {
@@ -65,7 +75,7 @@ void ApiJSON::service(stefanfrings::HttpRequest &request, stefanfrings::HttpResp
     response.write(responseData,true);
 }
 
-void ApiJSON::parsJSON(QJsonObject &request, QJsonObject &result)
+void ApiJSON::parsJSON(RequestType& request, ResultType& response)
 {
     // temp test code
     /*QJsonValue name = request.value("request_type");
@@ -73,7 +83,7 @@ void ApiJSON::parsJSON(QJsonObject &request, QJsonObject &result)
     result.insert("test", 42);*/
 
     // pars json and search DB
-    DBRequest *dbR = new DBRequest(this);
-    dbR->creatAndSendRequest(request, result);
-    delete dbR;
+    dbRequest = new DBRequest(this);
+    dbRequest->creatAndSendRequest(request, response);
+    delete dbRequest;
 }

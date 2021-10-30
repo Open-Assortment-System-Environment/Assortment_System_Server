@@ -50,6 +50,7 @@ private:
     /// \brief parsCommand runs the rigth function for the command
     /// \param command the commadn to pars
     /// \param parameter the parametes for the cammand
+    /// \param help is turnd tru if this function is caled by the help function
     ///
     void parsCommand(QString command, QString parameter, bool help = false);
 

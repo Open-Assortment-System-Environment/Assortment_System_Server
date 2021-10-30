@@ -12,6 +12,8 @@ target_link_libraries(requestParsers PUBLIC
     Qt${QT_VERSION_MAJOR}::Core
     QtWebApp_Httpserver
     dbRequest
+    resultType
+    requestType
 )
 
 # add include fir to target

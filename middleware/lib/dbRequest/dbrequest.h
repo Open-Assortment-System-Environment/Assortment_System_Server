@@ -17,10 +17,14 @@
 #include <QJsonArray>
 
 #include "global.h"
+#include "requesttype.h"
+#include "resulttype.h"
 #include "dbsearch.h"
 
 
-
+///
+/// \brief The DBRequest class creats and runs an request in the DB
+///
 class DBRequest : public QObject
 {
     Q_OBJECT
@@ -30,14 +34,14 @@ private:
     /// \param request
     /// \param result
     ///
-    void getAll(QJsonObject& request, QJsonObject& result);
+    void getAll(RequestType& request, ResultType& result);
 
     ///
     /// \brief search creats the result with all values in an table specifyed in the request
     /// \param request
     /// \param result
     ///
-    void search(QJsonObject& request, QJsonObject& result);
+    void search(RequestType& request, ResultType& result);
 
     ///
     /// \brief initRequestMap initalieses the requestMap with data
@@ -67,6 +71,11 @@ private:
     /// search: 2<p>
     ///
     QMap<QString, int> *requestMap = new QMap<QString, int>;
+
+    ///
+    /// \brief searchObj is an objekt to search for somthing in the DB
+    ///
+    DBSearch *searchObj;
 public:
     ///
     /// \brief DBRequest is the basic constructor
@@ -79,7 +88,7 @@ public:
     /// \param request the request data to use
     /// \param result the output result
     ///
-    void creatAndSendRequest(QJsonObject& request, QJsonObject& result);
+    void creatAndSendRequest(RequestType& request, ResultType& result);
 
 signals:
 
