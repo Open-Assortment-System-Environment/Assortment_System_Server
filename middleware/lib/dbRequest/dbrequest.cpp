@@ -28,7 +28,7 @@ void DBRequest::getAll(RequestType& request, ResultType& result)
                 delete partObject;
             }
             resMap->insert("parts", *partsArray);
-            result.setResult_values(resMap);
+            result.setResult_values(*resMap);
             request.setCompleted(true); // Mark request as completed
         } else // when the qry was not sucsasfull than put an error
         {

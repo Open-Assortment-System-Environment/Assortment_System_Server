@@ -29,7 +29,7 @@ private:
     ///
     /// \brief result_values are all the values that are containd in the result
     ///
-    QMap<QString, QVariant> *result_values;
+    QMap<QString, QVariant> *result_values = new QMap<QString, QVariant>;
 public:
     ///
     /// \brief ResultType is the basic constructor
@@ -70,12 +70,12 @@ public:
     /// \brief getResult_values returns the raw values data not formated as JSOn or other
     /// \return the data
     ///
-    QMap<QString, QVariant> *getResult_values() const;
+    QMap<QString, QVariant> getResult_values() const;
     ///
     /// \brief setResult_values sets the data
     /// \param newResult_values the new data
     ///
-    void setResult_values(QMap<QString, QVariant> *newResult_values);
+    void setResult_values(QMap<QString, QVariant> newResult_values);
 
 
     ///

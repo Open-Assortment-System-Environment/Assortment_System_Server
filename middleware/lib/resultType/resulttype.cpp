@@ -31,14 +31,14 @@ void ResultType::setErrorString(const QString &newErrorString)
 {
     errorString.append(newErrorString);
 }
-QMap<QString, QVariant> *ResultType::getResult_values() const
+QMap<QString, QVariant> ResultType::getResult_values() const
 {
-    return result_values;
+    return *result_values;
 }
 
-void ResultType::setResult_values(QMap<QString, QVariant> *newResult_values)
+void ResultType::setResult_values(QMap<QString, QVariant> newResult_values)
 {
-    result_values = newResult_values;
+    *result_values = newResult_values;
 }
 
 QJsonObject ResultType::getResult_values_AsJSON() const

@@ -135,6 +135,26 @@ private:
     /// \return returns true if all wend sucsesfull and if ther ar ids in it at all
     ///
     bool creatIdsString(QList<QVariant> &ids, QString &idsString);
+
+    ///
+    /// \brief getPartIds returns all the part id that complyne with the search parameters
+    /// \return the ids
+    ///
+    QList<QVariant> getPartIds();
+    ///
+    /// \brief getPartsWithAttributs gets all the parts with there attributs from the DB
+    /// \param ids the ids for the parts to get
+    /// \param LastQryError is the las error returnd by the DB Qry
+    /// \return the map with the parts
+    ///
+    QVariant getAllPartsWithAttributs(QList<QVariant> ids);
+    ///
+    /// \brief getPartWithAttributs returns the part with all his attributes
+    /// \param id the part id to get
+    /// \param LastQryError is the las error returnd by the DB Qry
+    /// \return the part
+    ///
+    QVariant getPartWithAttributs(QVariant id);
 public:
     ///
     /// \brief DBSearch the Constructor

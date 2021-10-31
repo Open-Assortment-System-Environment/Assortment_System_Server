@@ -7,7 +7,8 @@ URL = "http://127.0.0.1:8080/api/json"
 
 # defining a params dict for the parameters to be sent to the API
 #f = open("in-search-parts.json")
-f = open("in-get-parts-all.json")
+#f = open("in-get-parts-all.json")
+f = open("in-search-parts-test.json")
 
 #PARAMS = json.loads(f.read())
 #print(PARAMS)
@@ -25,6 +26,8 @@ r = requests.post(url = URL, json = data_json)#json.dumps(data_json)
 print(r.text)
 #r_json = json.loads(r.text)
 #print(r_json['error'])
+
+open("out.html", "wb").write(r.content);
 
 
 print('\033[1mStatus:\033[0m ', r.status_code)
