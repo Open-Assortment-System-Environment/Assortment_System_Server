@@ -2,6 +2,7 @@
 ## 1) value
 this search type searches for an attribute that has the exact value that is describt in the field "value"
 ### Example:
+JSON:
 ```
 {
   "name": "param_name",
