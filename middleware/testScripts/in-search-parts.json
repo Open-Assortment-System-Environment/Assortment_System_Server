@@ -24,6 +24,12 @@
         "values": ["v1", "v2", "vn"],
         "priorety": "search_priorety",
         "type": "values"
+      },
+      {
+        "which": "wherToserach",
+        "value": "value",
+        "priorety": "search_priorety",
+        "type": "text"
       }
     ]
   }
