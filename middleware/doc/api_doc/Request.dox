@@ -1,0 +1,12 @@
+/**
+\page request Request
+There are many type of request each on of them has it purpos.
+An list of Request types:
+- \subpage get_all, returns all the elements of an table
+- \subpage search, searches for an part or somthing other
+- \subpage insert, inserts an part or something other
+An request must contain:
+- the completed element that has to be set to false, this is set to true when the middleware/serve is finished with the request
+- the request_type element that says what type of request it is
+- and all the request_type sepcific elements
+*/

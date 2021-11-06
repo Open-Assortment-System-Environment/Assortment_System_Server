@@ -1,5 +1,5 @@
 -- Database generated with pgModeler (PostgreSQL Database Modeler).
--- pgModeler  version: 0.9.4-alpha
+-- pgModeler version: 0.9.4-beta
 -- PostgreSQL version: 13.0
 -- Project Site: pgmodeler.io
 -- Model Author: ---
@@ -66,68 +66,49 @@ ALTER SCHEMA vendors OWNER TO postgres;
 SET search_path TO pg_catalog,public,parts,storage,assemblies,kicad,global,vendors;
 -- ddl-end --
 
--- object: parts.parts | type: TABLE --
--- DROP TABLE IF EXISTS parts.parts CASCADE;
-CREATE TABLE parts.parts (
-	id bigint NOT NULL,
-	name text NOT NULL,
-	description text,
-	weight double precision,
-	id_3d_models bigint,
-	type text NOT NULL,
-	CONSTRAINT parts_pk PRIMARY KEY (id)
+-- object: parts.part_id_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS parts.part_id_seq CASCADE;
+CREATE SEQUENCE parts.part_id_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 9223372036854775807
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
 
-);
 -- ddl-end --
-COMMENT ON COLUMN parts.parts.name IS E'The name of the part (may be identical to the manufacture_id)';
--- ddl-end --
-COMMENT ON COLUMN parts.parts.description IS E'An description of the part';
--- ddl-end --
-ALTER TABLE parts.parts OWNER TO postgres;
+ALTER SEQUENCE parts.part_id_seq OWNER TO postgres;
 -- ddl-end --
 
-INSERT INTO parts.parts (id, name, description, weight, id_3d_models, type) VALUES (E'-1', E'Zero', E'a Part for test purposes', DEFAULT, DEFAULT, E'Zero');
+-- object: parts.documantation_id_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS parts.documantation_id_seq CASCADE;
+CREATE SEQUENCE parts.documantation_id_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 9223372036854775807
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
+
+-- ddl-end --
+ALTER SEQUENCE parts.documantation_id_seq OWNER TO postgres;
 -- ddl-end --
 
--- object: parts.documantations | type: TABLE --
--- DROP TABLE IF EXISTS parts.documantations CASCADE;
-CREATE TABLE parts.documantations (
-	id bigint NOT NULL,
-	id_parts bigint NOT NULL,
-	name text NOT NULL,
-	description text,
-	path text NOT NULL,
-	type text NOT NULL,
-	CONSTRAINT documantations_pk PRIMARY KEY (id,id_parts)
+-- object: parts.image_id_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS parts.image_id_seq CASCADE;
+CREATE SEQUENCE parts.image_id_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 9223372036854775807
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
 
-);
 -- ddl-end --
-COMMENT ON TABLE parts.documantations IS E'Here are the documantaion file stored, like the datasheets and manuels';
--- ddl-end --
-COMMENT ON COLUMN parts.documantations.description IS E'an short description of what is dislplayed in the file';
--- ddl-end --
-COMMENT ON COLUMN parts.documantations.path IS E'the path to the file';
--- ddl-end --
-ALTER TABLE parts.documantations OWNER TO postgres;
--- ddl-end --
-
--- object: parts.images | type: TABLE --
--- DROP TABLE IF EXISTS parts.images CASCADE;
-CREATE TABLE parts.images (
-	id bigint NOT NULL,
-	id_parts bigint NOT NULL,
-	description text,
-	path text NOT NULL,
-	type text NOT NULL,
-	CONSTRAINT images_pk PRIMARY KEY (id,id_parts)
-
-);
--- ddl-end --
-COMMENT ON TABLE parts.images IS E'here are the images of the part saved';
--- ddl-end --
-COMMENT ON COLUMN parts.images.path IS E'the path to the file';
--- ddl-end --
-ALTER TABLE parts.images OWNER TO postgres;
+ALTER SEQUENCE parts.image_id_seq OWNER TO postgres;
 -- ddl-end --
 
 -- object: parts.part_manufacturers | type: TABLE --
@@ -168,20 +149,19 @@ CREATE TABLE assemblies.assembly_parts (
 ALTER TABLE assemblies.assembly_parts OWNER TO postgres;
 -- ddl-end --
 
--- object: parts."3d_models" | type: TABLE --
--- DROP TABLE IF EXISTS parts."3d_models" CASCADE;
-CREATE TABLE parts."3d_models" (
-	id bigint NOT NULL,
-	type text NOT NULL,
-	CONSTRAINT "3d_models_pk" PRIMARY KEY (id)
+-- object: parts."3d_model_id" | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS parts."3d_model_id" CASCADE;
+CREATE SEQUENCE parts."3d_model_id"
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 9223372036854775807
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
 
-);
 -- ddl-end --
-COMMENT ON TABLE parts."3d_models" IS E'here are the images of the part saved';
--- ddl-end --
-COMMENT ON COLUMN parts."3d_models".type IS E'the model type(STL, WRL, ...)';
--- ddl-end --
-ALTER TABLE parts."3d_models" OWNER TO postgres;
+ALTER SEQUENCE parts."3d_model_id" OWNER TO postgres;
 -- ddl-end --
 
 -- object: kicad.footprints | type: TABLE --
@@ -359,14 +339,30 @@ CREATE TABLE parts.properties (
 ALTER TABLE parts.properties OWNER TO postgres;
 -- ddl-end --
 
-INSERT INTO parts.properties (part_id, value, attribut) VALUES (E'-1', E'"Zero"', E'Zero');
+INSERT INTO parts.properties (part_id, value, attribut) VALUES (E'-1', E'Zero', E'Zero');
 -- ddl-end --
 
--- object: parts_fk | type: CONSTRAINT --
--- ALTER TABLE parts.properties DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
-ALTER TABLE parts.properties ADD CONSTRAINT parts_fk FOREIGN KEY (part_id)
-REFERENCES parts.parts (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
+-- object: parts.parts | type: TABLE --
+-- DROP TABLE IF EXISTS parts.parts CASCADE;
+CREATE TABLE parts.parts (
+	id bigint NOT NULL DEFAULT nextval('parts.part_id_seq'::regclass),
+	name text NOT NULL,
+	description text,
+	weight double precision,
+	type text NOT NULL,
+	CONSTRAINT parts_pk PRIMARY KEY (id),
+	CONSTRAINT "parts_UNIQUE" UNIQUE (name)
+
+);
+-- ddl-end --
+COMMENT ON COLUMN parts.parts.name IS E'The name of the part (may be identical to the manufacture_id)';
+-- ddl-end --
+COMMENT ON COLUMN parts.parts.description IS E'An description of the part';
+-- ddl-end --
+ALTER TABLE parts.parts OWNER TO postgres;
+-- ddl-end --
+
+INSERT INTO parts.parts (id, name, description, weight, type) VALUES (E'-1', E'Zero', E'a Part for test purposes', DEFAULT, E'Zero');
 -- ddl-end --
 
 -- object: parts.value_types | type: TABLE --
@@ -487,10 +483,40 @@ REFERENCES parts.part_attributes (name) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: storage.box_id_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS storage.box_id_seq CASCADE;
+CREATE SEQUENCE storage.box_id_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 9223372036854775807
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
+
+-- ddl-end --
+ALTER SEQUENCE storage.box_id_seq OWNER TO postgres;
+-- ddl-end --
+
+-- object: storage.box_size_id_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS storage.box_size_id_seq CASCADE;
+CREATE SEQUENCE storage.box_size_id_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 9223372036854775807
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
+
+-- ddl-end --
+ALTER SEQUENCE storage.box_size_id_seq OWNER TO postgres;
+-- ddl-end --
+
 -- object: storage.boxes | type: TABLE --
 -- DROP TABLE IF EXISTS storage.boxes CASCADE;
 CREATE TABLE storage.boxes (
-	id bigint NOT NULL,
+	id bigint NOT NULL DEFAULT nextval('storage.box_id_seq'::regclass),
 	storage_box_size bigint NOT NULL,
 	storage_box_type text NOT NULL,
 	CONSTRAINT storage_boxes__pk PRIMARY KEY (id)
@@ -498,33 +524,6 @@ CREATE TABLE storage.boxes (
 );
 -- ddl-end --
 ALTER TABLE storage.boxes OWNER TO postgres;
--- ddl-end --
-
--- object: storage.box_sizes | type: TABLE --
--- DROP TABLE IF EXISTS storage.box_sizes CASCADE;
-CREATE TABLE storage.box_sizes (
-	id bigint NOT NULL,
-	hight double precision NOT NULL,
-	width double precision NOT NULL,
-	depth double precision NOT NULL,
-	CONSTRAINT storage_box_sizes_pk PRIMARY KEY (id)
-
-);
--- ddl-end --
-COMMENT ON COLUMN storage.box_sizes.hight IS E'the box hight in mm';
--- ddl-end --
-COMMENT ON COLUMN storage.box_sizes.width IS E'the box width in mm';
--- ddl-end --
-COMMENT ON COLUMN storage.box_sizes.depth IS E'the box depth in mm';
--- ddl-end --
-ALTER TABLE storage.box_sizes OWNER TO postgres;
--- ddl-end --
-
--- object: box_sizes_fk | type: CONSTRAINT --
--- ALTER TABLE storage.boxes DROP CONSTRAINT IF EXISTS box_sizes_fk CASCADE;
-ALTER TABLE storage.boxes ADD CONSTRAINT box_sizes_fk FOREIGN KEY (storage_box_size)
-REFERENCES storage.box_sizes (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: storage.box_types | type: TABLE --
@@ -588,16 +587,19 @@ REFERENCES global.units (name) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
--- object: storage.drawers | type: TABLE --
--- DROP TABLE IF EXISTS storage.drawers CASCADE;
-CREATE TABLE storage.drawers (
-	id bigint NOT NULL,
-	size bigint NOT NULL,
-	CONSTRAINT storage_drawers_pk PRIMARY KEY (id)
+-- object: storage.drawer_id_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS storage.drawer_id_seq CASCADE;
+CREATE SEQUENCE storage.drawer_id_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
 
-);
 -- ddl-end --
-ALTER TABLE storage.drawers OWNER TO postgres;
+ALTER SEQUENCE storage.drawer_id_seq OWNER TO postgres;
 -- ddl-end --
 
 -- object: storage.drawer_sizes | type: TABLE --
@@ -620,11 +622,16 @@ COMMENT ON COLUMN storage.drawer_sizes.depth IS E'the number of boxes in the dep
 ALTER TABLE storage.drawer_sizes OWNER TO postgres;
 -- ddl-end --
 
--- object: drawer_sizes_fk | type: CONSTRAINT --
--- ALTER TABLE storage.drawers DROP CONSTRAINT IF EXISTS drawer_sizes_fk CASCADE;
-ALTER TABLE storage.drawers ADD CONSTRAINT drawer_sizes_fk FOREIGN KEY (size)
-REFERENCES storage.drawer_sizes (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
+-- object: storage.drawers | type: TABLE --
+-- DROP TABLE IF EXISTS storage.drawers CASCADE;
+CREATE TABLE storage.drawers (
+	id bigint NOT NULL DEFAULT nextval('storage.drawer_id_seq'::regclass),
+	size bigint NOT NULL,
+	CONSTRAINT storage_drawers_pk PRIMARY KEY (id)
+
+);
+-- ddl-end --
+ALTER TABLE storage.drawers OWNER TO postgres;
 -- ddl-end --
 
 -- object: storage.box_drawer | type: TABLE --
@@ -659,10 +666,25 @@ REFERENCES storage.boxes (id) MATCH FULL
 ON DELETE SET NULL ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: storage.cabinet_id_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS storage.cabinet_id_seq CASCADE;
+CREATE SEQUENCE storage.cabinet_id_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
+
+-- ddl-end --
+ALTER SEQUENCE storage.cabinet_id_seq OWNER TO postgres;
+-- ddl-end --
+
 -- object: storage.cabinets | type: TABLE --
 -- DROP TABLE IF EXISTS storage.cabinets CASCADE;
 CREATE TABLE storage.cabinets (
-	id bigint NOT NULL,
+	id bigint NOT NULL DEFAULT nextval('storage.cabinet_id_seq'::regclass),
 	drawer_number bigint NOT NULL,
 	location text,
 	storage_drawer_size bigint,
@@ -671,13 +693,6 @@ CREATE TABLE storage.cabinets (
 );
 -- ddl-end --
 ALTER TABLE storage.cabinets OWNER TO postgres;
--- ddl-end --
-
--- object: drawer_sizes_fk | type: CONSTRAINT --
--- ALTER TABLE storage.cabinets DROP CONSTRAINT IF EXISTS drawer_sizes_fk CASCADE;
-ALTER TABLE storage.cabinets ADD CONSTRAINT drawer_sizes_fk FOREIGN KEY (storage_drawer_size)
-REFERENCES storage.drawer_sizes (id) MATCH FULL
-ON DELETE SET NULL ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: storage.drawer_cabinet | type: TABLE --
@@ -712,37 +727,20 @@ ON DELETE RESTRICT ON UPDATE CASCADE;
 ALTER TABLE storage.drawer_cabinet ADD CONSTRAINT drawer_cabinet_uq UNIQUE (drawer);
 -- ddl-end --
 
--- object: parts.get_next_parts_id | type: FUNCTION --
--- DROP FUNCTION IF EXISTS parts.get_next_parts_id() CASCADE;
-CREATE FUNCTION parts.get_next_parts_id ()
-	RETURNS bigint
-	LANGUAGE plpython3u
-	VOLATILE 
-	CALLED ON NULL INPUT
-	SECURITY INVOKER
-	PARALLEL UNSAFE
-	COST 1
-	AS $$
-plan = plpy.prepare("SELECT id FROM parts.parts ORDER BY id")
-ids = plpy.execute(plan)
-res = -10
-for id in range(ids.nrows()):
-    res = id
-    if ids[id]['id'] != id:
-        return id
-return 	res + 1
-$$;
--- ddl-end --
-ALTER FUNCTION parts.get_next_parts_id() OWNER TO postgres;
--- ddl-end --
-COMMENT ON FUNCTION parts.get_next_parts_id() IS E'returns the next avalible part id';
--- ddl-end --
+-- object: parts."3d_models" | type: TABLE --
+-- DROP TABLE IF EXISTS parts."3d_models" CASCADE;
+CREATE TABLE parts."3d_models" (
+	id bigint NOT NULL DEFAULT nextval('parts."3d_model_id"'::regclass),
+	type text NOT NULL,
+	CONSTRAINT "3d_models_pk" PRIMARY KEY (id)
 
--- object: "3d_models_fk" | type: CONSTRAINT --
--- ALTER TABLE parts."3d_models_parts" DROP CONSTRAINT IF EXISTS "3d_models_fk" CASCADE;
-ALTER TABLE parts."3d_models_parts" ADD CONSTRAINT "3d_models_fk" FOREIGN KEY (id_3d_models)
-REFERENCES parts."3d_models" (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
+);
+-- ddl-end --
+COMMENT ON TABLE parts."3d_models" IS E'here are the images of the part saved';
+-- ddl-end --
+COMMENT ON COLUMN parts."3d_models".type IS E'the model type(STL, WRL, ...)';
+-- ddl-end --
+ALTER TABLE parts."3d_models" OWNER TO postgres;
 -- ddl-end --
 
 -- object: parts_fk | type: CONSTRAINT --
@@ -767,11 +765,23 @@ ALTER TABLE global.file_type OWNER TO postgres;
 INSERT INTO global.file_type (type, description) VALUES (E'url', E'an link to the website');
 -- ddl-end --
 
--- object: file_type_fk | type: CONSTRAINT --
--- ALTER TABLE parts.images DROP CONSTRAINT IF EXISTS file_type_fk CASCADE;
-ALTER TABLE parts.images ADD CONSTRAINT file_type_fk FOREIGN KEY (type)
-REFERENCES global.file_type (type) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
+-- object: parts.images | type: TABLE --
+-- DROP TABLE IF EXISTS parts.images CASCADE;
+CREATE TABLE parts.images (
+	id bigint NOT NULL DEFAULT nextval('parts.image_id_seq'::regclass),
+	id_parts bigint NOT NULL,
+	description text,
+	path text NOT NULL,
+	type text NOT NULL,
+	CONSTRAINT images_pk PRIMARY KEY (id,id_parts)
+
+);
+-- ddl-end --
+COMMENT ON TABLE parts.images IS E'here are the images of the part saved';
+-- ddl-end --
+COMMENT ON COLUMN parts.images.path IS E'the path to the file';
+-- ddl-end --
+ALTER TABLE parts.images OWNER TO postgres;
 -- ddl-end --
 
 -- object: global.file_extensions | type: TABLE --
@@ -793,11 +803,26 @@ REFERENCES global.file_type (type) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
--- object: file_type_fk | type: CONSTRAINT --
--- ALTER TABLE parts.documantations DROP CONSTRAINT IF EXISTS file_type_fk CASCADE;
-ALTER TABLE parts.documantations ADD CONSTRAINT file_type_fk FOREIGN KEY (type)
-REFERENCES global.file_type (type) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
+-- object: parts.documantations | type: TABLE --
+-- DROP TABLE IF EXISTS parts.documantations CASCADE;
+CREATE TABLE parts.documantations (
+	id bigint NOT NULL DEFAULT nextval('parts.documantation_id_seq'::regclass),
+	id_parts bigint NOT NULL,
+	name text NOT NULL,
+	description text,
+	path text NOT NULL,
+	type text NOT NULL,
+	CONSTRAINT documantations_pk PRIMARY KEY (id,id_parts)
+
+);
+-- ddl-end --
+COMMENT ON TABLE parts.documantations IS E'Here are the documantaion file stored, like the datasheets and manuels';
+-- ddl-end --
+COMMENT ON COLUMN parts.documantations.description IS E'an short description of what is dislplayed in the file';
+-- ddl-end --
+COMMENT ON COLUMN parts.documantations.path IS E'the path to the file';
+-- ddl-end --
+ALTER TABLE parts.documantations OWNER TO postgres;
 -- ddl-end --
 
 -- object: vendors.vendors | type: TABLE --
@@ -884,84 +909,6 @@ REFERENCES global.currencys (name) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
--- object: parts.get_next_3d_models_id | type: FUNCTION --
--- DROP FUNCTION IF EXISTS parts.get_next_3d_models_id() CASCADE;
-CREATE FUNCTION parts.get_next_3d_models_id ()
-	RETURNS bigint
-	LANGUAGE plpython3u
-	VOLATILE 
-	CALLED ON NULL INPUT
-	SECURITY INVOKER
-	PARALLEL UNSAFE
-	COST 1
-	AS $$
-plan = plpy.prepare("SELECT id FROM parts.\"3d_models\" ORDER BY id")
-ids = plpy.execute(plan)
-res = -10
-for id in range(ids.nrows()):
-    res = id
-    if ids[id]['id'] != id:
-        return id
-return 	res + 1
-$$;
--- ddl-end --
-ALTER FUNCTION parts.get_next_3d_models_id() OWNER TO postgres;
--- ddl-end --
-COMMENT ON FUNCTION parts.get_next_3d_models_id() IS E'returns the next avalible 3d_model id';
--- ddl-end --
-
--- object: parts.get_next_images_id | type: FUNCTION --
--- DROP FUNCTION IF EXISTS parts.get_next_images_id() CASCADE;
-CREATE FUNCTION parts.get_next_images_id ()
-	RETURNS bigint
-	LANGUAGE plpython3u
-	VOLATILE 
-	CALLED ON NULL INPUT
-	SECURITY INVOKER
-	PARALLEL UNSAFE
-	COST 1
-	AS $$
-plan = plpy.prepare("SELECT id FROM parts.images ORDER BY id")
-ids = plpy.execute(plan)
-res = -10
-for id in range(ids.nrows()):
-    res = id
-    if ids[id]['id'] != id:
-        return id
-return 	res + 1
-$$;
--- ddl-end --
-ALTER FUNCTION parts.get_next_images_id() OWNER TO postgres;
--- ddl-end --
-COMMENT ON FUNCTION parts.get_next_images_id() IS E'returns the next avalible image id';
--- ddl-end --
-
--- object: parts.get_next_documantations_id | type: FUNCTION --
--- DROP FUNCTION IF EXISTS parts.get_next_documantations_id() CASCADE;
-CREATE FUNCTION parts.get_next_documantations_id ()
-	RETURNS bigint
-	LANGUAGE plpython3u
-	VOLATILE 
-	CALLED ON NULL INPUT
-	SECURITY INVOKER
-	PARALLEL UNSAFE
-	COST 1
-	AS $$
-plan = plpy.prepare("SELECT id FROM parts.documantations ORDER BY id")
-ids = plpy.execute(plan)
-res = -10
-for id in range(ids.nrows()):
-    res = id
-    if ids[id]['id'] != id:
-        return id
-return 	res + 1
-$$;
--- ddl-end --
-ALTER FUNCTION parts.get_next_documantations_id() OWNER TO postgres;
--- ddl-end --
-COMMENT ON FUNCTION parts.get_next_documantations_id() IS E'returns the next avalible documantations id';
--- ddl-end --
-
 -- object: footprints_fk | type: CONSTRAINT --
 -- ALTER TABLE kicad.parts DROP CONSTRAINT IF EXISTS footprints_fk CASCADE;
 ALTER TABLE kicad.parts ADD CONSTRAINT footprints_fk FOREIGN KEY (library_footprints,footprint_footprints)
@@ -1045,6 +992,75 @@ CREATE TRIGGER part_box_history_d
 	ON storage.part_box
 	FOR EACH STATEMENT
 	EXECUTE PROCEDURE storage.part_box_history_f_iu();
+-- ddl-end --
+
+-- object: parts_fk | type: CONSTRAINT --
+-- ALTER TABLE parts.properties DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
+ALTER TABLE parts.properties ADD CONSTRAINT parts_fk FOREIGN KEY (part_id)
+REFERENCES parts.parts (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: file_type_fk | type: CONSTRAINT --
+-- ALTER TABLE parts.documantations DROP CONSTRAINT IF EXISTS file_type_fk CASCADE;
+ALTER TABLE parts.documantations ADD CONSTRAINT file_type_fk FOREIGN KEY (type)
+REFERENCES global.file_type (type) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: file_type_fk | type: CONSTRAINT --
+-- ALTER TABLE parts.images DROP CONSTRAINT IF EXISTS file_type_fk CASCADE;
+ALTER TABLE parts.images ADD CONSTRAINT file_type_fk FOREIGN KEY (type)
+REFERENCES global.file_type (type) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: "3d_models_fk" | type: CONSTRAINT --
+-- ALTER TABLE parts."3d_models_parts" DROP CONSTRAINT IF EXISTS "3d_models_fk" CASCADE;
+ALTER TABLE parts."3d_models_parts" ADD CONSTRAINT "3d_models_fk" FOREIGN KEY (id_3d_models)
+REFERENCES parts."3d_models" (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: storage.box_sizes | type: TABLE --
+-- DROP TABLE IF EXISTS storage.box_sizes CASCADE;
+CREATE TABLE storage.box_sizes (
+	id bigint NOT NULL DEFAULT nextval('storage.box_size_id_seq'::regclass),
+	hight double precision NOT NULL,
+	width double precision NOT NULL,
+	depth double precision NOT NULL,
+	CONSTRAINT storage_box_sizes_pk PRIMARY KEY (id)
+
+);
+-- ddl-end --
+COMMENT ON COLUMN storage.box_sizes.hight IS E'the box hight in mm';
+-- ddl-end --
+COMMENT ON COLUMN storage.box_sizes.width IS E'the box width in mm';
+-- ddl-end --
+COMMENT ON COLUMN storage.box_sizes.depth IS E'the box depth in mm';
+-- ddl-end --
+ALTER TABLE storage.box_sizes OWNER TO postgres;
+-- ddl-end --
+
+-- object: box_sizes_fk | type: CONSTRAINT --
+-- ALTER TABLE storage.boxes DROP CONSTRAINT IF EXISTS box_sizes_fk CASCADE;
+ALTER TABLE storage.boxes ADD CONSTRAINT box_sizes_fk FOREIGN KEY (storage_box_size)
+REFERENCES storage.box_sizes (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: drawer_sizes_fk | type: CONSTRAINT --
+-- ALTER TABLE storage.drawers DROP CONSTRAINT IF EXISTS drawer_sizes_fk CASCADE;
+ALTER TABLE storage.drawers ADD CONSTRAINT drawer_sizes_fk FOREIGN KEY (size)
+REFERENCES storage.drawer_sizes (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: drawer_sizes_fk | type: CONSTRAINT --
+-- ALTER TABLE storage.cabinets DROP CONSTRAINT IF EXISTS drawer_sizes_fk CASCADE;
+ALTER TABLE storage.cabinets ADD CONSTRAINT drawer_sizes_fk FOREIGN KEY (storage_drawer_size)
+REFERENCES storage.drawer_sizes (id) MATCH FULL
+ON DELETE SET NULL ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: parts_fk | type: CONSTRAINT --
