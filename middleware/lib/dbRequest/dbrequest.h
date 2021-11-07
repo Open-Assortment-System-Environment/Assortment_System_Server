@@ -10,12 +10,6 @@
 #include <QSqlError>
 #include <QSqlRecord>
 
-#include <QJsonDocument>
-#include <QJsonParseError>
-#include <QJsonObject>
-#include <QJsonValue>
-#include <QJsonArray>
-
 #include "global.h"
 #include "requesttype.h"
 #include "resulttype.h"
@@ -51,7 +45,7 @@ private:
     ///
     /// \brief dbSettings ist the pointer to the setings for the DBConnection
     ///
-    QSettings* dbSettings;
+    QSettings* dbSettings = new QSettings(configFile, QSettings::IniFormat, this);
     ///
     /// \brief db is the DBconnection pointer
     ///

@@ -27,7 +27,7 @@
       },
       {
         "which": "wherToserach",
-        "value": "value",
+        "text": "value",
         "priorety": "search_priorety",
         "type": "text"
       }

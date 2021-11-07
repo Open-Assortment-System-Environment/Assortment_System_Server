@@ -29,7 +29,14 @@ QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QString value)
     QList<QVariant> ret;
     if((attribut.length() > 0) && (value.length() > 0))
     {
-        QString qryString = "SELECT part_id FROM parts.properties WHERE (attribut = '" + attribut + "' AND value = '" + value + "');";// create Querry string
+        QString qryString = "";
+        if(partsBasicParameters->contains(attribut))
+        {
+            qryString = "SELECT id FROM parts.parts WHERE (" + attribut + " = '" + value + "') ORDER BY id ASC;";// create Querry string
+        } else
+        {
+            qryString = "SELECT part_id FROM parts.properties WHERE (attribut = '" + attribut + "' AND value = '" + value + "') ORDER BY part_id ASC;";// create Querry string
+        }
         QString lastQryError = "";
         if(!(searchPartsByAttributQuery(qryString, ret, lastQryError)))
         {
@@ -52,12 +59,24 @@ QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QString valueF
     if((attribut.length() > 0) && (valueFrom.length() > 0) && (valueTo.length() > 0))
     {
         QString qryString = "";// create Querry string variable
-        if(valueFrom < valueTo)
+        if(partsBasicParameters->contains(attribut))
         {
-            qryString = "SELECT part_id FROM parts.properties WHERE (attribut = '" + attribut + "' AND value > '" + valueFrom + "' AND value < '" + valueTo + "') ORDER BY part_id ASC;";// create Querry string
-        }else
+            if(valueFrom < valueTo)
+            {
+                qryString = "SELECT id FROM parts.parts WHERE (" + attribut + " > '" + valueFrom + "' AND  " + attribut + " < '" + valueTo + "') ORDER BY id ASC;";// create Querry string
+            }else
+            {
+                qryString = "SELECT id FROM parts.parts WHERE (" + attribut + " > '" + valueTo + "' AND " + attribut + " < '" + valueFrom + "') ORDER BY id ASC;";// create Querry string
+            }
+        } else
         {
-            qryString = "SELECT part_id FROM parts.properties WHERE (attribut = '" + attribut + "' AND value > '" + valueTo + "' AND value < '" + valueFrom + "') ORDER BY part_id ASC;";// create Querry string
+            if(valueFrom < valueTo)
+            {
+                qryString = "SELECT part_id FROM parts.properties WHERE (attribut = '" + attribut + "' AND value > '" + valueFrom + "' AND value < '" + valueTo + "') ORDER BY part_id ASC;";// create Querry string
+            }else
+            {
+                qryString = "SELECT part_id FROM parts.properties WHERE (attribut = '" + attribut + "' AND value > '" + valueTo + "' AND value < '" + valueFrom + "') ORDER BY part_id ASC;";// create Querry string
+            }
         }
 
         QString lastQryError = "";
@@ -88,7 +107,7 @@ QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QList<QVariant
             noNullString = false;
         } else if(i < (values.length() - 1))
         {
-            qryValues.append(values[i].toString() + "', ");
+            qryValues.append(values[i].toString() + "', '");
         }if(i == (values.length() - 1))
         {
             qryValues.append(values[i].toString() + "'");
@@ -96,20 +115,27 @@ QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QList<QVariant
     }
     if((attribut.length() > 0) && (values.length() > 0) && noNullString)
     {
-        QString qryString = "SELECT part_id FROM parts.properties WHERE (attribut = '" + attribut + "' AND value IN (" + qryValues + ")) ORDER BY part_id ASC;";// create Querry string
+        QString qryString = "";
+        if(partsBasicParameters->contains(attribut))
+        {
+            qryString = "SELECT id FROM parts.parts WHERE (" + attribut + " IN (" + qryValues + ")) ORDER BY id ASC;";// create Querry string
+        } else
+        {
+            qryString = "SELECT part_id FROM parts.properties WHERE (attribut = '" + attribut + "' AND value IN (" + qryValues + ")) ORDER BY part_id ASC;";// create Querry string
+        }
 
         QString lastQryError = "";
         if(!(searchPartsByAttributQuery(qryString, ret, lastQryError)))
         {
             qInfo() << "Last querry error: " << lastQryError;
             error = true;
-            errorString = "Error while searching for id's: attribut[" + attribut + "]; value[" + qryValues + "]; Last querry error: " + lastQryError;
+            errorString = "Error while searching for id's: attribut[" + attribut + "]; values[" + qryValues + "]; Last querry error: " + lastQryError;
         }
     } else
     {
         qInfo() << "No attribut or value to Search";
         error = true;
-        errorString = "Error while searching for id's, no attribute or value to search: attribut[" + attribut + "]; value[" + qryValues + "]";
+        errorString = "Error while searching for id's, no attribute or value to search: attribut[" + attribut + "]; values[" + qryValues + "]";
     }
     return ret;
 }
@@ -122,7 +148,14 @@ QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QString value,
         QString idsString = "";
         if(creatIdsString(ids, idsString))
         {
-            QString qryString = "SELECT part_id FROM parts.properties WHERE (attribut = '" + attribut + "' AND value = '" + value + "' AND part_id IN (" + idsString + ")) ORDER BY part_id ASC;";// create Querry string
+            QString qryString = "";
+            if(partsBasicParameters->contains(attribut))
+            {
+                qryString = "SELECT id FROM parts.parts WHERE (" + attribut + " = '" + value + "' AND id IN (" + idsString + ")) ORDER BY id ASC;";// create Querry string
+            } else
+            {
+                qryString = "SELECT part_id FROM parts.properties WHERE (attribut = '" + attribut + "' AND value = '" + value + "' AND part_id IN (" + idsString + ")) ORDER BY part_id ASC;";// create Querry string
+            }
             QString lastQryError = "";
             if(!(searchPartsByAttributQuery(qryString, ret, lastQryError)))
             {
@@ -154,12 +187,24 @@ QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QString valueF
         QString idsString = "";
         if(creatIdsString(ids, idsString))
         {
-            if(valueFrom < valueTo)
+            if(partsBasicParameters->contains(attribut))
             {
-                qryString = "SELECT part_id FROM parts.properties WHERE (attribut = '" + attribut + "' AND value > '" + valueFrom + "' AND value < '" + valueTo + "' AND part_id IN (" + idsString + ")) ORDER BY part_id ASC;";// create Querry string
-            }else
+                if(valueFrom < valueTo)
+                {
+                    qryString = "SELECT id FROM parts.parts WHERE (" + attribut + " > '" + valueFrom + "' AND  " + attribut + " < '" + valueTo + "' AND id IN (" + idsString + ")) ORDER BY id ASC;";// create Querry string
+                }else
+                {
+                    qryString = "SELECT id FROM parts.parts WHERE (" + attribut + " > '" + valueTo + "' AND " + attribut + " < '" + valueFrom + "' AND id IN (" + idsString + ")) ORDER BY id ASC;";// create Querry string
+                }
+            } else
             {
-                qryString = "SELECT part_id FROM parts.properties WHERE (attribut = '" + attribut + "' AND value > '" + valueTo + "' AND value < '" + valueFrom + "' AND part_id IN (" + idsString + ")) ORDER BY part_id ASC;";// create Querry string
+                if(valueFrom < valueTo)
+                {
+                    qryString = "SELECT part_id FROM parts.properties WHERE (attribut = '" + attribut + "' AND value > " + valueFrom + " AND value < " + valueTo + " AND part_id IN (" + idsString + ")) ORDER BY part_id ASC;";// create Querry string
+                }else
+                {
+                    qryString = "SELECT part_id FROM parts.properties WHERE (attribut = '" + attribut + "' AND value > " + valueTo + " AND value < " + valueFrom + " AND part_id IN (" + idsString + ")) ORDER BY part_id ASC;";// create Querry string
+                }
             }
 
             QString lastQryError = "";
@@ -196,7 +241,7 @@ QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QList<QVariant
             noNullString = false;
         } else if(i < (values.length() - 1))
         {
-            qryValues.append(values[i].toString() + "', ");
+            qryValues.append(values[i].toString() + "', '");
         }if(i == (values.length() - 1))
         {
             qryValues.append(values[i].toString() + "'");
@@ -207,14 +252,22 @@ QList<QVariant> DBSearch::searchPartsByAttribut(QString attribut, QList<QVariant
         QString idsString = "";
         if(creatIdsString(ids, idsString))
         {
-            QString qryString = "SELECT part_id FROM parts.properties WHERE (attribut = '" + attribut + "' AND value IN (" + qryValues + ") AND part_id IN (" + idsString + ")) ORDER BY part_id ASC;";// create Querry string
+            QString qryString = "";
+            if(partsBasicParameters->contains(attribut))
+            {
+                qryString = "SELECT id FROM parts.parts WHERE (" + attribut + " IN (" + qryValues + ") AND id IN (" + idsString + ")) ORDER BY id ASC;";// create Querry string
+            } else
+            {
+                qryString = "SELECT part_id FROM parts.properties WHERE (attribut = '" + attribut + "' AND value IN (" + qryValues + ") AND part_id IN (" + idsString + ")) ORDER BY part_id ASC;";// create Querry string
+            }
+            qDebug() << "QRY String: " << qryString;
 
             QString lastQryError = "";
             if(!(searchPartsByAttributQuery(qryString, ret, lastQryError)))
             {
                 qInfo() << "Last querry error: " << lastQryError;
                 error = true;
-                errorString = "Error while searching for id's: attribut[" + attribut + "]; value[" + qryValues + "]; Last querry error: " + lastQryError;
+                errorString = "Error while searching for id's: attribut[" + attribut + "]; values[" + qryValues + "]; Last querry error: " + lastQryError;
             }
         } else
         {
@@ -267,7 +320,7 @@ bool DBSearch::creatIdsString(QList<QVariant> &ids, QString &idsString)
                 noError = false;
             } else if(i < (ids.length() - 1))
             {
-                idsString.append(ids[i].toString() + "', ");
+                idsString.append(ids[i].toString() + "', '");
             }if(i == (ids.length() - 1))
             {
                 idsString.append(ids[i].toString() + "'");
@@ -290,7 +343,7 @@ QList<QVariant> DBSearch::getPartIds()
         break;
 
         case 2: // values
-            ids = searchPartsByAttribut(reqeustSearchBy->at(0).toMap().value("name").toString(), reqeustSearchBy->at(0).toMap().value("value").toList());
+            ids = searchPartsByAttribut(reqeustSearchBy->at(0).toMap().value("name").toString(), reqeustSearchBy->at(0).toMap().value("values").toList());
         break;
 
         case 3: // from_to
@@ -309,7 +362,7 @@ QList<QVariant> DBSearch::getPartIds()
                 break;
 
                 case 2: // values
-                    ids = searchPartsByAttribut(reqeustSearchBy->at(i).toMap().value("name").toString(), reqeustSearchBy->at(i).toMap().value("value").toList(), ids);
+                    ids = searchPartsByAttribut(reqeustSearchBy->at(i).toMap().value("name").toString(), reqeustSearchBy->at(i).toMap().value("values").toList(), ids);
                 break;
 
                 case 3: // from_to
@@ -400,24 +453,29 @@ QVariant DBSearch::getPartWithAttributs(QVariant id)
     return ret;
 }
 
-DBSearch::DBSearch(QSqlDatabase *DB, QObject *parent)
+void DBSearch::initThis(QSqlDatabase *DB)
 {
     db = DB;
     error = false;
     errorString = "";
     initSearchWhatMap();
     initSearchTypeMap();
+    dbSearchSettings->beginGroup("db_search");
+
+    QStringList partsAtributeValueString = dbSearchSettings->value("partsBasicParameters").toStringList();
+    *partsBasicParameters = partsAtributeValueString;
+}
+
+DBSearch::DBSearch(QSqlDatabase *DB, QObject *parent)
+{
+    initThis(DB);
 }
 
 DBSearch::DBSearch(QSqlDatabase *DB, RequestType *Reqest, ResultType *Result, QObject *parent)
 {
-    db = DB;
     result = Result;
     setReqest(Reqest);
-    error = false;
-    errorString = "";
-    initSearchWhatMap();
-    initSearchTypeMap();
+    initThis(DB);
 }
 
 void DBSearch::searchStart()

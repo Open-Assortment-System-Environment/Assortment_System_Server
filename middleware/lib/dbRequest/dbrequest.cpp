@@ -27,7 +27,7 @@ void DBRequest::getAll(RequestType& request, ResultType& result)
                 delete partValue;
                 delete partObject;
             }
-            resMap->insert("parts", *partsArray);
+            resMap->insert("elements", *partsArray);
             result.setResult_values(*resMap);
             request.setCompleted(true); // Mark request as completed
         } else // when the qry was not sucsasfull than put an error
@@ -57,7 +57,6 @@ void DBRequest::initRequestMap()
 DBRequest::DBRequest(QObject *parent) : QObject(parent)
 {
     // set lisstener settings objektc
-    dbSettings = new QSettings(configFile, QSettings::IniFormat, parent);
     dbSettings->beginGroup("db_connection");
 
     // check if an old DBConnection with the same name already exists and if yes thean remove it

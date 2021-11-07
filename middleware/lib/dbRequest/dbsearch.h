@@ -11,6 +11,8 @@
 #include <QSqlError>
 #include <QSqlRecord>
 
+#include "global.h"
+
 #include "resulttype.h"
 #include "requesttype.h"
 
@@ -53,6 +55,16 @@ private:
     /// \brief searchTypeMap for identefien the id of the search type(from_to, value, ...)
     ///
     QMap<QString, int> *searchTypeMap = new QMap<QString, int>;
+    ///
+    /// \brief partsBasicParameters is the list of basic parameter that are uses in parts.parts
+    ///
+    QList<QString> *partsBasicParameters= new QList<QString>;
+
+
+    ///
+    /// \brief dbSearchSettings ist the pointer to the setings for the db search settings
+    ///
+    QSettings* dbSearchSettings = new QSettings(configFile, QSettings::IniFormat, this);
 
     // functions
 
@@ -144,17 +156,20 @@ private:
     ///
     /// \brief getPartsWithAttributs gets all the parts with there attributs from the DB
     /// \param ids the ids for the parts to get
-    /// \param LastQryError is the las error returnd by the DB Qry
     /// \return the map with the parts
     ///
     QVariant getAllPartsWithAttributs(QList<QVariant> ids);
     ///
     /// \brief getPartWithAttributs returns the part with all his attributes
     /// \param id the part id to get
-    /// \param LastQryError is the las error returnd by the DB Qry
     /// \return the part
     ///
     QVariant getPartWithAttributs(QVariant id);
+    ///
+    /// \brief initThis initialys all the basic things of the objekt and is caled by the constructors
+    /// \param DB the db pointer
+    ///
+    void initThis(QSqlDatabase *DB);
 public:
     ///
     /// \brief DBSearch the Constructor
