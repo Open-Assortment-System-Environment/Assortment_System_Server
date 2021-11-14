@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,337" last-zoom="0.25" max-obj-count="42"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="2919,2104" last-zoom="0.75" max-obj-count="42"
 	 default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -1121,7 +1121,11 @@ url•an link to the website]]>
 	 custom-color="#a06562"
 	 src-table="global.currencys"
 	 dst-table="parts.purchase_price"
-	 src-required="true" dst-required="false"/>
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="244.868" y="19.7692"/>
+	</label>
+</relationship>
 
 <relationship name="footprints_has_many_parts" type="rel1n" layers="0"
 	 src-col-pattern="{sc}_{st}"
