@@ -258,9 +258,9 @@ ALTER FUNCTION pg_catalog.plpython3_inline_handler(internal) OWNER TO postgres;
 -- object: parts."3d_models_parts" | type: TABLE --
 -- DROP TABLE IF EXISTS parts."3d_models_parts" CASCADE;
 CREATE TABLE parts."3d_models_parts" (
-	id_3d_models bigint NOT NULL,
 	part_id bigint NOT NULL,
-	CONSTRAINT "3d_models_parts_pk" PRIMARY KEY (id_3d_models,part_id)
+	id_3d_models bigint NOT NULL,
+	CONSTRAINT "3d_models_parts_pk" PRIMARY KEY (part_id,id_3d_models)
 
 );
 -- ddl-end --
@@ -330,9 +330,9 @@ INSERT INTO parts.part_attributes (name, description, universal, "value-type", u
 -- DROP TABLE IF EXISTS parts.properties CASCADE;
 CREATE TABLE parts.properties (
 	part_id bigint NOT NULL,
-	value text NOT NULL,
 	attribut text NOT NULL,
-	CONSTRAINT properties_pk PRIMARY KEY (part_id,attribut)
+	value text NOT NULL,
+	CONSTRAINT properties_pk PRIMARY KEY (attribut,part_id)
 
 );
 -- ddl-end --
@@ -458,21 +458,21 @@ REFERENCES global.units (name) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
--- object: parts.manufacturers | type: TABLE --
--- DROP TABLE IF EXISTS parts.manufacturers CASCADE;
-CREATE TABLE parts.manufacturers (
+-- object: vendors.manufacturers | type: TABLE --
+-- DROP TABLE IF EXISTS vendors.manufacturers CASCADE;
+CREATE TABLE vendors.manufacturers (
 	name text NOT NULL,
 	CONSTRAINT manufacturers_pk PRIMARY KEY (name)
 
 );
 -- ddl-end --
-ALTER TABLE parts.manufacturers OWNER TO postgres;
+ALTER TABLE vendors.manufacturers OWNER TO postgres;
 -- ddl-end --
 
 -- object: manufacturers_fk | type: CONSTRAINT --
 -- ALTER TABLE parts.part_manufacturers DROP CONSTRAINT IF EXISTS manufacturers_fk CASCADE;
 ALTER TABLE parts.part_manufacturers ADD CONSTRAINT manufacturers_fk FOREIGN KEY (manufacturer)
-REFERENCES parts.manufacturers (name) MATCH FULL
+REFERENCES vendors.manufacturers (name) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
@@ -1064,20 +1064,6 @@ ON DELETE SET NULL ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: parts_fk | type: CONSTRAINT --
--- ALTER TABLE parts.documantations DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
-ALTER TABLE parts.documantations ADD CONSTRAINT parts_fk FOREIGN KEY (id_parts)
-REFERENCES parts.parts (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
--- ddl-end --
-
--- object: parts_fk | type: CONSTRAINT --
--- ALTER TABLE parts.images DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
-ALTER TABLE parts.images ADD CONSTRAINT parts_fk FOREIGN KEY (id_parts)
-REFERENCES parts.parts (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
--- ddl-end --
-
--- object: parts_fk | type: CONSTRAINT --
 -- ALTER TABLE parts.part_manufacturers DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
 ALTER TABLE parts.part_manufacturers ADD CONSTRAINT parts_fk FOREIGN KEY (part_id)
 REFERENCES parts.parts (id) MATCH FULL
@@ -1101,6 +1087,20 @@ ON DELETE RESTRICT ON UPDATE CASCADE;
 -- object: parts_fk | type: CONSTRAINT --
 -- ALTER TABLE kicad.parts DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
 ALTER TABLE kicad.parts ADD CONSTRAINT parts_fk FOREIGN KEY (part_id)
+REFERENCES parts.parts (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: parts_fk | type: CONSTRAINT --
+-- ALTER TABLE parts.images DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
+ALTER TABLE parts.images ADD CONSTRAINT parts_fk FOREIGN KEY (id_parts)
+REFERENCES parts.parts (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: parts_fk | type: CONSTRAINT --
+-- ALTER TABLE parts.documantations DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
+ALTER TABLE parts.documantations ADD CONSTRAINT parts_fk FOREIGN KEY (id_parts)
 REFERENCES parts.parts (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
