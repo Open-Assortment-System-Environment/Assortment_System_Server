@@ -1,8 +1,0 @@
-{
-  "request":
-  {
-    "completed": false,
-    "request_type": "get_all",
-    "which": "parts.properties"
-  }
-}

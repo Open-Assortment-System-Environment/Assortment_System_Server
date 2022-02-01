@@ -1,7 +1,0 @@
-/**
-\page api API
-The API is currently only a JSON API but could be modefyte to axapt other formats.<p>
-You send an \subpage request and you wil get the \ref request puls the \subpage result back.<p>
-
-<!--\ref search_type_value_field_describtions "VALUE ASD"--->
-*/
