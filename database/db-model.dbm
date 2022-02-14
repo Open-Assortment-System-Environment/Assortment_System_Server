@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="2919,2104" last-zoom="0.75" max-obj-count="42"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="4799,1720" last-zoom="1.15" max-obj-count="46"
 	 default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -39,6 +39,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </schema>
 
 <schema name="vendors" layers="0" rect-visible="true" fill-color="#ba082d">
+	<role name="postgres"/>
+</schema>
+
+<schema name="auth" layers="0" rect-visible="true" fill-color="#251eee">
 	<role name="postgres"/>
 </schema>
 
@@ -1339,6 +1343,146 @@ return 	res + 1]]></definition>
 	 dst-table="storage.cabinets"
 	 src-required="false" dst-required="false"/>
 
+<sequence name="user_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="9223372036854775807" cache="1">
+	<schema name="auth"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="user" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="auth"/>
+	<role name="postgres"/>
+	<position x="4480" y="1800"/>
+	<column name="id" not-null="true" sequence="auth.user_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="version" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="favourite_pet" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="admin" not-null="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="user_pkey" type="pk-constr" table="auth.&quot;user&quot;">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="auth_identity_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="9223372036854775807" cache="1">
+	<schema name="auth"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="auth_identity" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="auth"/>
+	<role name="postgres"/>
+	<position x="4480" y="1980"/>
+	<column name="id" not-null="true" sequence="auth.auth_identity_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="version" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="auth.auth_info_id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="provider" not-null="true">
+		<type name="character varying" length="64"/>
+	</column>
+	<column name="identity" not-null="true">
+		<type name="character varying" length="512"/>
+	</column>
+	<constraint name="auth_identity_pkey" type="pk-constr" table="auth.auth_identity">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="auth_info_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="9223372036854775807" cache="1">
+	<schema name="auth"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="auth_info" layers="0" collapse-mode="2" max-obj-count="16" z-value="0">
+	<schema name="auth"/>
+	<role name="postgres"/>
+	<position x="5080" y="1780"/>
+	<column name="id" not-null="true" sequence="auth.auth_info_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="version" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="user_id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="password_hash" not-null="true">
+		<type name="character varying" length="100"/>
+	</column>
+	<column name="password_method" not-null="true">
+		<type name="character varying" length="20"/>
+	</column>
+	<column name="password_salt" not-null="true">
+		<type name="character varying" length="20"/>
+	</column>
+	<column name="status" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="failed_login_attempts" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="last_login_attempt">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="email" not-null="true">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="unverified_email" not-null="true">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="email_token" not-null="true">
+		<type name="character varying" length="64"/>
+	</column>
+	<column name="email_token_expires">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="email_token_role" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<constraint name="auth_info_pkey" type="pk-constr" table="auth.auth_info">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="auth_token_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="9223372036854775807" cache="1">
+	<schema name="auth"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="auth_token" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="auth"/>
+	<role name="postgres"/>
+	<position x="5660" y="1860"/>
+	<column name="id" not-null="true" sequence="auth.auth_token_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="version" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="auth.auth_info_id">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="value" not-null="true">
+		<type name="character varying" length="64"/>
+	</column>
+	<column name="expires">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="auth_token_pkey" type="pk-constr" table="auth.auth_token">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
 <constraint name="parts_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="parts.parts" table="parts.part_manufacturers">
 	<columns names="part_id" ref-type="src-columns"/>
@@ -1372,6 +1516,30 @@ return 	res + 1]]></definition>
 <constraint name="parts_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="parts.parts" table="parts.documantations">
 	<columns names="id_parts" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_auth.auth_identity_auth.auth_info" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="auth.auth_info"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="auth.auth_identity">
+	<columns names="auth.auth_info_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_auth.auth_info_user" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="auth.&quot;user&quot;"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="auth.auth_info">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_auth.auth_token_auth.auth_info" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="auth.auth_info"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="auth.auth_token">
+	<columns names="auth.auth_info_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -1412,6 +1580,21 @@ return 	res + 1]]></definition>
 	 src-table="kicad.parts"
 	 dst-table="parts.parts" reference-fk="parts_fk"
 	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_auth_identity_auth_info" type="relfk" layers="0"
+	 src-table="auth.auth_identity"
+	 dst-table="auth.auth_info" reference-fk="fk_auth.auth_identity_auth.auth_info"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_auth_info_user" type="relfk" layers="0"
+	 src-table="auth.auth_info"
+	 dst-table="auth.&quot;user&quot;" reference-fk="fk_auth.auth_info_user"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_auth_token_auth_info" type="relfk" layers="0"
+	 src-table="auth.auth_token"
+	 dst-table="auth.auth_info" reference-fk="fk_auth.auth_token_auth.auth_info"
+	 src-required="false" dst-required="false"/>
 
 <permission>
 	<object name="public" type="schema"/>
