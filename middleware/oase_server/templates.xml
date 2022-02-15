@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<messages xmlns:if="Wt.WTemplate.conditions">
+
+  <message id="template.logged-in">
+    <div>
+      <div class="Wt-auth-logged-in-left">
+        ${nav-b-tex1} ${nav-b-tex2}</div>
+      <div class="Wt-auth-logged-in-right">
+        <b>${user-name} </b>${logout}</div>
+    </div>
+    <div class="Wt-auth-logged-in-center"><p><br/></p></div>
+    <div class="Wt-auth-logged-in-center">
+      ${main-view-widget}
+    </div>
+  </message>
+
+  <message id="template.registration">
+    <div class="Wt-form Wt-auth-registration">
+
+      ${password-description}
+
+      <div class="Wt-fields">
+        ${<if:user-name>}
+        <li>
+          <label for="${id:user-name}">${user-name-label}
+            ${user-name-info class="Wt-info"}
+            ${confirm-is-you class="Wt-info"}:
+          </label>
+          ${user-name}
+        </li>
+        ${</if:user-name>}
+
+        ${<if:choose-password>}
+        <li>
+          <label for="${id:choose-password}">${tr:Wt.Auth.choose-password}
+            ${choose-password-info class="Wt-info"}:
+          </label>
+          ${choose-password}
+        </li>
+
+        <li>
+          <label for="${id:repeat-password}">${tr:Wt.Auth.repeat-password}
+            ${repeat-password-info class="Wt-info"}:
+          </label>
+          ${repeat-password}
+        </li>
+        ${</if:choose-password>}
+
+        ${<if:email>}
+        <li>
+          <label for="${id:email}">${tr:Wt.Auth.email}
+            ${email-info class="Wt-info"}:
+          </label>
+          ${email}
+        </li>
+        ${</if:email>}
+
+        <li>
+        <label for="${id:favourite-pet}">Favourite pet:
+          ${favourite-pet-info class="Wt-info"}:
+        </label>
+        ${favourite-pet}
+        </li>
+
+        <li>
+        <label for="${id:favourite-pet}">Admin:
+        </label>
+        ${admin}
+        </li>
+
+      </div>
+
+      ${<if:oauth>}
+      <li>
+        <br clear="both" />
+        ${oauth-description}
+        <label>${tr:Wt.Auth.oauth}
+          <span class="Wt-info">${tr:Wt.Auth.oauth-info}</span>
+        </label>
+        ${icons}
+      </li>
+      ${</if:oauth>}
+
+      <div class="Wt-buttons">
+        ${ok-button} ${cancel-button}
+      </div>
+    </div>
+  </message>
+</messages>
