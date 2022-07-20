@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="5037,1587" last-zoom="0.9" max-obj-count="44"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="6088,2690" last-zoom="0.9" max-obj-count="44"
 	 default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
