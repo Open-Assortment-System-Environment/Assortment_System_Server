@@ -9,25 +9,23 @@
 
 #include <Wt/Auth/RegistrationWidget.h>
 
-using namespace Wt;
-
 class Session;
 class UserDetailsModel;
 
-class RegistrationView : public Auth::RegistrationWidget
+class RegistrationView : public Wt::Auth::RegistrationWidget
 {
 public:
-  RegistrationView(Session& session, Auth::AuthWidget *authWidget = 0);
+  RegistrationView(Session& session, Wt::Auth::AuthWidget *authWidget = 0);
 
   /* specialize to create user details fields */
-  virtual std::unique_ptr<WWidget> createFormWidget(WFormModel::Field field);
+  virtual std::unique_ptr<Wt::WWidget> createFormWidget(Wt::WFormModel::Field field);
 
 protected:
   /* specialize to also validate the user details */
   virtual bool validate();
 
   /* specialize to register user details */
-  virtual void registerUserDetails(Auth::User& user);
+  virtual void registerUserDetails(Wt::Auth::User& user);
 
 private:
   Session& session_;

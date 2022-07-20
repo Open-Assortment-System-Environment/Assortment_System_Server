@@ -1,5 +1,9 @@
 body {
     font-family: arial, sans-serif;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    padding-left: 25px;
+    padding-right: 25px;
 }
 
 .Wt-auth-logged-in-left {
@@ -23,8 +27,10 @@ body {
     padding-right: 4px;
 }
 
-.Wt-auth-registration {
-    width: 600px;
+@media (min-width: 1200px) {
+  .container {
+    width: 800px;
+  }
 }
 
 /*

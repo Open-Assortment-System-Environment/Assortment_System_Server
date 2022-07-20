@@ -15,6 +15,11 @@ int main()
 // applications:
 #include "mainapplication.h"
 
+///
+/// \brief createApplication creats the application pointer
+/// \param env a refferenc to the Envirment
+/// \return the pointer to the application
+///
 std::unique_ptr<Wt::WApplication> createApplication(const Wt::WEnvironment& env)
 {
   return std::make_unique<MainApplication>(env);

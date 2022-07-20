@@ -9,24 +9,24 @@
 #include "session.h"
 
 
-const WFormModel::Field
+const Wt::WFormModel::Field
 UserDetailsModel::FavouritePetField = "favourite-pet";
-const WFormModel::Field
+const Wt::WFormModel::Field
 UserDetailsModel::Admin = "admin";
 
 UserDetailsModel::UserDetailsModel(Session& session)
   : WFormModel(),
     session_(session)
 {
-  addField(FavouritePetField, WString::tr("favourite-pet-info"));
-  addField(Admin, WString::tr("admin-info"));
+  addField(FavouritePetField, Wt::WString::tr("favourite-pet-info"));
+  addField(Admin, Wt::WString::tr("admin-info"));
 }
 
-void UserDetailsModel::save(const Auth::User& authUser)
+void UserDetailsModel::save(const Wt::Auth::User& authUser)
 {
-  Dbo::ptr<User> user = session_.user(authUser);
+  Wt::Dbo::ptr<User> user = session_.user(authUser);
   user.modify()->favouritePet = valueText(FavouritePetField).toUTF8();
-  log("notice") << "(regSave Admin: " << valueText(Admin) << ")";
+  Wt::log("notice") << "(regSave Admin: " << valueText(Admin) << ")";
   bool tmpValue = false;
   if(valueText(Admin) == "true")
       tmpValue = true;

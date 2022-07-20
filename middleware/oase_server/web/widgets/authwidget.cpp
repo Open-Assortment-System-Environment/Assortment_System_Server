@@ -20,10 +20,10 @@ AuthWidget::~AuthWidget()
     delete mainViewWidget_;
 }
 
-std::unique_ptr<Wt::WWidget> AuthWidget::createRegistrationView(const Auth::Identity& id)
+std::unique_ptr<Wt::WWidget> AuthWidget::createRegistrationView(const Wt::Auth::Identity& id)
 {
-  auto registrationView = cpp14::make_unique<RegistrationView>(session_, this);
-  std::unique_ptr<Auth::RegistrationModel> model = createRegistrationModel();
+  auto registrationView = Wt::cpp14::make_unique<RegistrationView>(session_, this);
+  std::unique_ptr<Wt::Auth::RegistrationModel> model = createRegistrationModel();
 
   if (id.isValid())
     model->registerIdentified(id);
@@ -35,52 +35,42 @@ std::unique_ptr<Wt::WWidget> AuthWidget::createRegistrationView(const Auth::Iden
 void AuthWidget::createLoggedInView()
 {
     // base setup of the logged in view
-    Auth::AuthWidget::createLoggedInView();
+    Wt::Auth::AuthWidget::createLoggedInView();
     setTemplateText(tr("template.logged-in"));
 
-    // create nav buttons
-    WPushButton *navBTex1
-      = bindWidget("nav-b-tex1",
-           cpp14::make_unique<WPushButton>("Nav Tex 1"));
-    navBTex1->clicked().connect(this, &AuthWidget::showTex1);
-    WPushButton *navBTex2
-      = bindWidget("nav-b-tex2",
-           cpp14::make_unique<WPushButton>("Nav Tex 2"));
-    navBTex2->clicked().connect(this, &AuthWidget::showTex2);
-
     // create main view:
-    mainViewWidget_ = bindWidget("main-view-widget", cpp14::make_unique<ContainerWidget>());
-    initTex1();
-    initTex2();
-    showTex1();
+    mainViewWidget_ = bindWidget("main-view-widget", Wt::cpp14::make_unique<MainView>());
+
+    // create nav buttons
+    Wt::WPushButton *navBTex1
+      = bindWidget("nav-b-tex1",
+           Wt::cpp14::make_unique<Wt::WPushButton>("Nav Tex 1"));
+    navBTex1->clicked().connect(this, &AuthWidget::showTex1);
+    Wt::WPushButton *navBTex2
+      = bindWidget("nav-b-tex2",
+           Wt::cpp14::make_unique<Wt::WPushButton>("Nav Tex 2"));
+    navBTex2->clicked().connect(this, &AuthWidget::showTex2);
 }
 
-void AuthWidget::hideAll()
+void AuthWidget::createLoginView()
 {
-    tex1_->hide();
-    tex2_->hide();
-}
+    setTemplateText(tr("template.login"));
 
-void AuthWidget::initTex1()
-{
-    tex1_ = mainViewWidget_->addWidget(std::make_unique<Wt::WCheckBox>("Tex1"));
-    tex1_->hide();
-}
+    createPasswordLoginView();
+    createOAuthLoginView();
+#ifdef WT_HAS_SAML
+    createSamlLoginView();
+#endif // WT_HAS_SAML_
 
-void AuthWidget::initTex2()
-{
-    tex2_ = mainViewWidget_->addWidget(std::make_unique<Wt::WCheckBox>("Tex2"));
-    tex2_->hide();
+    //Wt::Auth::AuthWidget::createLoginView();
 }
 
 void AuthWidget::showTex1()
 {
-    hideAll();
-    tex1_->show();
+    mainViewWidget_->showTex1();
 }
 
 void AuthWidget::showTex2()
 {
-    hideAll();
-    tex2_->show();
+    mainViewWidget_->showTex2();
 }

@@ -23,6 +23,10 @@ class ContainerWidget : public Wt::WContainerWidget
 {
 public:
     ContainerWidget();
+
+protected:
+
+private:
 };
 
 #endif // CONTAINERWIDGET_H

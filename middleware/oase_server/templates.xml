@@ -1,5 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <messages xmlns:if="Wt.WTemplate.conditions">
+  <message id="template.field">
+    <![CDATA[
+    ${<if:{1}>}
+    <div class="form-group">
+      <label for="${id:{1}}" class="control-label col-sm-2" style="text-align: left">
+        ${tr:Wt.Auth.{1}}
+      </label>
+      <div class="col-sm-7">
+        ${{1}}
+      </div>
+      <div class="help-block col-sm-3" style="text-align: right">
+        ${{1}-info}
+      </div>
+    </div>
+    ${</if:{1}>}
+    ]]>
+  </message>
+
+  <message id="template.field2">
+    <![CDATA[
+    ${<if:{1}>}
+    <div class="form-group">
+      <label for="${id:{1}}" class="control-label col-sm-2" style="text-align: left">
+        ${{2}}
+      </label>
+      <div class="col-sm-7">
+        ${{1}}
+      </div>
+      <div class="help-block col-sm-3" style="text-align: right">
+        ${{1}-info}
+      </div>
+    </div>
+    ${</if:{1}>}
+    ]]>
+  </message>
+
+  <message id="template.field3">
+    <![CDATA[
+    ${<if:{1}>}
+    <div class="form-group">
+      <label for="${id:{1}}" class="control-label col-sm-2" style="text-align: left">
+        ${{2}}
+      </label>
+      <div class="col-sm-7">
+        ${{1}}
+      </div>
+      <div class="help-block col-sm-3" style="text-align: right">
+        ${{1}-info} ${{3} class="btn-link"}
+      </div>
+    </div>
+    ${</if:{1}>}
+    ]]>
+  </message>
 
   <message id="template.logged-in">
     <div>
@@ -15,58 +68,24 @@
   </message>
 
   <message id="template.registration">
-    <div class="Wt-form Wt-auth-registration">
+     <div class="Wt-form Wt-auth-registration">
 
       ${password-description}
 
       <div class="Wt-fields">
         ${<if:user-name>}
-        <li>
-          <label for="${id:user-name}">${user-name-label}
-            ${user-name-info class="Wt-info"}
-            ${confirm-is-you class="Wt-info"}:
-          </label>
-          ${user-name}
-        </li>
+        ${block:template.field user-name}
         ${</if:user-name>}
 
         ${<if:choose-password>}
-        <li>
-          <label for="${id:choose-password}">${tr:Wt.Auth.choose-password}
-            ${choose-password-info class="Wt-info"}:
-          </label>
-          ${choose-password}
-        </li>
 
-        <li>
-          <label for="${id:repeat-password}">${tr:Wt.Auth.repeat-password}
-            ${repeat-password-info class="Wt-info"}:
-          </label>
-          ${repeat-password}
-        </li>
+        ${block:template.field choose-password}
+        ${block:template.field repeat-password}
         ${</if:choose-password>}
 
         ${<if:email>}
-        <li>
-          <label for="${id:email}">${tr:Wt.Auth.email}
-            ${email-info class="Wt-info"}:
-          </label>
-          ${email}
-        </li>
+        ${block:template.field email}
         ${</if:email>}
-
-        <li>
-        <label for="${id:favourite-pet}">Favourite pet:
-          ${favourite-pet-info class="Wt-info"}:
-        </label>
-        ${favourite-pet}
-        </li>
-
-        <li>
-        <label for="${id:favourite-pet}">Admin:
-        </label>
-        ${admin}
-        </li>
 
       </div>
 
@@ -85,5 +104,36 @@
         ${ok-button} ${cancel-button}
       </div>
     </div>
+  </message>
+
+  <message id="template.login">
+  <div class="container span8 offset2 Wt-auth-login">
+        <legend>${tr:Wt.Auth.login-form-title}</legend>
+        <p>${tr:Wt.Auth.login-form-info}</p>
+
+        <div class="form-horizontal">
+          ${<if:passwords>}
+            ${block:template.field2 user-name user-name-label}
+            ${block:template.field password}
+            ${block:template.field remember-me}
+          ${</if:passwords>}
+
+          ${<if:oauth>}
+            <div class="control-group">
+              <div class="controls">
+                <p>Or login using:</p>
+                ${icons}
+              </div>
+            </div>
+          ${</if:oauth>}
+
+          <div class="form-actions">
+            <p>${login class="btn-primary"}</p>
+            <p>${lost-password class="btn-link"} ${sep}
+            ${register class="btn-link"}</p>
+          </div>
+        </div>
+      </div>
+
   </message>
 </messages>

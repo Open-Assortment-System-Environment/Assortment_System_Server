@@ -8,6 +8,9 @@ set(WIDGETS_SRC
     # Container:
     containerwidget.h
     containerwidget.cpp
+    # MainView
+    mainview.h
+    mainview.cpp
 )
 
 # finde packeges

@@ -29,8 +29,7 @@
 #include <Wt/WLabel.h>
 
 #include "containerwidget.h"
-
-//using namespace Wt;
+#include "mainview.h"
 
 class Session;
 
@@ -40,25 +39,18 @@ public:
   AuthWidget(Session& session);
   ~AuthWidget();
 
-  virtual std::unique_ptr<WWidget> createRegistrationView(const Wt::Auth::Identity& id) override;
+  virtual std::unique_ptr<Wt::WWidget> createRegistrationView(const Wt::Auth::Identity& id) override;
   virtual void createLoggedInView() override;
+
+protected:
+  virtual void createLoginView() override;
+
 
 private:
   Session& session_;
 
   // Widgets:
-  ContainerWidget *mainViewWidget_;
-  Wt::WCheckBox *tex1_;
-  Wt::WCheckBox *tex2_;
-
-  // widget manigment functions:
-  void hideAll();
-
-  // init functions:
-  void initTex1();
-  void initTex2();
-
-  // show functions:
+  MainView *mainViewWidget_;
   void showTex1();
   void showTex2();
 };

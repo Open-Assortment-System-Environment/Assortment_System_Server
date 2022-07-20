@@ -11,11 +11,9 @@
 
 #include <any>
 
-using namespace Wt;
-
 class Session;
 
-class UserDetailsModel : public WFormModel
+class UserDetailsModel : public Wt::WFormModel
 {
 public:
   static const Field FavouritePetField;
@@ -23,7 +21,7 @@ public:
 
   UserDetailsModel(Session& session);
 
-  void save(const Auth::User& user);
+  void save(const Wt::Auth::User& user);
 
 private:
   Session& session_;

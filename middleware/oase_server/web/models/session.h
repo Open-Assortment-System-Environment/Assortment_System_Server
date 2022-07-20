@@ -14,13 +14,12 @@
 
 #include "user.h"
 
-using namespace Wt;
+typedef Wt::Auth::Dbo::UserDatabase<AuthInfo> UserDatabase;
 
-namespace dbo = Wt::Dbo;
-
-typedef Auth::Dbo::UserDatabase<AuthInfo> UserDatabase;
-
-class Session : public dbo::Session
+///
+/// \brief The Session class
+///
+class Session : public Wt::Dbo::Session
 {
 public:
   static void configureAuth();
@@ -28,19 +27,19 @@ public:
   Session(const std::string& sqliteDb);
   ~Session();
 
-  dbo::ptr<User> user();
-  dbo::ptr<User> user(const Auth::User& user);
+  Wt::Dbo::ptr<User> user();
+  Wt::Dbo::ptr<User> user(const Wt::Auth::User& user);
 
-  Auth::AbstractUserDatabase& users();
-  Auth::Login& login() { return login_; }
+  Wt::Auth::AbstractUserDatabase& users();
+  Wt::Auth::Login& login() { return login_; }
 
-  static const Auth::AuthService& auth();
-  static const Auth::PasswordService& passwordAuth();
-  static const std::vector<const Auth::OAuthService*> oAuth();
+  static const Wt::Auth::AuthService& auth();
+  static const Wt::Auth::PasswordService& passwordAuth();
+  static const std::vector<const Wt::Auth::OAuthService*> oAuth();
 
 private:
   std::unique_ptr<UserDatabase> users_;
-  Auth::Login                   login_;
+  Wt::Auth::Login               login_;
 };
 
 #endif // SESSION_H_

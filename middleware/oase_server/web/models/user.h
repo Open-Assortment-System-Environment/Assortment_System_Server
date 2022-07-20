@@ -13,8 +13,6 @@
 #include <Wt/WGlobal.h>
 #include <Wt/Auth/Dbo/AuthInfo.h>
 
-namespace dbo = Wt::Dbo;
-
 class User;
 typedef Wt::Auth::Dbo::AuthInfo<User> AuthInfo;
 
@@ -23,14 +21,14 @@ public:
   /* You probably want to add other user information here, e.g. */
   std::string favouritePet;
   bool admin;
-  dbo::weak_ptr<AuthInfo> authInfo;
+  Wt::Dbo::weak_ptr<AuthInfo> authInfo;
 
   template<class Action>
   void persist(Action& a)
   {
-    dbo::field(a, favouritePet, "favourite_pet");
-    dbo::field(a, admin, "admin");
-    dbo::hasOne(a, authInfo, "user");
+    Wt::Dbo::field(a, favouritePet, "favourite_pet");
+    Wt::Dbo::field(a, admin, "admin");
+    Wt::Dbo::hasOne(a, authInfo, "user");
   }
 };
 

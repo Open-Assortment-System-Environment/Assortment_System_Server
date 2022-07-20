@@ -21,9 +21,9 @@
 
 namespace {
 
-  Auth::AuthService myAuthService;
-  Auth::PasswordService myPasswordService(myAuthService);
-  std::vector<std::unique_ptr<Auth::OAuthService>> myOAuthServices;
+  Wt::Auth::AuthService myAuthService;
+  Wt::Auth::PasswordService myPasswordService(myAuthService);
+  std::vector<std::unique_ptr<Wt::Auth::OAuthService>> myOAuthServices;
 
 }
 
@@ -32,24 +32,24 @@ void Session::configureAuth()
   myAuthService.setAuthTokensEnabled(true, "logincookie");
   myAuthService.setEmailVerificationEnabled(true);
 
-  auto verifier = cpp14::make_unique<Auth::PasswordVerifier>();
-  verifier->addHashFunction(cpp14::make_unique<Auth::BCryptHashFunction>(7));
+  auto verifier = Wt::cpp14::make_unique<Wt::Auth::PasswordVerifier>();
+  verifier->addHashFunction(Wt::cpp14::make_unique<Wt::Auth::BCryptHashFunction>(7));
   myPasswordService.setVerifier(std::move(verifier));
   myPasswordService.setAttemptThrottlingEnabled(true);
   myPasswordService.setStrengthValidator
-    (cpp14::make_unique<Auth::PasswordStrengthValidator>());
+    (Wt::cpp14::make_unique<Wt::Auth::PasswordStrengthValidator>());
 
-  if (Auth::GoogleService::configured())
-    myOAuthServices.push_back(cpp14::make_unique<Auth::GoogleService>(myAuthService));
+  if (Wt::Auth::GoogleService::configured())
+    myOAuthServices.push_back(Wt::cpp14::make_unique<Wt::Auth::GoogleService>(myAuthService));
 
-  if (Auth::FacebookService::configured())
-    myOAuthServices.push_back(cpp14::make_unique<Auth::FacebookService>(myAuthService));
+  if (Wt::Auth::FacebookService::configured())
+    myOAuthServices.push_back(Wt::cpp14::make_unique<Wt::Auth::FacebookService>(myAuthService));
 }
 
 Session::Session(const std::string& sqliteDb)
 {
   //auto connection = cpp14::make_unique<Dbo::backend::Sqlite3>(sqliteDb);
-  auto connection = cpp14::make_unique<Dbo::backend::Postgres>(sqliteDb);
+  auto connection = Wt::cpp14::make_unique<Wt::Dbo::backend::Postgres>(sqliteDb);
 
   connection->setProperty("show-queries", "true");
 
@@ -68,31 +68,31 @@ Session::Session(const std::string& sqliteDb)
     std::cerr << "Using existing database";
   }
 
-  users_ = cpp14::make_unique<UserDatabase>(*this);
+  users_ = Wt::cpp14::make_unique<UserDatabase>(*this);
 }
 
 Session::~Session()
 {
 }
 
-Auth::AbstractUserDatabase& Session::users()
+Wt::Auth::AbstractUserDatabase& Session::users()
 {
   return *users_;
 }
 
-dbo::ptr<User> Session::user()
+Wt::Dbo::ptr<User> Session::user()
 {
   if (login_.loggedIn())
     return user(login_.user());
   else
-    return dbo::ptr<User>();
+    return Wt::Dbo::ptr<User>();
 }
 
-dbo::ptr<User> Session::user(const Auth::User& authUser)
+Wt::Dbo::ptr<User> Session::user(const Wt::Auth::User& authUser)
 {
-  dbo::ptr<AuthInfo> authInfo = users_->find(authUser);
+  Wt::Dbo::ptr<AuthInfo> authInfo = users_->find(authUser);
 
-  dbo::ptr<User> user = authInfo->user();
+  Wt::Dbo::ptr<User> user = authInfo->user();
 
   if (!user) {
     user = add(Wt::cpp14::make_unique<User>());
@@ -102,19 +102,19 @@ dbo::ptr<User> Session::user(const Auth::User& authUser)
   return user;
 }
 
-const Auth::AuthService& Session::auth()
+const Wt::Auth::AuthService& Session::auth()
 {
   return myAuthService;
 }
 
-const Auth::PasswordService& Session::passwordAuth()
+const Wt::Auth::PasswordService& Session::passwordAuth()
 {
   return myPasswordService;
 }
 
-const std::vector<const Auth::OAuthService*> Session::oAuth()
+const std::vector<const Wt::Auth::OAuthService*> Session::oAuth()
 {
-  std::vector<const Auth::OAuthService *> result;
+  std::vector<const Wt::Auth::OAuthService *> result;
   for (auto &auth : myOAuthServices) {
     result.push_back(auth.get());
   }
