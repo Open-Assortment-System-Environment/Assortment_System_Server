@@ -63,7 +63,14 @@ CREATE SCHEMA vendors;
 ALTER SCHEMA vendors OWNER TO postgres;
 -- ddl-end --
 
-SET search_path TO pg_catalog,public,parts,storage,assemblies,kicad,global,vendors;
+-- object: auth | type: SCHEMA --
+-- DROP SCHEMA IF EXISTS auth CASCADE;
+CREATE SCHEMA auth;
+-- ddl-end --
+ALTER SCHEMA auth OWNER TO postgres;
+-- ddl-end --
+
+SET search_path TO pg_catalog,public,parts,storage,assemblies,kicad,global,vendors,auth;
 -- ddl-end --
 
 -- object: parts.part_id_seq | type: SEQUENCE --
@@ -126,10 +133,10 @@ ALTER TABLE parts.part_manufacturers OWNER TO postgres;
 -- object: assemblies.assemblies | type: TABLE --
 -- DROP TABLE IF EXISTS assemblies.assemblies CASCADE;
 CREATE TABLE assemblies.assemblies (
-	name text NOT NULL,
+	id bigint NOT NULL,
 	description text NOT NULL,
 	git_project text NOT NULL,
-	CONSTRAINT assemblies_pk PRIMARY KEY (name)
+	CONSTRAINT assemblies_pk PRIMARY KEY (id)
 
 );
 -- ddl-end --
@@ -139,10 +146,11 @@ ALTER TABLE assemblies.assemblies OWNER TO postgres;
 -- object: assemblies.assembly_parts | type: TABLE --
 -- DROP TABLE IF EXISTS assemblies.assembly_parts CASCADE;
 CREATE TABLE assemblies.assembly_parts (
-	assembly text NOT NULL,
+	id_assemblies bigint NOT NULL,
 	part_id bigint NOT NULL,
 	quantity bigint NOT NULL,
-	CONSTRAINT assembly_parts_pk PRIMARY KEY (assembly,part_id)
+	unit text NOT NULL,
+	CONSTRAINT assembly_parts_pk PRIMARY KEY (part_id,id_assemblies)
 
 );
 -- ddl-end --
@@ -1063,17 +1071,117 @@ REFERENCES storage.drawer_sizes (id) MATCH FULL
 ON DELETE SET NULL ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: auth.user_id_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS auth.user_id_seq CASCADE;
+CREATE SEQUENCE auth.user_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
+
+-- ddl-end --
+ALTER SEQUENCE auth.user_id_seq OWNER TO postgres;
+-- ddl-end --
+
+-- object: auth.auth_identity_id_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS auth.auth_identity_id_seq CASCADE;
+CREATE SEQUENCE auth.auth_identity_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
+
+-- ddl-end --
+ALTER SEQUENCE auth.auth_identity_id_seq OWNER TO postgres;
+-- ddl-end --
+
+-- object: auth.auth_info_id_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS auth.auth_info_id_seq CASCADE;
+CREATE SEQUENCE auth.auth_info_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
+
+-- ddl-end --
+ALTER SEQUENCE auth.auth_info_id_seq OWNER TO postgres;
+-- ddl-end --
+
+-- object: auth.auth_token_id_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS auth.auth_token_id_seq CASCADE;
+CREATE SEQUENCE auth.auth_token_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
+
+-- ddl-end --
+ALTER SEQUENCE auth.auth_token_id_seq OWNER TO postgres;
+-- ddl-end --
+
 -- object: parts_fk | type: CONSTRAINT --
--- ALTER TABLE parts.part_manufacturers DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
-ALTER TABLE parts.part_manufacturers ADD CONSTRAINT parts_fk FOREIGN KEY (part_id)
+-- ALTER TABLE assemblies.assemblies DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
+ALTER TABLE assemblies.assemblies ADD CONSTRAINT parts_fk FOREIGN KEY (id)
 REFERENCES parts.parts (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: assemblies_uq | type: CONSTRAINT --
+-- ALTER TABLE assemblies.assemblies DROP CONSTRAINT IF EXISTS assemblies_uq CASCADE;
+ALTER TABLE assemblies.assemblies ADD CONSTRAINT assemblies_uq UNIQUE (id);
+-- ddl-end --
+
 -- object: assemblies_fk | type: CONSTRAINT --
 -- ALTER TABLE assemblies.assembly_parts DROP CONSTRAINT IF EXISTS assemblies_fk CASCADE;
-ALTER TABLE assemblies.assembly_parts ADD CONSTRAINT assemblies_fk FOREIGN KEY (assembly)
-REFERENCES assemblies.assemblies (name) MATCH FULL
+ALTER TABLE assemblies.assembly_parts ADD CONSTRAINT assemblies_fk FOREIGN KEY (id_assemblies)
+REFERENCES assemblies.assemblies (id) MATCH FULL
+ON DELETE SET NULL ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: storage.storage_tmp | type: TABLE --
+-- DROP TABLE IF EXISTS storage.storage_tmp CASCADE;
+CREATE TABLE storage.storage_tmp (
+	id_part bigint NOT NULL,
+	quantity double precision NOT NULL,
+	unit text NOT NULL,
+	place text NOT NULL,
+	CONSTRAINT storage_tmp_pk PRIMARY KEY (id_part)
+
+);
+-- ddl-end --
+ALTER TABLE storage.storage_tmp OWNER TO postgres;
+-- ddl-end --
+
+-- object: units_fk | type: CONSTRAINT --
+-- ALTER TABLE storage.storage_tmp DROP CONSTRAINT IF EXISTS units_fk CASCADE;
+ALTER TABLE storage.storage_tmp ADD CONSTRAINT units_fk FOREIGN KEY (unit)
+REFERENCES global.units (name) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: units_fk | type: CONSTRAINT --
+-- ALTER TABLE assemblies.assembly_parts DROP CONSTRAINT IF EXISTS units_fk CASCADE;
+ALTER TABLE assemblies.assembly_parts ADD CONSTRAINT units_fk FOREIGN KEY (unit)
+REFERENCES global.units (name) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: parts_fk | type: CONSTRAINT --
+-- ALTER TABLE parts.part_manufacturers DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
+ALTER TABLE parts.part_manufacturers ADD CONSTRAINT parts_fk FOREIGN KEY (part_id)
+REFERENCES parts.parts (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
@@ -1101,6 +1209,13 @@ ON DELETE RESTRICT ON UPDATE CASCADE;
 -- object: parts_fk | type: CONSTRAINT --
 -- ALTER TABLE parts.documantations DROP CONSTRAINT IF EXISTS parts_fk CASCADE;
 ALTER TABLE parts.documantations ADD CONSTRAINT parts_fk FOREIGN KEY (id_parts)
+REFERENCES parts.parts (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: storage_tmp_has_many_parts | type: CONSTRAINT --
+-- ALTER TABLE storage.storage_tmp DROP CONSTRAINT IF EXISTS storage_tmp_has_many_parts CASCADE;
+ALTER TABLE storage.storage_tmp ADD CONSTRAINT storage_tmp_has_many_parts FOREIGN KEY (id_part)
 REFERENCES parts.parts (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
